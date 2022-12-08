@@ -1,7 +1,3 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -24,7 +20,7 @@ class _LoginPageState extends State<LoginPage>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                   Icons.android,
                   size: 100,
               ),
@@ -35,25 +31,24 @@ class _LoginPageState extends State<LoginPage>
                 fontSize: 50,
                 ),
             ),
-            SizedBox(height: 10), //Creates space between text
+            const SizedBox(height: 10), //Creates space between text
             Text(
                 'Welcome back to Vendi, you\'ve been missed',
                 style: GoogleFonts.bebasNeue(
                   fontSize: 19,
                 )
               ),
-           SizedBox(height: 40),
-
-              //email text field
+           const SizedBox(height: 40),
+            //email text field
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0),
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: Padding(
+                child: const Padding(
                   padding: const EdgeInsets.only(left:20.0),
                   child: TextField(
                     decoration: InputDecoration(
@@ -64,9 +59,7 @@ class _LoginPageState extends State<LoginPage>
                 ),
               ),
             ),
-
-              SizedBox(height: 10), //Create Space between both boxes
-
+            const SizedBox(height: 10), //Create Space between both boxes
             //Password text field
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 25.0),
@@ -76,8 +69,8 @@ class _LoginPageState extends State<LoginPage>
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left:20.0),
+                child: const Padding(
+                  padding: EdgeInsets.only(left:20.0),
                   child: TextField(
                     obscureText: true, //Hides password
                     decoration: InputDecoration(
@@ -88,18 +81,17 @@ class _LoginPageState extends State<LoginPage>
                 ),
               ),
             ),
-              SizedBox(height: 10),
-
+            const SizedBox(height: 10),
             //sign in button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
-                  padding: EdgeInsets.all(25),
+                  padding: const EdgeInsets.all(25),
                   decoration: BoxDecoration(
                       color: Colors.deepPurple,
                       borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                         'Sign In',
                       style: TextStyle(
@@ -111,11 +103,10 @@ class _LoginPageState extends State<LoginPage>
                   ),
                 ),
               ),
-              SizedBox(height:25),
-
+              const SizedBox(height:25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Text(
                       'Not a member?', style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -128,15 +119,6 @@ class _LoginPageState extends State<LoginPage>
                   ),
                 ],
               ),
-
-
-
-
-
-
-
-
-
           ],
         )
       )
