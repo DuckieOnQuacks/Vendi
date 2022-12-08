@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vendi_app/favorites_page.dart';
+import 'package:vendi_app/home_page.dart';
 import 'package:vendi_app/points_page.dart';
 import 'package:vendi_app/profile_page.dart';
-import 'package:vendi_app/register_page.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -14,7 +14,7 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
 
   int currentPage = 0;
-  List<Widget> pages = const [RegisterPage(), FavoritesPage(), PointsPage(), ProfilePage()]; // Switch RegisterPage to the map SDK on
+  List<Widget> pages = const [HomePage(), FavoritesPage(), PointsPage(), ProfilePage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
