@@ -14,7 +14,7 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
 
   int currentPage = 0;
-  List<Widget> pages = const [HomePage(), FavoritesPage(), PointsPage(), ProfilePage()];
+  List<Widget> pages = const [Homepage(), FavoritesPage(), PointsPage(), ProfilePage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

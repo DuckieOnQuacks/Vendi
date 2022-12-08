@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-const LatLng currentLocation = LatLng(39.5299, -119.8143);
+const LatLng curentLocation = LatLng(39.5299, -119.8143);
 
-class HomePage extends StatefulWidget
+class Homepage extends StatefulWidget
 {
-  const HomePage({Key? key}) : super(key: key);
+  const Homepage({Key? key}) : super(key: key);
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<Homepage> createState() => _HomepageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HomepageState extends State<Homepage>
 {
-  late GoogleMapController _mapController;
+  //late GoogleMapController _mapController;
   final Map<String, Marker> _markers = {};
   @override
   Widget build(BuildContext context)
@@ -20,12 +20,12 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       body: GoogleMap(
         initialCameraPosition: const CameraPosition(
-        target: currentLocation,
+        target: curentLocation,
           zoom: 14,
       ),
         onMapCreated: (controller) {
-          _mapController = controller;
-          addMarker('Test Marker', currentLocation);
+          //_mapController = controller;
+          addMarker('Test Marker', curentLocation);
         },
         markers: _markers.values.toSet(),
       ),

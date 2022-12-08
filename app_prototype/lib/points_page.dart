@@ -6,7 +6,7 @@ class PointsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Points Page")),
+      appBar: AppBar(title: const Text("Point Redemption")),
     );
   }
 }
