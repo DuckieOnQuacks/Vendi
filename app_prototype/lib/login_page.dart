@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/register_page.dart';
-import 'package:vendi_app/side_bar.dart';
+import 'package:vendi_app/bottom_bar.dart';
 
 class LoginPage extends StatefulWidget
 {
@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage>
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                      return const SideBar();
+                      return const BottomBar();
                     }));
                   },
                   style: ButtonStyle (
@@ -104,7 +104,6 @@ class _LoginPageState extends State<LoginPage>
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
-                        side: const BorderSide(color: Colors.deepPurple)
                       )
                     )
                   ),
