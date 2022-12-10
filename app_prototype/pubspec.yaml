@@ -31,11 +31,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  camera:
+  path_provider:
+  path:
+  image_picker:
 
   # Google maps sdk
   geolocator: '^9.0.2'
   google_maps_flutter: '^2.2.1'
-  #location: '^4.4.0'
+  location: '^4.4.0'
 
   # The package adds a package for creating a splash screen for the app. Once receieved run:
   # flutter pub run flutter_native_splash:create
@@ -50,6 +54,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -69,10 +74,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+# To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

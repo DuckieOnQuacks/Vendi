@@ -23,10 +23,11 @@ class _LoginPageState extends State<LoginPage>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                  Icons.android,
-                  size: 100,
+              Image.asset(
+                'assets/images/YellowMachine.png',
+                scale: 5,
               ),
+              const SizedBox(height: 10),
             Text(
                 'Hello Again!',
                 style: GoogleFonts.bebasNeue(
@@ -143,6 +144,7 @@ class _LoginPageState extends State<LoginPage>
                   ),
                 ],
               ),
+
           ],
         )
       )
