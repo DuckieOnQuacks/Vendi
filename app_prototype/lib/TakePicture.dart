@@ -77,7 +77,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             // where it was saved.
             final image = await _controller.takePicture();
 
-            if (!mounted) return;
+            //if (!mounted) return;
 
             // If the picture was taken, display it on a new screen.
             await Navigator.of(context).push(
@@ -91,7 +91,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             );
           } catch (e) {
             // If an error occurs, log the error to the console.
-            print(e);
+            debugPrint(e.toString());
           }
         },
         child: const Icon(Icons.camera_alt),

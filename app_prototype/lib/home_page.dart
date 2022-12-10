@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:ui' as ui;
+
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vendi_app/home_page.dart';
@@ -18,6 +23,7 @@ class _HomepageState extends State<Homepage> {
   late GoogleMapController _mapController;
   final Map<String, Marker> _markers = {};
   late List<CameraDescription> cameras;
+  bool? isChecked = false;
 
   @override
   void initState() {
@@ -30,19 +36,11 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      appBar: AppBar(
-        //title: Text(""),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              openCamera();
-            },
-            icon: Icon(Icons.camera_alt),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text("Google Maps")),
       body: GoogleMap(
+        mapToolbarEnabled: false,
         initialCameraPosition: const CameraPosition(
           target: currentLocation,
           zoom: 14,
@@ -57,19 +55,20 @@ class _HomepageState extends State<Homepage> {
   }
 
   addMarker(String id, LatLng location) async {
-    var markerIcon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(),
-      'assets/images/BlueMachine.png',
-    );
-
+    var markerIcon = await getBytesFromAsset('assets/images/BlueMachine.png', 100);
     var marker = Marker(
       markerId: MarkerId(id),
       position: location,
-      infoWindow: const InfoWindow(
+      infoWindow: InfoWindow(
         title: "Name of machine",
         snippet: "Specific location of machine",
+        onTap: () {
+          showModalBottomSheet(context: context, builder: (context) {
+            return createBottomSheet();
+          });
+        },
       ),
-      icon: markerIcon,
+      icon: BitmapDescriptor.fromBytes((markerIcon)),
     );
     _markers[id] = marker;
     setState(() {});
@@ -95,6 +94,43 @@ class _HomepageState extends State<Homepage> {
       MaterialPageRoute(
         builder: (context) => CameraScreen(controller),
       ),
+    );
+  }
+
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+  }
+
+  // Bottom sheet widget. It will be the basic container for the template information of a vending machine.
+// This can be edited as you wish.
+  Widget createBottomSheet() {
+    return Center(
+      child: Column(
+        children: [
+          // Bottom sheets cannot be updated from outside the page so a stateful builder is needed to handle state changes.
+          // Currently this checkbox should only work for a single vending machine. Whether or not this should be expanded is tbd.
+          StatefulBuilder(
+            builder: (BuildContext context, setState) {
+              return Checkbox(value: isChecked, onChanged: (bool? checked) {
+                setState(() {
+                  isChecked = checked;
+                });
+              });
+            },
+          ),
+          ElevatedButton(onPressed: () {
+            Navigator.pop(context);
+          }, child: const Text("Close Menu")),
+          IconButton(
+            onPressed: () {
+              openCamera();
+            }, icon: const Icon(Icons.camera_alt),
+          ),
+        ],
+      )
     );
   }
 }
@@ -125,10 +161,10 @@ class _CameraScreenState extends State<CameraScreen> {
             await widget.controller.takePicture();
           } catch (e) {
             // If an error occurs, log the error to the console
-            print(e);
+            debugPrint(e.toString());
           }
         },
-        child: Icon(Icons.camera),
+        child: const Icon(Icons.camera),
       ),
     );
   }
