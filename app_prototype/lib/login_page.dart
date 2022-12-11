@@ -16,139 +16,139 @@ class _LoginPageState extends State<LoginPage>
   Widget build(BuildContext context)
   {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey[300],
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/YellowMachine.png',
-                scale: 5,
-              ),
-              const SizedBox(height: 10),
-            Text(
-                'Hello Again!',
-                style: GoogleFonts.bebasNeue(
-                fontWeight: FontWeight.bold,
-                fontSize: 50,
-                ),
-            ),
-            const SizedBox(height: 10), //Creates space between text
-            Text(
-                'Welcome back to Vendi, you\'ve been missed',
-                style: GoogleFonts.bebasNeue(
-                  fontSize: 19,
-                )
-              ),
-           const SizedBox(height: 40),
-            //email text field
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  border: Border.all(color: Colors.white),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.only(left:20.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Email',
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.grey[300],
+        body: SafeArea(
+            child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/YellowMachine.png',
+                      scale: 5,
                     ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10), //Create Space between both boxes
-            //Password text field
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  border: Border.all(color: Colors.white),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.only(left:20.0),
-                  child: TextField(
-                    obscureText: true, //Hides password
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Password',
+                    const SizedBox(height: 10),
+                    Text(
+                      'Hello Again!',
+                      style: GoogleFonts.bebasNeue(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 50,
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            //sign in button
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                      return const BottomBar();
-                    }));
-                  },
-                  style: ButtonStyle (
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      const EdgeInsets.all(25)
+                    const SizedBox(height: 10), //Creates space between text
+                    Text(
+                        'Welcome back to Vendi, you\'ve been missed',
+                        style: GoogleFonts.bebasNeue(
+                          fontSize: 19,
+                        )
                     ),
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      Colors.deepPurple
+                    const SizedBox(height: 40),
+                    //email text field
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.only(left:20.0),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Email',
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: const BorderSide(color: Colors.deepPurple)
-                      )
-                    )
-                  ),
-                  child: const Center(
-                    child: Text(
-                        'Sign In',
-                      style: TextStyle(
-                          color: Colors.white,
+                    const SizedBox(height: 10), //Create Space between both boxes
+                    //Password text field
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.only(left:20.0),
+                          child: TextField(
+                            obscureText: true, //Hides password
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Password',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    //sign in button
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+                            return const BottomBar();
+                          }));
+                        },
+                        style: ButtonStyle (
+                            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                const EdgeInsets.all(25)
+                            ),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.deepPurple
+                            ),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    side: const BorderSide(color: Colors.deepPurple)
+                                )
+                            )
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height:25),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Not a member?', style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                        ),),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+                              return const RegisterPage();
+                            }));
+                          },
+                          child: const Text(
+                            ' Register Now!', style: TextStyle(
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          ),
+                        ),
+                      ],
                     ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height:25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                      'Not a member?', style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                        return const RegisterPage();
-                      }));
-                    },
-                    child: const Text(
-                        ' Register Now!', style: TextStyle(
-                        color: Colors.blueAccent,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    ),
-                  ),
-                ],
-              ),
 
-          ],
+                  ],
+                )
+            )
         )
-      )
-    )
     );
   }
 }
