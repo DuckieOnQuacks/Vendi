@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:camera/camera.dart';
@@ -158,7 +158,15 @@ class _CameraScreenState extends State<CameraScreen> {
         onPressed: () async {
           try {
             // Take a picture and store it as a file
-            await widget.controller.takePicture();
+            var image = await widget.controller.takePicture();
+
+            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+              return Scaffold(
+                appBar: AppBar(title: const Text("Displayed Image")),
+                body: Image.file(File(image.path)),
+              );
+            }
+            ));
           } catch (e) {
             // If an error occurs, log the error to the console
             debugPrint(e.toString());
