@@ -1,4 +1,6 @@
+import 'dart:math';
 import 'dart:ui' as ui;
+import 'dart:math' as math;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
@@ -8,7 +10,19 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 
 
-const LatLng currentLocation = LatLng(39.5299, -119.8143);
+const currentLocation =  LatLng(39.54411893434308, -119.8160761741225);
+const machines = [
+  LatLng(39.541124878293125, -119.8146587094217),
+  LatLng(39.54687777057448, -119.81770069829096),
+  LatLng(39.53783496758882, -119.8180473779956),
+  LatLng(39.54250126604798, -119.8162125037587),
+];
+
+const machineType = [
+  'assets/images/BlueMachine.png',
+  'assets/images/PinkMachine.png',
+  'assets/images/YellowMachine.png',
+];
 
 class Homepage extends StatefulWidget
 {
@@ -30,11 +44,14 @@ class _HomepageState extends State<Homepage> {
         mapToolbarEnabled: false,
         initialCameraPosition: const CameraPosition(
           target: currentLocation,
-          zoom: 14,
+          zoom: 15,
         ),
         onMapCreated: (controller) {
           _mapController = controller;
-          addMarker('Test Marker', currentLocation);
+          for(var i = 0; i <= machines.length; i++)
+            {
+              addMarker('Test Marker $i', machines[i]);
+            }
         },
         markers: _markers.values.toSet(),
       ),
@@ -42,7 +59,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   addMarker(String id, LatLng location) async {
-    var markerIcon = await getBytesFromAsset('assets/images/BlueMachine.png', 100);
+    var markerIcon = await getBytesFromAsset(getRandomElement(machineType), 100);
     var marker = Marker(
       markerId: MarkerId(id),
       position: location,
@@ -59,6 +76,13 @@ class _HomepageState extends State<Homepage> {
     );
     _markers[id] = marker;
     setState(() {});
+  }
+
+  T getRandomElement<T>(List<T> list) 
+  {
+    final random = new Random();
+    var i = random.nextInt(list.length);
+    return list[i];
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
