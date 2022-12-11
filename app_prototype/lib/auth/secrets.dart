@@ -1,0 +1,1 @@
+var mySecretKey = 'AIzaSyCU-bE_pku2AsP9_HFqHro2DUcMtuNyGZw';
