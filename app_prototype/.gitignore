@@ -46,3 +46,4 @@ app.*.map.json
 /android/app/release
 /lib/auth/secrets.dart
 /lib/auth
+app/src/main/AndroidManifest.xml
