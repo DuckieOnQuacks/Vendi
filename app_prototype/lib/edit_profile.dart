@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
+import 'dart:io';
 
-class EditProfile extends StatelessWidget {
-  const EditProfile({super.key});
 
-  @override
+  createAlertDialog(BuildContext context) {
+    TextEditingController customController = TextEditingController();
+
+    return showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        //Will Add if statement to check if updated fields
+        //meet all requriements and not currently
+        //equal to current fields
+        title: Text("Profile Update Successful!"),
+
+        actions: <Widget>[
+          MaterialButton(
+
+            child: Image.asset(
+              'assets/images/YellowMachine.png',
+              scale: 6,
+            ),
+            onPressed: () {},
+          )
+        ],
+      );
+    });
+  }
+
   Widget build(BuildContext context) {
     bool isValid;
     return Scaffold(
@@ -21,27 +44,43 @@ class EditProfile extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 50),
-                      //email text fi
+
+                      //Uploading New Profile Field
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.pink[200],
-                            border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.only(left: 20.0),
-                            child: TextField(
-                              obscureText: true, //Hides password
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Upload New Profile Photo',
+                        child: ElevatedButton(onPressed: () {
+
+                        },
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all<
+                                  EdgeInsetsGeometry>(
+                                  const EdgeInsets.all(25)
                               ),
-                            ),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.pink
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      side: const BorderSide(
+                                          color: Colors.yellow)
+                                  )
+                              )
                           ),
+                          child: Text(
+                              'Upload New Profile Picture', style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20)
+                          ),
+
+
+                          //const SizedBox(height: 10),
+
                         ),
                       ),
+
                       const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -76,7 +115,7 @@ class EditProfile extends StatelessWidget {
                           child: const Padding(
                             padding: EdgeInsets.only(left: 20.0),
                             child: TextField(
-                              obscureText: true, //Hides password
+                              obscureText: false,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Email',
@@ -98,7 +137,7 @@ class EditProfile extends StatelessWidget {
                           child: const Padding(
                             padding: EdgeInsets.only(left: 20.0),
                             child: TextField(
-                              obscureText: true, //Hides password
+                              obscureText: false,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Phone Number',
@@ -121,7 +160,7 @@ class EditProfile extends StatelessWidget {
                           child: const Padding(
                             padding: EdgeInsets.only(left: 20.0),
                             child: TextField(
-                              obscureText: true,
+                              obscureText: false,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 //color: Colors.white,
@@ -137,38 +176,51 @@ class EditProfile extends StatelessWidget {
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25.0),
 
-                      child: ElevatedButton(onPressed: () {},
-                          style: ButtonStyle (
-                              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                  const EdgeInsets.all(25)
-                              ),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.yellow
-                              ),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      side: const BorderSide(color: Colors.yellow)
+                          child: ElevatedButton(onPressed: () {
+                            createAlertDialog(context);
+                          },
+                              style: ButtonStyle(
+                                  padding: MaterialStateProperty.all<
+                                      EdgeInsetsGeometry>(
+                                      const EdgeInsets.all(25)
+                                  ),
+                                  backgroundColor: MaterialStateProperty.all<
+                                      Color>(
+                                      Colors.yellow
+                                  ),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              12),
+                                          side: const BorderSide(
+                                              color: Colors.yellow)
+                                      )
                                   )
+                              ),
+                              child: Text('Update Profile', style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20)
                               )
-                          ),
-                          child: Text('Update Profile', style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20)
+
+
+                            //const SizedBox(height: 10),
+
                           )
-
-
-                      //const SizedBox(height: 10),
-
                       )
-                      )
+
                     ]
                 )
             )
         )
     );
   }
-}
+
+
+
+
+
+
 
 

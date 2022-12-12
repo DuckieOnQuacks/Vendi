@@ -12,6 +12,7 @@ class FavoritesPage extends StatefulWidget {
   @override
   Widget build(BuildContext context)
   {
+
     var newMachines = machines.where((machine) => machine.isFavorited == true).toList();
     return ListView.builder(
         padding: const EdgeInsets.only(top: 10),
