@@ -36,7 +36,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context)
   {
     return Scaffold(
-      appBar: AppBar(title: const Text("Google Maps")),
+      appBar: AppBar(title: const Text("Google Maps"), automaticallyImplyLeading: false,),
       body: GoogleMap(
         mapToolbarEnabled: false,
         initialCameraPosition: const CameraPosition(

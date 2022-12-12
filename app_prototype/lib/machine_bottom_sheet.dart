@@ -26,39 +26,44 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
   }
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          // Bottom sheets cannot be updated from outside the page so a stateful builder is needed to handle state changes.
-          // Currently this checkbox should only work for a single vending machine. Whether or not this should be expanded is tbd.
-          StatefulBuilder(
-            builder: (BuildContext context, setState) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            StatefulBuilder(builder: (BuildContext context, setState) {
               return Checkbox(value: selectedMachine?.getFavorited, onChanged: (bool? checked) {
                 setState(() {
                   selectedMachine?.isFavorited = checked!;
-                  debugPrint(selectedMachine?.machineName);
                 });
               });
-            },
-          ),
-          ElevatedButton(onPressed: () {
-            setState(() {
-              selectedMachine?.image = '';
-            });
-            Navigator.pop(context);
-          }, child: const Text("Close Menu")),
-           selectedMachine?.image == ''? IconButton(
-            onPressed: () {
-              setState(() {});
+            }),
+            selectedMachine?.image == ''? IconButton(onPressed: () {
               openCamera();
-            }, icon: const Icon(Icons.camera_alt),
-          ): SizedBox(
-            width: 54,
-            height: 96,
-            child: Image.file(File(selectedMachine!.image)),
-          ),
-        ],
-      )
+            }, icon: const Icon(Icons.camera_alt)) : const SizedBox.shrink()
+          ],
+        ),
+        Row(
+          children: [
+            Image.asset(selectedMachine!.asset, scale: 8,),
+            const SizedBox(width:50),
+            Column(children: [Text(selectedMachine!.name), Text(selectedMachine!.machineDesc)]),
+          ]
+        ),
+        Row(
+          children: [
+            selectedMachine?.image == ''? const SizedBox.shrink() : SizedBox(
+              width: 54, height: 96,
+              child: Image.file(File(selectedMachine!.image)),
+            ),
+          ],
+        ),
+        ElevatedButton( onPressed: () {
+          setState(() {
+            selectedMachine?.image = '';
+          });
+          Navigator.pop(context);
+        }, child: const Text("Close Menu"))
+      ]
     );
   }
     // Method that opens the camera
