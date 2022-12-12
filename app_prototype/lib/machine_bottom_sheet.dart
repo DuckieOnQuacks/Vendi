@@ -31,8 +31,8 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
       child: Column(
         children: [
           SizedBox(height: 20),
-          selectedMachine?.image == ''? Text('Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
-              Text('If youre happy with the image, click save!', style: GoogleFonts.bebasNeue(fontSize: 25)),
+          selectedMachine?.image == ''? Text('Check the box to add this machine to your favorites. Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
+              Text('If you\'re happy with the image, click save!', style: GoogleFonts.bebasNeue(fontSize: 25)),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
