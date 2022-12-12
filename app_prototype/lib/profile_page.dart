@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:vendi_app/edit_profile.dart';
+import 'package:vendi_app/register_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -38,6 +39,7 @@ class ProfilePage extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
                           return const EditProfile();
+                          return const RegisterPage();
                         }));
                       },
                       style: ElevatedButton.styleFrom(
