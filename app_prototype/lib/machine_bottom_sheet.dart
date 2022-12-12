@@ -41,10 +41,14 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
             },
           ),
           ElevatedButton(onPressed: () {
+            setState(() {
+              displayedImage = '';
+            });
             Navigator.pop(context);
           }, child: const Text("Close Menu")),
           displayedImage == ''? IconButton(
             onPressed: () {
+              setState(() {});
               openCamera();
             }, icon: const Icon(Icons.camera_alt),
           ): SizedBox(

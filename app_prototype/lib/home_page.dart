@@ -68,7 +68,7 @@ class _HomepageState extends State<Homepage> {
         snippet: "Specific location of machine",
         onTap: () {
           showModalBottomSheet(context: context, builder: (context) {
-            return MachineBottomSheet();
+            return const MachineBottomSheet();
           });
         },
       ),
