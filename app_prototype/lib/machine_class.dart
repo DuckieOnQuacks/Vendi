@@ -2,10 +2,10 @@
 
 class MachineClass
 {
-  bool isFavorited = false;
-  String machineName;
-  String machineIcon;
-  int machineId;
+  late bool isFavorited = false;
+  late String machineName;
+  late String machineIcon;
+  late int machineId;
 
   // Constructor
   MachineClass(String name, String icon, int id)
