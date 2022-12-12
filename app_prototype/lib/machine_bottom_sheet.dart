@@ -29,6 +29,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
     return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             StatefulBuilder(builder: (BuildContext context, setState) {
               return Checkbox(value: selectedMachine?.getFavorited, onChanged: (bool? checked) {
@@ -37,32 +38,42 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                 });
               });
             }),
-            selectedMachine?.image == ''? IconButton(onPressed: () {
+            selectedMachine?.image == ''? IconButton(onPressed: ()
+            {
               openCamera();
-            }, icon: const Icon(Icons.camera_alt)) : const SizedBox.shrink()
+            },
+                icon: const Icon(Icons.camera_alt)) : const SizedBox.shrink(),
+
           ],
         ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //Image.asset(selectedMachine!.asset, scale: 8,),
+              //const SizedBox(width:50),
+              Column(children: [Text(selectedMachine!.name), Text(selectedMachine!.machineDesc)]),
+            ]
+          ),
+
         Row(
-          children: [
-            Image.asset(selectedMachine!.asset, scale: 8,),
-            const SizedBox(width:50),
-            Column(children: [Text(selectedMachine!.name), Text(selectedMachine!.machineDesc)]),
-          ]
-        ),
-        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             selectedMachine?.image == ''? const SizedBox.shrink() : SizedBox(
-              width: 54, height: 96,
+              width: 200, height: 250,
               child: Image.file(File(selectedMachine!.image)),
             ),
           ],
         ),
+        //const SizedBox(height: 270),
+
+
         ElevatedButton( onPressed: () {
           setState(() {
             selectedMachine?.image = '';
           });
           Navigator.pop(context);
-        }, child: const Text("Close Menu"))
+        },
+            child: const Text("Close Menu"))
       ]
     );
   }

@@ -13,6 +13,9 @@ final machines = [
   MachineClass("Schulich Lecture Hall", 'assets/images/PinkMachine.png' , 'Located on the first floor', 1, LatLng(39.54105463820153, -119.81470308380608)),
   MachineClass("William Raggio Building", 'assets/images/BlueMachine.png' , 'Located on the second floor', 2, LatLng(39.54235203232871, -119.81518074721858)),
   MachineClass("The Joe", 'assets/images/YellowMachine.png' , 'Located on the first floor', 3, LatLng(39.54466081663702, -119.81626193095232)),
+  MachineClass("Panera Bread", 'assets/images/BlueMachine.png' , 'Located on the first floor', 4, LatLng(39.54237902737183, -119.81619429719166)),
+  MachineClass("Reynolds School Of Journalism", 'assets/images/PinkMachine.png' , 'Located on the first floor', 5, LatLng(39.541418046522196, -119.81528115652931)),
+  MachineClass("Mathewson Knowledge Center", 'assets/images/PinkMachine.png' , 'Located on the first floor', 5, LatLng(39.543534319081886, -119.81577690579334)),
 ];
 
 //const machineType = [
