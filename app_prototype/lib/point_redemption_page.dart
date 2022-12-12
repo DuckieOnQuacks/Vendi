@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vendi_app/bottom_bar.dart';
-import 'package:vendi_app/register_page.dart';
 
 class PointsRedemptionPage extends StatelessWidget {
   const PointsRedemptionPage({super.key});
@@ -38,8 +36,16 @@ class PointsRedemptionPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Redeem \$1 reward', style: GoogleFonts.bebasNeue(
+                      Text('Current Balance:', style: GoogleFonts.bebasNeue(
                         fontWeight: FontWeight.bold, fontSize: 50,)
+                      ),
+                      Text('100 Vendi Points', style: GoogleFonts.chicle(
+                        fontWeight: FontWeight.bold, fontSize: 50,)
+                      ),
+                      const SizedBox(height: 10),
+                      const SizedBox(height: 10),
+                      Text('Redeem \$1 reward', style: GoogleFonts.bebasNeue(
+                        fontWeight: FontWeight.bold, fontSize: 30,)
                       ),
                       const SizedBox(height: 10),
                       //button will go to popup window
@@ -80,7 +86,7 @@ class PointsRedemptionPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 40),
                       Text('Redeem \$2 reward', style: GoogleFonts.bebasNeue(
-                        fontWeight: FontWeight.bold, fontSize: 50,)
+                        fontWeight: FontWeight.bold, fontSize: 30,)
                       ),
                       const SizedBox(height: 10),
                       //button will go to popup window
@@ -121,7 +127,7 @@ class PointsRedemptionPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 40),
                       Text('Redeem \$4 reward', style: GoogleFonts.bebasNeue(
-                        fontWeight: FontWeight.bold, fontSize: 50,)
+                        fontWeight: FontWeight.bold, fontSize: 30,)
                       ),
                       const SizedBox(height: 10),
                       //button will go to popup window

@@ -32,12 +32,12 @@ class PointsPage extends StatelessWidget {
         const SizedBox(height: 1),
         Text(
           '100',
-          style: GoogleFonts.caveatBrush(
+          style: GoogleFonts.chicle(
             fontSize: 100,
           ),
         ),
           Text(
-            'points.',
+            'Vendi points.',
             style: GoogleFonts.bebasNeue(
               fontWeight: FontWeight.bold,
               fontSize: 50,
