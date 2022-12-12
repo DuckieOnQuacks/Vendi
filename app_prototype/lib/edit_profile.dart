@@ -2,31 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:io';
 
+String imagePath = '';
+class EditProfile extends StatefulWidget {
+  const EditProfile({super.key});
 
-  createAlertDialog(BuildContext context) {
-    TextEditingController customController = TextEditingController();
+  @override
+  State<EditProfile> createState() => _EditProfileState();
+}
 
-    return showDialog(context: context, builder: (context) {
-      return AlertDialog(
-        //Will Add if statement to check if updated fields
-        //meet all requriements and not currently
-        //equal to current fields
-        title: Text("Profile Update Successful!"),
+class _EditProfileState extends State<EditProfile> {
+  late List<CameraDescription> cameras;
 
-        actions: <Widget>[
-          MaterialButton(
-
-            child: Image.asset(
-              'assets/images/YellowMachine.png',
-              scale: 6,
-            ),
-            onPressed: () {},
-          )
-        ],
-      );
+  @override
+  void initState() {
+    super.initState();
+    // Get a list of available cameras on the device
+    availableCameras().then((availableCameras) {
+      cameras = availableCameras;
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     bool isValid;
     return Scaffold(
@@ -38,9 +34,11 @@ import 'dart:io';
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
+                      SizedBox(height: 150, width: 150,
+                      child:                      imagePath == ''? Image.asset(
                         'assets/images/KermitProfile.jpg',
                         scale: 4,
+                      ):Image.file(File(imagePath), scale: 4),
                       ),
 
                       const SizedBox(height: 50),
@@ -49,7 +47,7 @@ import 'dart:io';
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: ElevatedButton(onPressed: () {
-
+                          openCamera();
                         },
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all<
@@ -68,7 +66,7 @@ import 'dart:io';
                                   )
                               )
                           ),
-                          child: Text(
+                          child: const Text(
                               'Upload New Profile Picture', style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -198,15 +196,11 @@ import 'dart:io';
                                       )
                                   )
                               ),
-                              child: Text('Update Profile', style: TextStyle(
+                              child: const Text('Update Profile', style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20)
                               )
-
-
-                            //const SizedBox(height: 10),
-
                           )
                       )
 
@@ -216,11 +210,103 @@ import 'dart:io';
         )
     );
   }
+    void openCamera() async {
+    // Ensure that there is a camera available on the device
+    if (cameras == null || cameras.isEmpty) {
+      return;
+    }
 
+    // Take the first camera in the list (usually the back camera)
+    CameraDescription camera = cameras[0];
 
+    // Open the camera and store the resulting CameraController
+    CameraController controller = CameraController(camera, ResolutionPreset.high);
+    await controller.initialize();
 
+    // Navigate to the CameraScreen and pass the CameraController to it
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CameraScreen(controller),
+      ),
+    ).then((value)=>setState((){}));
+  }
+  }
 
+createAlertDialog(BuildContext context) {
+  TextEditingController customController = TextEditingController();
 
+  return showDialog(context: context, builder: (context) {
+    return AlertDialog(
+      //Will Add if statement to check if updated fields
+      //meet all requriements and not currently
+      //equal to current fields
+      title: const Text("Profile Update Successful!"),
 
+      actions: <Widget>[
+        MaterialButton(
 
+          child: Image.asset(
+            'assets/images/YellowMachine.png',
+            scale: 6,
+          ),
+          onPressed: () {},
+        )
+      ],
+    );
+  });
+}
 
+class CameraScreen extends StatefulWidget {
+  CameraScreen(this.controller);
+
+  final CameraController controller;
+
+  @override
+  _CameraScreenState createState() => _CameraScreenState();
+}
+
+class _CameraScreenState extends State<CameraScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CameraPreview(widget.controller),
+      // Add a floating action button to take pictures
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          try {
+            // Take a picture and store it as a file
+            var image = await widget.controller.takePicture();
+
+            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+              return Scaffold(
+                appBar: AppBar(title: const Text("Is this image ok?"),
+                automaticallyImplyLeading: false,
+                leading: IconButton(icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.check),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      imagePath = image.path;
+                    }
+                  ),
+                ]),
+                body: Image.file(File(image.path)),
+              );
+            }
+            ));
+          } catch (e) {
+            // If an error occurs, log the error to the console
+            debugPrint(e.toString());
+          }
+        },
+        child: const Icon(Icons.camera),
+      ),
+    );
+  }
+}
