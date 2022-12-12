@@ -10,6 +10,7 @@ class ProfilePage extends StatelessWidget {
   {
     return Scaffold(
       appBar: AppBar(title: const Text("Profile")),
+        backgroundColor: Colors.grey[300],
         body: SingleChildScrollView(
           child: Center(
             child: Container(
@@ -40,6 +41,7 @@ class ProfilePage extends StatelessWidget {
                           return const EditProfile();
                         }));
                       },
+
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.yellow, side: BorderSide.none, shape: const StadiumBorder()),
                       child: const Text('Edit Profile', style: TextStyle(color: Colors.black)),
