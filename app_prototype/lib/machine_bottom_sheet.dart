@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-
-String displayedImage = '';
+import 'package:vendi_app/machine_class.dart';
+MachineClass? selectedMachine;
 
 class MachineBottomSheet extends StatefulWidget {
-  const MachineBottomSheet({super.key});
+  MachineBottomSheet(MachineClass machine)
+    {super.key; selectedMachine = machine; }
 
   @override
   State<MachineBottomSheet> createState() => _MachineBottomSheetState();
@@ -13,7 +14,8 @@ class MachineBottomSheet extends StatefulWidget {
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
   late List<CameraDescription> cameras;
-
+  
+  
   @override
   void initState() {
     super.initState();
@@ -22,38 +24,57 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
       cameras = availableCameras;
     });
   }
-
-  bool? isChecked = false;
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          // Bottom sheets cannot be updated from outside the page so a stateful builder is needed to handle state changes.
-          // Currently this checkbox should only work for a single vending machine. Whether or not this should be expanded is tbd.
-          StatefulBuilder(
-            builder: (BuildContext context, setState) {
-              return Checkbox(value: isChecked, onChanged: (bool? checked) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            StatefulBuilder(builder: (BuildContext context, setState) {
+              return Checkbox(value: selectedMachine?.getFavorited, onChanged: (bool? checked) {
                 setState(() {
-                  isChecked = checked;
+                  selectedMachine?.isFavorited = checked!;
                 });
               });
-            },
-          ),
-          ElevatedButton(onPressed: () {
-            Navigator.pop(context);
-          }, child: const Text("Close Menu")),
-          displayedImage == ''? IconButton(
-            onPressed: () {
+            }),
+            selectedMachine?.image == ''? IconButton(onPressed: ()
+            {
               openCamera();
-            }, icon: const Icon(Icons.camera_alt),
-          ): SizedBox(
-            width: 54,
-            height: 96,
-            child: Image.file(File(displayedImage)),
+            },
+                icon: const Icon(Icons.camera_alt)) : const SizedBox.shrink(),
+
+          ],
+        ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //Image.asset(selectedMachine!.asset, scale: 8,),
+              //const SizedBox(width:50),
+              Column(children: [Text(selectedMachine!.name), Text(selectedMachine!.machineDesc)]),
+            ]
           ),
-        ],
-      )
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            selectedMachine?.image == ''? const SizedBox.shrink() : SizedBox(
+              width: 200, height: 250,
+              child: Image.file(File(selectedMachine!.image)),
+            ),
+          ],
+        ),
+        //const SizedBox(height: 270),
+
+
+        ElevatedButton( onPressed: () {
+          setState(() {
+            selectedMachine?.image = '';
+          });
+          Navigator.pop(context);
+        },
+            child: const Text("Close Menu"))
+      ]
     );
   }
     // Method that opens the camera
@@ -118,8 +139,7 @@ class _CameraScreenState extends State<CameraScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
-                      displayedImage = image.path;
-                      debugPrint(displayedImage);
+                      selectedMachine?.image = image.path;
                     }
                   ),
                 ]),
