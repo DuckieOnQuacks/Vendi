@@ -23,7 +23,7 @@ class PointsPage extends StatelessWidget {
     ),
     const SizedBox(height: 25),
     Text(
-    'User, you have',
+    'Kermit, you have',
     style: GoogleFonts.bebasNeue(
     fontWeight: FontWeight.bold,
     fontSize: 50,

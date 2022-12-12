@@ -8,21 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
+import 'package:vendi_app/home_page.dart';
+import 'package:vendi_app/machine_class.dart';
 
 
-const currentLocation =  LatLng(39.54411893434308, -119.8160761741225);
-const machines = [
-  LatLng(39.541124878293125, -119.8146587094217),
-  LatLng(39.54687777057448, -119.81770069829096),
-  LatLng(39.53783496758882, -119.8180473779956),
-  LatLng(39.54250126604798, -119.8162125037587),
+const currentLocation = LatLng(39.54411893434308, -119.8160761741225);
+final machines = [
+  MachineClass("Ansari Building", 'assets/images/BlueMachine.png' , 'Located on the second floor', 0, LatLng(39.54006690730848, -119.81491866643591)),
+  MachineClass("Schulich Lecture Hall", 'assets/images/PinkMachine.png' , 'Located on the first floor', 1, LatLng(39.54105463820153, -119.81470308380608)),
+  MachineClass("William Raggio Building", 'assets/images/BlueMachine.png' , 'Located on the second floor', 2, LatLng(39.54235203232871, -119.81518074721858)),
+  MachineClass("The Joe", 'assets/images/YellowMachine.png' , 'Located on the first floor', 3, LatLng(39.54466081663702, -119.81626193095232)),
 ];
 
-const machineType = [
-  'assets/images/BlueMachine.png',
-  'assets/images/PinkMachine.png',
-  'assets/images/YellowMachine.png',
-];
+//const machineType = [
+//  'assets/images/BlueMachine.png',
+//  'assets/images/PinkMachine.png',
+//  'assets/images/YellowMachine.png',
+//];
 
 class Homepage extends StatefulWidget
 {
@@ -50,7 +52,7 @@ class _HomepageState extends State<Homepage> {
           _mapController = controller;
           for(var i = 0; i < machines.length; i++)
             {
-              addMarker('Test Marker $i', machines[i]);
+              addMarker('Test Marker $i', machines[i].machineLoc, i);
             }
         },
         markers: _markers.values.toSet(),
@@ -58,14 +60,14 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  addMarker(String id, LatLng location) async {
-    var markerIcon = await getBytesFromAsset(getRandomElement(machineType), 100);
+  addMarker(String id, LatLng location, int i) async {
+    var markerIcon = await getBytesFromAsset(machines[i].asset, 100);
     var marker = Marker(
       markerId: MarkerId(id),
       position: location,
       infoWindow: InfoWindow(
-        title: "Name of machine",
-        snippet: "Specific location of machine",
+        title: machines[i].name,
+        snippet: machines[i].machineDesc,
         onTap: () {
           showModalBottomSheet(context: context, builder: (context) {
             return const MachineBottomSheet();
@@ -76,13 +78,6 @@ class _HomepageState extends State<Homepage> {
     );
     _markers[id] = marker;
     setState(() {});
-  }
-
-  T getRandomElement<T>(List<T> list) 
-  {
-    final random = new Random();
-    var i = random.nextInt(list.length);
-    return list[i];
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
