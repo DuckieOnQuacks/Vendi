@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-
-String displayedImage = '';
+import 'package:vendi_app/machine_class.dart';
+MachineClass? selectedMachine;
 
 class MachineBottomSheet extends StatefulWidget {
-  const MachineBottomSheet({super.key});
+  MachineBottomSheet(MachineClass machine)
+    {super.key; selectedMachine = machine; }
 
   @override
   State<MachineBottomSheet> createState() => _MachineBottomSheetState();
@@ -13,7 +14,8 @@ class MachineBottomSheet extends StatefulWidget {
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
   late List<CameraDescription> cameras;
-
+  
+  
   @override
   void initState() {
     super.initState();
@@ -22,8 +24,6 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
       cameras = availableCameras;
     });
   }
-
-  bool? isChecked = false;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -33,20 +33,21 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
           // Currently this checkbox should only work for a single vending machine. Whether or not this should be expanded is tbd.
           StatefulBuilder(
             builder: (BuildContext context, setState) {
-              return Checkbox(value: isChecked, onChanged: (bool? checked) {
+              return Checkbox(value: selectedMachine?.getFavorited, onChanged: (bool? checked) {
                 setState(() {
-                  isChecked = checked;
+                  selectedMachine?.isFavorited = checked!;
+                  debugPrint(selectedMachine?.machineName);
                 });
               });
             },
           ),
           ElevatedButton(onPressed: () {
             setState(() {
-              displayedImage = '';
+              selectedMachine?.image = '';
             });
             Navigator.pop(context);
           }, child: const Text("Close Menu")),
-          displayedImage == ''? IconButton(
+           selectedMachine?.image == ''? IconButton(
             onPressed: () {
               setState(() {});
               openCamera();
@@ -54,7 +55,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
           ): SizedBox(
             width: 54,
             height: 96,
-            child: Image.file(File(displayedImage)),
+            child: Image.file(File(selectedMachine!.image)),
           ),
         ],
       )
@@ -122,8 +123,7 @@ class _CameraScreenState extends State<CameraScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
-                      displayedImage = image.path;
-                      debugPrint(displayedImage);
+                      selectedMachine?.image = image.path;
                     }
                   ),
                 ]),

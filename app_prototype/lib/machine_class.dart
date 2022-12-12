@@ -1,5 +1,3 @@
-
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MachineClass
@@ -9,7 +7,8 @@ class MachineClass
   late String machineDesc;
   late String machineIcon;
   late int machineId;
-  var machineLoc = LatLng(39.54007668689109, -119.81492289354577);
+  String image = '';
+  var machineLoc = const LatLng(39.54007668689109, -119.81492289354577);
 
   // Constructor
   MachineClass(String name, String icon, String description, int id, var location) {
@@ -21,7 +20,7 @@ class MachineClass
   }
 
   // Get methods
-  bool get getFavorited {
+  bool? get getFavorited {
     return isFavorited;
   }
   String get name {
@@ -30,9 +29,17 @@ class MachineClass
   String get asset {
     return machineIcon;
   }
+  String get macImage {
+    return image;
+  }
 
   // Set methods
-  set setFavorited (bool favorited) {
+  set setFavorited (bool favorited) 
+  {
     isFavorited = favorited;
+  }
+  set machineImage (String macImage)
+  {
+    image = macImage;
   }
 }

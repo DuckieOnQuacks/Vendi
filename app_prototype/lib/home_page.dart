@@ -1,14 +1,9 @@
-import 'dart:math';
 import 'dart:ui' as ui;
-import 'dart:math' as math;
-
-import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
-import 'package:vendi_app/home_page.dart';
 import 'package:vendi_app/machine_class.dart';
 
 
@@ -70,7 +65,7 @@ class _HomepageState extends State<Homepage> {
         snippet: machines[i].machineDesc,
         onTap: () {
           showModalBottomSheet(context: context, builder: (context) {
-            return const MachineBottomSheet();
+            return MachineBottomSheet(machines[i]);
           });
         },
       ),
