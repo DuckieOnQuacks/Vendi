@@ -21,25 +21,27 @@ class FavoritesPage extends StatefulWidget {
             borderRadius: BorderRadius.circular(15),
             color: Colors.grey[200],
           ),
-          child: ListTile(
-            leading: Image.asset(newMachines[index].asset),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                setState(() {
-                  newMachines[index].isFavorited = false;
-                });
-              },
-            ),
-            title: Text(
-              newMachines[index].name,
-            ),
-            subtitle: Text(
-              newMachines[index].machineDesc,
-            ),
-            onTap:() {print('onTap pressed');},
-            tileColor: Colors.grey[200],
+          child: Card(
+            child: ListTile(
+              leading: Image.asset(newMachines[index].asset),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  setState(() {
+                    newMachines[index].isFavorited = false;
+                  });
+                },
+              ),
+              title: Text(
+                newMachines[index].name,
+              ),
+              subtitle: Text(
+                newMachines[index].machineDesc,
+              ),
+              onTap:() {print('onTap pressed');},
+              tileColor: Colors.grey[200],
       ),
+          ),
         ),
     );
   }
