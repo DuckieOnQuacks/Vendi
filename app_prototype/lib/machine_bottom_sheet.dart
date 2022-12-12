@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/machine_class.dart';
 MachineClass? selectedMachine;
 
@@ -28,6 +29,10 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(height: 20),
+        selectedMachine?.image == ''? Text('Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
+            Text('If youre happy with the image, click save!', style: GoogleFonts.bebasNeue(fontSize: 25)),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -38,22 +43,20 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                 });
               });
             }),
-            selectedMachine?.image == ''? IconButton(onPressed: ()
-            {
+            selectedMachine?.image == ''? IconButton(onPressed: () {
               openCamera();
             },
-                icon: const Icon(Icons.camera_alt)) : const SizedBox.shrink(),
-
+                icon: const Icon(Icons.camera_alt)) :
+                  ElevatedButton( onPressed: () {
+                    setState(() {
+                    selectedMachine?.image = '';
+                    });
+                    Navigator.pop(context);
+                    },
+                    child: const Text("Save")),
           ],
         ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              //Image.asset(selectedMachine!.asset, scale: 8,),
-              //const SizedBox(width:50),
-              Column(children: [Text(selectedMachine!.name), Text(selectedMachine!.machineDesc)]),
-            ]
-          ),
+
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
