@@ -10,7 +10,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context)
   {
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile")),
+      appBar: AppBar(title: const Text("Profile"), automaticallyImplyLeading: false,),
         backgroundColor: Colors.grey[300],
         body: SingleChildScrollView(
           child: Center(
@@ -40,7 +40,6 @@ class ProfilePage extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
                           return const EditProfile();
-                          return const RegisterPage();
                         }));
                       },
 

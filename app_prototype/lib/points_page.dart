@@ -9,7 +9,7 @@ class PointsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Your Points")),
+      appBar: AppBar(title: const Text("Your Points"), automaticallyImplyLeading: false,),
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[50],
       body: SafeArea(

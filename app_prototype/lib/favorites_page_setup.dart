@@ -10,7 +10,7 @@ class FavoritesPageSetup extends StatelessWidget {
     var newMachines = machines.where((machine) => machine.isFavorited == true)
         .toList();
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar( automaticallyImplyLeading: false,
         title: Text(
           'Favorites Page',
         ),
