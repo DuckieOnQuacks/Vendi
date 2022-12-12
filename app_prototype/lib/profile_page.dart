@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:vendi_app/edit_profile.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -34,7 +35,11 @@ class ProfilePage extends StatelessWidget {
                   SizedBox(
                     width: 200,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+                          return const EditProfile();
+                        }));
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.yellow, side: BorderSide.none, shape: const StadiumBorder()),
                       child: const Text('Edit Profile', style: TextStyle(color: Colors.black)),

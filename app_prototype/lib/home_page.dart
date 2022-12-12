@@ -48,7 +48,7 @@ class _HomepageState extends State<Homepage> {
         ),
         onMapCreated: (controller) {
           _mapController = controller;
-          for(var i = 0; i <= machines.length; i++)
+          for(var i = 0; i < machines.length; i++)
             {
               addMarker('Test Marker $i', machines[i]);
             }
@@ -68,7 +68,7 @@ class _HomepageState extends State<Homepage> {
         snippet: "Specific location of machine",
         onTap: () {
           showModalBottomSheet(context: context, builder: (context) {
-            return const MachineBottomSheet();
+            return MachineBottomSheet();
           });
         },
       ),

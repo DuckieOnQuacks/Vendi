@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
+String displayedImage = '';
+
 class MachineBottomSheet extends StatefulWidget {
   const MachineBottomSheet({super.key});
 
@@ -41,12 +43,15 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
           ElevatedButton(onPressed: () {
             Navigator.pop(context);
           }, child: const Text("Close Menu")),
-          IconButton(
+          displayedImage == ''? IconButton(
             onPressed: () {
               openCamera();
             }, icon: const Icon(Icons.camera_alt),
+          ): SizedBox(
+            width: 54,
+            height: 96,
+            child: Image.file(File(displayedImage)),
           ),
-          
         ],
       )
     );
@@ -71,7 +76,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
       MaterialPageRoute(
         builder: (context) => CameraScreen(controller),
       ),
-    );
+    ).then((value)=>setState((){}));
   }
 }
 
@@ -101,7 +106,23 @@ class _CameraScreenState extends State<CameraScreen> {
 
             await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
               return Scaffold(
-                appBar: AppBar(title: const Text("Displayed Image")),
+                appBar: AppBar(title: const Text("Is this image ok?"),
+                automaticallyImplyLeading: false,
+                leading: IconButton(icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.check),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      displayedImage = image.path;
+                      debugPrint(displayedImage);
+                    }
+                  ),
+                ]),
                 body: Image.file(File(image.path)),
               );
             }
