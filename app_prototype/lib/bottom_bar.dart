@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vendi_app/favorites_page.dart';
+import 'package:vendi_app/favorites_page_setup.dart';
 import 'package:vendi_app/home_page.dart';
 import 'package:vendi_app/points_page.dart';
 import 'package:vendi_app/profile_page.dart';
@@ -14,7 +15,7 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
 
   int currentPage = 0;
-  List<Widget> pages = const [Homepage(), FavoritesPage(), PointsPage(), ProfilePage()];
+  List<Widget> pages = const [Homepage(), FavoritesPageSetup(), PointsPage(), ProfilePage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
