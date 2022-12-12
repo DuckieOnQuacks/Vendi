@@ -27,57 +27,60 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
   }
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 20),
-        selectedMachine?.image == ''? Text('Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
-            Text('If youre happy with the image, click save!', style: GoogleFonts.bebasNeue(fontSize: 25)),
+    return Center(
+      child: Column(
+        children: [
+          SizedBox(height: 20),
+          selectedMachine?.image == ''? Text('Check the box to add this machine to your favorites. Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
+              Text('If you\'re happy with the image, click save!', style: GoogleFonts.bebasNeue(fontSize: 25)),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            StatefulBuilder(builder: (BuildContext context, setState) {
-              return Checkbox(value: selectedMachine?.getFavorited, onChanged: (bool? checked) {
-                setState(() {
-                  selectedMachine?.isFavorited = checked!;
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              StatefulBuilder(builder: (BuildContext context, setState) {
+                return Checkbox(value: selectedMachine?.getFavorited, onChanged: (bool? checked) {
+                  setState(() {
+                    selectedMachine?.isFavorited = checked!;
+                  });
                 });
-              });
-            }),
-            selectedMachine?.image == ''? IconButton(onPressed: () {
-              openCamera();
-            },
-                icon: const Icon(Icons.camera_alt)) :
-                  ElevatedButton( onPressed: () {
-                    setState(() {
-                    selectedMachine?.image = '';
-                    });
-                    Navigator.pop(context);
-                    },
-                    child: const Text("Save")),
-          ],
-        ),
+    }),
+              selectedMachine?.image == ''? IconButton(onPressed: ()
+              {
+                openCamera();
+              },
+                  icon: const Icon(Icons.camera_alt)) :
+                    ElevatedButton( onPressed: () {
+                      setState(() {
+                      selectedMachine?.image = '';
+                      });
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Save")),
+            ],
+),
 
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            selectedMachine?.image == ''? const SizedBox.shrink() : SizedBox(
-              width: 200, height: 250,
-              child: Image.file(File(selectedMachine!.image)),
-            ),
-          ],
-        ),
-        //const SizedBox(height: 270),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              selectedMachine?.image == ''? const SizedBox.shrink() : SizedBox(
+                width: 200, height: 250,
+                child: Image.file(File(selectedMachine!.image)),
+              ),
+            ],
+          ),
+          //const SizedBox(height: 270),
 
 
-        ElevatedButton( onPressed: () {
-          setState(() {
-            selectedMachine?.image = '';
-          });
-          Navigator.pop(context);
-        },
-            child: const Text("Close Menu"))
-      ]
+          ElevatedButton( onPressed: () {
+            setState(() {
+              selectedMachine?.image = '';
+            });
+            Navigator.pop(context);
+          },
+              child: const Text("Close Menu"))
+        ]
+      ),
     );
   }
     // Method that opens the camera

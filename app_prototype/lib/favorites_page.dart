@@ -17,23 +17,33 @@ class FavoritesPage extends StatefulWidget {
     return ListView.builder(
         padding: const EdgeInsets.only(top: 10),
         itemCount: newMachines.length,
-        itemBuilder: (context, index) => ListTile(
-          leading: Image.asset(newMachines[index].asset),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              setState(() {
-                newMachines[index].isFavorited = false;
-              });
-            },
+        itemBuilder: (context, index) => Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.grey[200],
           ),
-          title: Text(
-            newMachines[index].name,
-          ),
-          subtitle: Text(
-            newMachines[index].machineDesc,
-          ),
+          child: Card(
+            child: ListTile(
+              leading: Image.asset(newMachines[index].asset),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  setState(() {
+                    newMachines[index].isFavorited = false;
+                  });
+                },
+              ),
+              title: Text(
+                newMachines[index].name,
+              ),
+              subtitle: Text(
+                newMachines[index].machineDesc,
+              ),
+              onTap:() {print('onTap pressed');},
+              tileColor: Colors.grey[200],
       ),
+          ),
+        ),
     );
   }
 }
