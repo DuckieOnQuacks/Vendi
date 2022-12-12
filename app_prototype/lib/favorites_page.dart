@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/home_page.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -28,9 +29,13 @@ class FavoritesPage extends StatefulWidget {
           ),
           title: Text(
             newMachines[index].name,
+            style: GoogleFonts.bebasNeue(
+              fontSize: 19),
           ),
           subtitle: Text(
             newMachines[index].machineDesc,
+            style: GoogleFonts.bebasNeue(
+                fontSize: 19),
           ),
       ),
     );

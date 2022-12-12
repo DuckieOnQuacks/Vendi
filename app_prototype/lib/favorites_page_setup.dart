@@ -7,8 +7,7 @@ class FavoritesPageSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var newMachines = machines.where((machine) => machine.isFavorited == true)
-        .toList();
+    var newMachines = machines.where((machine) => machine.isFavorited == true).toList();
     return Scaffold(
       appBar: AppBar( automaticallyImplyLeading: false,
         title: Text(
