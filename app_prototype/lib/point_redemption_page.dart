@@ -6,6 +6,26 @@ import 'package:vendi_app/register_page.dart';
 class PointsRedemptionPage extends StatelessWidget {
   const PointsRedemptionPage({super.key});
 
+    //popup window
+  createAlertDialog(BuildContext context) {
+
+    TextEditingController customController = TextEditingController();
+
+    return showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: Text("Are you sure you want to redeem your points?"),
+        actions: <Widget>[
+          MaterialButton(
+            child: Image.asset(
+              'assets/images/GoogleWalletBadge.png',
+              scale: 5,
+            ),
+            onPressed: (){},
+          )
+        ],
+      );
+    });
+  }
 
     @override
     Widget build(BuildContext context) {
@@ -22,17 +42,12 @@ class PointsRedemptionPage extends StatelessWidget {
                         fontWeight: FontWeight.bold, fontSize: 50,)
                       ),
                       const SizedBox(height: 10),
-                      //sign in button
+                      //button will go to popup window
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(builder: (
-                                    BuildContext context) {
-                                  return const PointsRedemptionPage();
-                                  return const BottomBar();
-                                }));
+                            createAlertDialog(context);
                           },
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all<
@@ -68,17 +83,12 @@ class PointsRedemptionPage extends StatelessWidget {
                         fontWeight: FontWeight.bold, fontSize: 50,)
                       ),
                       const SizedBox(height: 10),
-                      //sign in button
+                      //button will go to popup window
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(builder: (
-                                    BuildContext context) {
-                                  return const PointsRedemptionPage();
-                                  return const BottomBar();
-                                }));
+                            createAlertDialog(context);
                           },
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all<
@@ -114,17 +124,12 @@ class PointsRedemptionPage extends StatelessWidget {
                         fontWeight: FontWeight.bold, fontSize: 50,)
                       ),
                       const SizedBox(height: 10),
-                      //sign in button
+                      //button will go to popup window
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(builder: (
-                                    BuildContext context) {
-                                  return const PointsRedemptionPage();
-                                  return const BottomBar();
-                                }));
+                            createAlertDialog(context);
                           },
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all<
