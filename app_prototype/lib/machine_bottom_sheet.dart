@@ -43,7 +43,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                     selectedMachine?.isFavorited = checked!;
                   });
                 });
-              }),
+    }),
               selectedMachine?.image == ''? IconButton(onPressed: ()
               {
                 openCamera();
@@ -57,7 +57,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                       },
                       child: const Text("Save")),
             ],
-          ),
+),
 
 
           Row(
