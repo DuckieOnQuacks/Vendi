@@ -15,13 +15,14 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
 
   int currentPage = 0;
+  // What pages to load depending on the bottom bar index
   List<Widget> pages = const [Homepage(), FavoritesPageSetup(), PointsPage(), ProfilePage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: pages[currentPage],
 
-      // Navigation bar at the bottom of the screen
+      // Navigation bar at the bottom of the screen allows you to go between different pages
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(icon: Icon(Icons.pin_drop), label: 'Locations',),

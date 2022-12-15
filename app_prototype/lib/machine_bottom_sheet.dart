@@ -30,7 +30,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
     return Center(
       child: Column(
         children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           selectedMachine?.image == ''? Text('Check the box to add this machine to your favorites. Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
               Text('If you\'re happy with the image, click save!', style: GoogleFonts.bebasNeue(fontSize: 25)),
 
@@ -38,12 +38,15 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               StatefulBuilder(builder: (BuildContext context, setState) {
+
+                // Checkbox for favoriting the machine
                 return Checkbox(value: selectedMachine?.getFavorited, onChanged: (bool? checked) {
                   setState(() {
                     selectedMachine?.isFavorited = checked!;
                   });
                 });
     }),
+              // Camera button for opening the camera
               selectedMachine?.image == ''? IconButton(onPressed: ()
               {
                 openCamera();
@@ -69,9 +72,8 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
               ),
             ],
           ),
-          //const SizedBox(height: 270),
 
-
+          // Interactable close menu button
           ElevatedButton( onPressed: () {
             setState(() {
               selectedMachine?.image = '';
@@ -107,9 +109,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
   }
 }
 
-// This is an example CameraScreen widget that you could use to display
-// the camera preview and take pictures. You would need to import the
-// necessary packages and create this widget in your app.
+
 class CameraScreen extends StatefulWidget {
   CameraScreen(this.controller);
 
@@ -132,6 +132,7 @@ class _CameraScreenState extends State<CameraScreen> {
             var image = await widget.controller.takePicture();
 
             await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+              // Checks whether or not the picture is fine for the user
               return Scaffold(
                 appBar: AppBar(title: const Text("Is this image ok?"),
                 automaticallyImplyLeading: false,

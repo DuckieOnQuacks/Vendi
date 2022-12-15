@@ -11,7 +11,7 @@ class PointsRedemptionPage extends StatelessWidget {
 
     return showDialog(context: context, builder: (context) {
       return AlertDialog(
-        title: Text("Are you sure you want to redeem your points?"),
+        title: const Text("Are you sure you want to redeem your points?"),
         actions: <Widget>[
           MaterialButton(
             child: Image.asset(

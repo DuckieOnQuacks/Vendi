@@ -176,6 +176,9 @@ class _EditProfileState extends State<EditProfile> {
 
                           child: ElevatedButton(onPressed: () {
                             createAlertDialog(context);
+                            setState(() {
+                              
+                            });
                           },
                               style: ButtonStyle(
                                   padding: MaterialStateProperty.all<

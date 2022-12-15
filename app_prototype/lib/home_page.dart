@@ -7,6 +7,7 @@ import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/machine_class.dart';
 
 
+// List of real machines and their locations
 const currentLocation = LatLng(39.54411893434308, -119.8160761741225);
 final machines = [
   MachineClass("Ansari Building", 'assets/images/BlueMachine.png' , 'Located on the second floor', 0, LatLng(39.54006690730848, -119.81491866643591)),
@@ -18,11 +19,6 @@ final machines = [
   MachineClass("Mathewson Knowledge Center", 'assets/images/PinkMachine.png' , 'Located on the first floor', 5, LatLng(39.543534319081886, -119.81577690579334)),
 ];
 
-//const machineType = [
-//  'assets/images/BlueMachine.png',
-//  'assets/images/PinkMachine.png',
-//  'assets/images/YellowMachine.png',
-//];
 
 class Homepage extends StatefulWidget
 {
@@ -31,6 +27,7 @@ class Homepage extends StatefulWidget
   State<Homepage> createState() => _HomepageState();
 }
 
+
 class _HomepageState extends State<Homepage> {
   late GoogleMapController _mapController;
   final Map<String, Marker> _markers = {};
@@ -38,6 +35,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context)
   {
+    // The stateless widget for the google maps home page
     return Scaffold(
       appBar: AppBar(title: const Text("Google Maps"), automaticallyImplyLeading: false,),
       body: GoogleMap(
@@ -58,6 +56,7 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
+  // Helper method for adding a marker to the map
   addMarker(String id, LatLng location, int i) async {
     var markerIcon = await getBytesFromAsset(machines[i].asset, 100);
     var marker = Marker(
@@ -67,6 +66,7 @@ class _HomepageState extends State<Homepage> {
         title: machines[i].name,
         snippet: machines[i].machineDesc,
         onTap: () {
+          // Opens the bottom sheet when the screen is tapped
           showModalBottomSheet(context: context, builder: (context) {
             return MachineBottomSheet(machines[i]);
           });
@@ -78,6 +78,7 @@ class _HomepageState extends State<Homepage> {
     setState(() {});
   }
 
+  // Sourced from https://github.com/flutter/flutter/issues/34657 to resize images in code
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);

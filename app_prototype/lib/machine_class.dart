@@ -1,5 +1,6 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+// Because of no backend this is a template file for storing machine data
 class MachineClass
 {
   late bool isFavorited = false;
