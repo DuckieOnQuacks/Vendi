@@ -6,6 +6,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/machine_class.dart';
 
+// Most of the code on this page was developed by the team using the flutter framework
+// One helper method getBytesFromAsset was sourced from https://github.com/flutter/flutter/issues/34657 to rescale images in code.
 
 // List of real machines and their locations
 const currentLocation = LatLng(39.54411893434308, -119.8160761741225);

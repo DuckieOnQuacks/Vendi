@@ -1,5 +1,7 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+// All code on this page was developed by the team using the flutter framework
+
 // Because of no backend this is a template file for storing machine data
 class MachineClass
 {

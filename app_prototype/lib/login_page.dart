@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/bottom_bar.dart';
 import 'package:vendi_app/register_page.dart';
 
+// All code on this page was developed by the team using the flutter framework
+
 class LoginPage extends StatefulWidget
 {
   const LoginPage({Key? key}) : super(key: key);

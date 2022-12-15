@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:io';
 
+// All code on this page was developed by the team using the flutter framework
+
 String imagePath = '';
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});

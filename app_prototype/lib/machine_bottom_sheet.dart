@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/machine_class.dart';
+
+// All code on this page was developed by the team using the flutter framework
+
 MachineClass? selectedMachine;
 
 class MachineBottomSheet extends StatefulWidget {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// All code on this page was developed by the team using the flutter framework
+
 class PointsRedemptionPage extends StatelessWidget {
   const PointsRedemptionPage({super.key});
 

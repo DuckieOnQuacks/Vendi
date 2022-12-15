@@ -5,6 +5,8 @@ import 'package:vendi_app/home_page.dart';
 import 'package:vendi_app/points_page.dart';
 import 'package:vendi_app/profile_page.dart';
 
+// All code on this page was developed by the team using the flutter framework
+
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vendi_app/home_page.dart';
 
+// All code on this page was developed by the team using the flutter framework
+
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
   @override

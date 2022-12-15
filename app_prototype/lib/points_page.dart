@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/bottom_bar.dart';
 import 'package:vendi_app/point_redemption_page.dart';
 
+// All code on this page was developed by the team using the flutter framework
+
 class PointsPage extends StatelessWidget {
   const PointsPage({super.key});
 
