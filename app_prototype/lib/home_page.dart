@@ -44,7 +44,7 @@ class _HomepageState extends State<Homepage> {
         mapToolbarEnabled: false,
         initialCameraPosition: const CameraPosition(
           target: currentLocation,
-          zoom: 15,
+          zoom: 16,
         ),
         onMapCreated: (controller) {
           _mapController = controller;

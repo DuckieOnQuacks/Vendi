@@ -62,8 +62,8 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         Navigator.pop(context);
                       },
                       child: const Text("Save")),
-            ],
-),
+                  ],
+        ),
 
 
           Row(

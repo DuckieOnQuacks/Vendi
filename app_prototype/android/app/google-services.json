@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "339067866362",
+    "project_id": "vendimaps-371008",
+    "storage_bucket": "vendimaps-371008.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339067866362:android:a60a39ead570fc7a7acd43",
+        "android_client_info": {
+          "package_name": "com.example.vendi_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "339067866362-neuj4btcj778jc0fp4i2mphefkdn33ue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQZhAL1pwc1YZOT4wEqCumVv70WR8JLhA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "339067866362-neuj4btcj778jc0fp4i2mphefkdn33ue.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

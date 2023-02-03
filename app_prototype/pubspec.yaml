@@ -41,6 +41,10 @@ dependencies:
   google_maps_flutter: '^2.2.1'
   location: '^4.4.0'
 
+  #FireBase Imports
+  firebase_core: ^2.4.1
+  firebase_auth: ^4.2.5
+
   # The package adds a package for creating a splash screen for the app. Once receieved run:
   # flutter pub run flutter_native_splash:create
   flutter_native_splash: ^2.2.16
