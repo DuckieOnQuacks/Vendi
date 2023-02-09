@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
-import 'package:vendi_app/machine_class.dart';
+import 'package:vendi_app/db/machine_class.dart';
 
 // Most of the code on this page was developed by the team using the flutter framework
 // One helper method getBytesFromAsset was sourced from https://github.com/flutter/flutter/issues/34657 to rescale images in code.
 
 // List of real machines and their locations
 const currentLocation = LatLng(39.54411893434308, -119.8160761741225);
+
 final machines = [
   MachineClass("Ansari Building", 'assets/images/BlueMachine.png' , 'Located on the second floor', 0, LatLng(39.54006690730848, -119.81491866643591)),
   MachineClass("Schulich Lecture Hall", 'assets/images/PinkMachine.png' , 'Located on the first floor', 1, LatLng(39.54105463820153, -119.81470308380608)),
@@ -35,11 +36,11 @@ class _HomepageState extends State<Homepage> {
   final Map<String, Marker> _markers = {};
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     // The stateless widget for the google maps home page
     return Scaffold(
-      appBar: AppBar(title: const Text("Google Maps"), automaticallyImplyLeading: false,),
+      appBar: AppBar(
+        title: const Text("Google Maps"), automaticallyImplyLeading: false,),
       body: GoogleMap(
         mapToolbarEnabled: false,
         initialCameraPosition: const CameraPosition(
@@ -48,10 +49,10 @@ class _HomepageState extends State<Homepage> {
         ),
         onMapCreated: (controller) {
           _mapController = controller;
-          for(var i = 0; i < machines.length; i++)
-            {
-              addMarker('Test Marker $i', machines[i].machineLoc, i);
-            }
+
+          for (var i = 0; i < machines.length; i++) {
+            addMarker('Test Marker $i', machines[i].machineLoc, i);
+          }
         },
         markers: _markers.values.toSet(),
       ),
@@ -81,12 +82,13 @@ class _HomepageState extends State<Homepage> {
   }
 
   // Sourced from https://github.com/flutter/flutter/issues/34657 to resize images in code
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+  Future<Uint8List> getBytesFromAsset(String path, int width) async
+  {
     ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.Codec codec = await ui.instantiateImageCodec(
+        data.buffer.asUint8List(), targetWidth: width);
     ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer
+        .asUint8List();
   }
 }
-
-

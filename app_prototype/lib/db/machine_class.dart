@@ -37,7 +37,7 @@ class MachineClass
   }
 
   // Set methods
-  set setFavorited (bool favorited) 
+  set setFavorited (bool favorited)
   {
     isFavorited = favorited;
   }
