@@ -1,4 +1,4 @@
-import 'dart:io';
+/*import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,10 +6,10 @@ import 'package:vendi_app/machine_class.dart';
 
 // All code on this page was developed by the team using the flutter framework
 
-MachineClass? selectedMachine;
+Machine? selectedMachine;
 
 class MachineBottomSheet extends StatefulWidget {
-  MachineBottomSheet(MachineClass machine)
+  MachineBottomSheet(Machine machine)
     {super.key; selectedMachine = machine; }
 
   @override
@@ -18,8 +18,8 @@ class MachineBottomSheet extends StatefulWidget {
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
   late List<CameraDescription> cameras;
-  
-  
+
+
   @override
   void initState() {
     super.initState();
@@ -34,7 +34,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
       child: Column(
         children: [
           const SizedBox(height: 20),
-          selectedMachine?.image == ''? Text('Check the box to add this machine to your favorites. Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
+          selectedMachine?.imagePath == ''? Text('Check the box to add this machine to your favorites. Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
               Text('If you\'re happy with the image, click save!', style: GoogleFonts.bebasNeue(fontSize: 25)),
 
           Row(
@@ -166,4 +166,4 @@ class _CameraScreenState extends State<CameraScreen> {
       ),
     );
   }
-}
+}*/
