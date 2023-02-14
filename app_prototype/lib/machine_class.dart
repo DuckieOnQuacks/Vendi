@@ -12,13 +12,13 @@ import 'package:vendi_app/home_page.dart';
 
 // Because of no backend this is a template file for storing machine data
 class Machine {
-  late final int id;
-  late final String desc;
-  late final double lat;
-  late final double lon;
-  late final String imagePath;
+  final int id;
+  final String desc;
+  final double lat;
+  final double lon;
+  final String imagePath;
   late final int isFavorited;
-  late final String icon;
+  final String icon;
 
   // Constructor
   Machine(

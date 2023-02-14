@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:vendi_app/edit_profile.dart';
-import 'package:vendi_app/register_page.dart';
+
 
 // All code on this page was developed by the team using the flutter framework
 

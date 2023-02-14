@@ -1,67 +1,85 @@
+import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import '../machine_class.dart';
 
 class DatabaseHelper {
-  static const int _version = 2;
-  static const String _dbName = 'Machine.db';
+  static const int version = 1;
+  static const String dbName = 'Machine.db';
+
+  static const table = 'Machine';
+  static const columnId = 'id';
+  static const columnDesc = 'description';
+  static const columnLat = 'latitude';
+  static const columnLon = 'longitude';
+  static const columnImagePath = 'imagePath';
+  static const columnFavorite = 'favorite';
+  static const columnIcon = 'icon';
+
+  late Database db;
+
+  Future<void> init() async {
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+    final path = join(documentsDirectory.path, dbName);
+    db = await openDatabase(
+      path,
+      version: version,
+      onCreate: onCreate,
+    );
+    debugPrint('here');
+  }
+
 
   //Create database and return it
-  Future<Database> onCreate() async {
-    return openDatabase(join(await getDatabasesPath(), _dbName),
-        onCreate: (db, version) async =>
-        await db.execute("CREATE TABLE Machine("
-            "id INTEGER NOT NULL, "
-            "description TEXT, "
-            "latitude DOUBLE PRECISION NOT NULL, "
-            "longitude DOUBLE PRECISION NOT NULL, "
-            "imagePath TEXT, "
-            "favorite INTEGER NOT NULL DEFAULT '0',"
-            "icon TEXT)"),
-        version: _version);
+  Future onCreate(Database db, int version) async {
+        await db.execute('''
+        CREATE TABLE $table(
+            $columnId INTEGER NOT NULL, 
+            $columnDesc TEXT NOT NULL, 
+            $columnLat INTEGER NOT NULL, 
+            $columnLon INTEGER NOT NULL, 
+            $columnImagePath TEXT NOT NULL, 
+            $columnFavorite INTEGER NOT NULL DEFAULT '0',
+            $columnIcon TEXT NOT NULL)
+            ''');
   }
 
   Future<int> addMachine(Machine machine) async {
-    final db = await onCreate();
-    return await db.insert("Machine", machine.toJson(),
+    return await db.insert(table, machine.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<int> updateMachine(Machine machine) async {
-    final db = await onCreate();
-    return await db.update("Machine", machine.toJson(),
+    return await db.update(table, machine.toJson(),
         where: 'id =?',
         whereArgs: [machine.id],
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<int> deleteMachine(Machine machine) async {
-    final db = await onCreate();
     return await db.delete(
-      "Machine",
+      table,
       where: 'id =?',
       whereArgs: [machine.id],
     );
   }
 
   Future<List<Machine>> getAllFavorited() async {
-    final db = await onCreate();
-    List<Map<String, dynamic>> favorite = await db.query("Machine", where: "favorite = 1");
+    List<Map<String, dynamic>> favorite = await db.query(table, where: "favorite = 1");
     return List.generate(favorite.length, (index){
       return Machine.fromJson(favorite[index]);
     });
   }
 
   Future<List<Machine>> getAllMachines() async {
-    final db = await onCreate();
-    final List<Map<String, dynamic>> maps = await db.query("Machine");
+    final List<Map<String, dynamic>> maps = await db.query(table);
     return List.generate(maps.length, (index) => Machine.fromJson(maps[index]));
   }
 
   Future<int> queryRowCount() async {
-    final db = await onCreate();
-    final results = await db.rawQuery('SELECT COUNT(*) FROM $Machine');
+    final results = await db.rawQuery('SELECT COUNT(*) FROM $table');
     return Sqflite.firstIntValue(results) ?? 0;
   }
 }

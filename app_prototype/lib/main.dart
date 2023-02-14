@@ -7,9 +7,8 @@ final dbHelper = DatabaseHelper();
 // All code on this page was developed by the team using the flutter framework
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dbHelper.init();
   await Firebase.initializeApp();
-  await dbHelper.onCreate();
-
   runApp(const MyApp());
 }
 

@@ -5,18 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/machine_class.dart';
-import 'package:sqflite/sqflite.dart';
-
-import 'db/database_helper.dart';
 import 'main.dart';
 
-// Most of the code on this page was developed by the team using the flutter framework
-// One helper method getBytesFromAsset was sourced from https://github.com/flutter/flutter/issues/34657 to rescale images in code.
 
 // List of real machines and their locations
 const currentLocation = LatLng(39.54411893434308, -119.8160761741225);
 
-Machine test = Machine(id: 1, desc: 'coomer', lat: 39.54006690730848, lon: -119.81491866643591, imagePath: "Vendi/app_prototype/assets/images/BlueMachine.png", isFavorited: 0, icon: "Vendi/app_prototype/assets/images/BlueMachine.png");
+Machine test = Machine(id: 1, desc: 'coomer', lat: 39.54006690730848, lon: -119.81491866643591, imagePath: "assets/images/BlueMachine.png", isFavorited: 0, icon: "assets/images/BlueMachine.png");
+
+Machine test2 = Machine(id: 2, desc: 'coomer2', lat: 39.543534319081886, lon: -119.81577690579334, imagePath: "assets/images/BlueMachine.png", isFavorited: 0, icon: "assets/images/BlueMachine.png");
+
 //final machines = [
  // MachineClass("Ansari Building", 'assets/images/BlueMachine.png' , 'Located on the second floor', 0, LatLng(39.54006690730848, -119.81491866643591)),
  // MachineClass("Schulich Lecture Hall", 'assets/images/PinkMachine.png' , 'Located on the first floor', 1, LatLng(39.54105463820153, -119.81470308380608)),
@@ -49,11 +47,17 @@ class _HomepageState extends State<Homepage> {
         title: const Text("Google Maps"), automaticallyImplyLeading: false,
         actions: [
           IconButton(
-              icon: Icon(Icons.add),
+              icon: const Icon(Icons.add),
               onPressed:(){
-                dbHelper.addMachine(test);
+                dbHelper.addMachine(test2);
               },
             ),
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed:(){
+              dbHelper.deleteMachine(test2);
+            },
+          ),
             ],
             ),
       body: GoogleMap(
@@ -78,7 +82,7 @@ class _HomepageState extends State<Homepage> {
 
   // Helper method for adding a marker to the map
   addMarker(Machine machines) async {
-    var markerIcon = await getBytesFromAsset(machines.icon, 100);
+    var markerIcon = await getBytesFromAsset("assets/images/BlueMachine.png", 100);
     var marker = Marker(
       markerId: MarkerId(machines.id.toString()),
       position: LatLng(machines.lat, machines.lon),
