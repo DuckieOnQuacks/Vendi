@@ -11,6 +11,7 @@ class DatabaseHelper {
 
   static const table = 'Machine';
   static const columnId = 'id';
+  static const columnName = 'name';
   static const columnDesc = 'description';
   static const columnLat = 'latitude';
   static const columnLon = 'longitude';
@@ -37,6 +38,7 @@ class DatabaseHelper {
         await db.execute('''
         CREATE TABLE $table(
             $columnId INTEGER NOT NULL, 
+            $columnName TEXT NO NULL,
             $columnDesc TEXT NOT NULL, 
             $columnLat INTEGER NOT NULL, 
             $columnLon INTEGER NOT NULL, 

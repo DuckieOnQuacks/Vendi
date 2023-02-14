@@ -13,6 +13,7 @@ import 'package:vendi_app/home_page.dart';
 // Because of no backend this is a template file for storing machine data
 class Machine {
   final int id;
+  final String name;
   final String desc;
   final double lat;
   final double lon;
@@ -23,6 +24,7 @@ class Machine {
   // Constructor
   Machine(
       {required this.id,
+      required this.name,
       required this.desc,
       required this.lat,
       required this.lon,
@@ -32,6 +34,7 @@ class Machine {
 
   factory Machine.fromJson(Map<String, dynamic> json) => Machine(
       id: json['id'],
+      name: json['name'],
       desc: json['description'],
       lat: json['latitude'],
       lon: json['longitude'],
@@ -42,6 +45,7 @@ class Machine {
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'name': name,
         'description': desc,
         'latitude': lat,
         'longitude': lon,
