@@ -11,9 +11,9 @@ import 'main.dart';
 // List of real machines and their locations
 const currentLocation = LatLng(39.54411893434308, -119.8160761741225);
 
-Machine test = Machine(id: 1, name: "Ansari Building", desc: 'Located on the second floor', lat: 39.54006690730848, lon: -119.81491866643591, imagePath: "assets/images/BlueMachine.png", isFavorited: 1, icon: "assets/images/PinkMachine.png");
+Machine test = Machine(id: 1, name: "Ansari Building", desc: 'Located on the second floor', lat: 39.54006690730848, lon: -119.81491866643591, imagePath: "", isFavorited: 0, icon: "assets/images/PinkMachine.png");
 
-Machine test2 = Machine(id: 2, name: "Schulich Lecture Hall", desc: 'Located on the first floor', lat: 39.543534319081886, lon: -119.81577690579334, imagePath: "assets/images/YellowMachine.png", isFavorited: 0, icon: "assets/images/YellowMachine.png");
+Machine test2 = Machine(id: 2, name: "Schulich Lecture Hall", desc: 'Located on the first floor', lat: 39.543534319081886, lon: -119.81577690579334, imagePath: "", isFavorited: 0, icon: "assets/images/BlueMachine.png");
 
 //final machines = [
  // MachineClass("Ansari Building", 'assets/images/BlueMachine.png' , 'Located on the second floor', 0, LatLng(39.54006690730848, -119.81491866643591)),
@@ -49,19 +49,25 @@ class _HomepageState extends State<Homepage> {
           IconButton(
               icon: const Icon(Icons.add),
               onPressed:(){
-                dbHelper.addMachine(test);
+                setState(() {
+                  dbHelper.addMachine(test);
+                });
               },
             ),
           IconButton(
             icon: const Icon(Icons.save),
             onPressed:(){
-              dbHelper.deleteMachine(test);
+              setState(() {
+                dbHelper.deleteMachine(test2);
+              });
             },
           ),
           IconButton(
             icon: const Icon(Icons.abc),
             onPressed:(){
-              dbHelper.addMachine(test2);
+              setState(() {
+                dbHelper.addMachine(test2);
+              });
             },
           ),
             ],
@@ -98,7 +104,7 @@ class _HomepageState extends State<Homepage> {
         onTap: () {
           // Opens the bottom sheet when the screen is tapped
           showModalBottomSheet(context: context, builder: (context) {
-            return Scaffold();//MachineBottomSheet(machines);
+            return MachineBottomSheet(machines);
           });
         },
       ),

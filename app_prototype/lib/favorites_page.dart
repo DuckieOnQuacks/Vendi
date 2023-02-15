@@ -35,12 +35,44 @@ class _FavoritePageState extends State<FavoritesPage> {
                     icon: const Icon(Icons.delete),
                     onPressed: () {
                       setState(() {
-                        favMachines[index].isFavorited = 0;
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Confirm Delete'),
+                              content: Text('Are you sure you want to delete this item?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(false);
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      favMachines[index].isFavorited = 0;
+                                      dbHelper.updateMachine(favMachines[index]);
+                                      dbHelper.getAllFavorited();
+                                      Navigator.of(context).pop(true);
+                                    });
+                                  },
+                                  child: Text('Delete'),
+                                ),
+                              ],
+                            );
+                          },
+                        ).then((value) {
+                          if (value != null && value == true) {
+                            // Perform deletion logic here
+                          }
+                        });
+
                       });
                     },
                   ),
                   title: Text(
-                    favMachines[index].id.toString(),
+                    favMachines[index].name,
                   ),
                   subtitle: Text(
                     favMachines[index].desc,
