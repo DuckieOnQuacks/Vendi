@@ -4,13 +4,15 @@ import 'package:camera/camera.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/machine_class.dart';
 
+import 'main.dart';
+
 // All code on this page was developed by the team using the flutter framework
 
-MachineClass? selectedMachine;
+Machine? selectedMachine;
 
 class MachineBottomSheet extends StatefulWidget {
-  MachineBottomSheet(MachineClass machine)
-    {super.key; selectedMachine = machine; }
+  MachineBottomSheet(Machine machine)
+    {super.key; selectedMachine = machine;}
 
   @override
   State<MachineBottomSheet> createState() => _MachineBottomSheetState();
@@ -18,8 +20,7 @@ class MachineBottomSheet extends StatefulWidget {
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
   late List<CameraDescription> cameras;
-  
-  
+
   @override
   void initState() {
     super.initState();
@@ -34,7 +35,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
       child: Column(
         children: [
           const SizedBox(height: 20),
-          selectedMachine?.image == ''? Text('Check the box to add this machine to your favorites. Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
+          selectedMachine?.imagePath == ''? Text('Check the box to add this machine to your favorites. Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
               Text('If you\'re happy with the image, click save!', style: GoogleFonts.bebasNeue(fontSize: 25)),
 
           Row(
@@ -43,21 +44,25 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
               StatefulBuilder(builder: (BuildContext context, setState) {
 
                 // Checkbox for favoriting the machine
-                return Checkbox(value: selectedMachine?.getFavorited, onChanged: (bool? checked) {
-                  setState(() {
-                    selectedMachine?.isFavorited = checked!;
-                  });
-                });
-    }),
+                return Checkbox(
+                  value: selectedMachine?.isFavorited == 1,
+                  onChanged: (bool? checked) {
+                    setState(() {
+                      selectedMachine?.isFavorited = checked ?? false ? 1 : 0;
+                      dbHelper.addMachine(selectedMachine!);
+                    });
+                  },
+                );
+              }),
               // Camera button for opening the camera
-              selectedMachine?.image == ''? IconButton(onPressed: ()
+              selectedMachine?.imagePath == ''? IconButton(onPressed: ()
               {
                 openCamera();
               },
                   icon: const Icon(Icons.camera_alt)) :
                     ElevatedButton( onPressed: () {
                       setState(() {
-                      selectedMachine?.image = '';
+                      selectedMachine?.imagePath = '';
                       });
                         Navigator.pop(context);
                       },
@@ -69,9 +74,9 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              selectedMachine?.image == ''? const SizedBox.shrink() : SizedBox(
+              selectedMachine?.imagePath == ''? const SizedBox.shrink() : SizedBox(
                 width: 200, height: 250,
-                child: Image.file(File(selectedMachine!.image)),
+                child: Image.file(File(selectedMachine!.imagePath)),
               ),
             ],
           ),
@@ -79,7 +84,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
           // Interactable close menu button
           ElevatedButton( onPressed: () {
             setState(() {
-              selectedMachine?.image = '';
+              //selectedMachine?.imagePath = '';
             });
             Navigator.pop(context);
           },
@@ -149,7 +154,8 @@ class _CameraScreenState extends State<CameraScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
-                      selectedMachine?.image = image.path;
+                      selectedMachine?.imagePath = image.path;
+                      dbHelper.updateMachine(selectedMachine!);
                     }
                   ),
                 ]),

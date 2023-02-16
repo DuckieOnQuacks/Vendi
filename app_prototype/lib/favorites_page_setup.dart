@@ -8,7 +8,7 @@ class FavoritesPageSetup extends StatelessWidget {
   const FavoritesPageSetup({super.key});
   @override
   Widget build(BuildContext context) {
-    var newMachines = machines.where((machine) => machine.isFavorited == true).toList();
+    //var newMachines = machines.where((machine) => machine.isFavorited == true).toList();
     // Sets up a favorites page using a scaffold object
     return Scaffold(
       appBar: AppBar( automaticallyImplyLeading: false,
