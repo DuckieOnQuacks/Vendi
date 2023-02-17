@@ -17,7 +17,7 @@ class Machine {
   final String desc;
   final double lat;
   final double lon;
-  late final String imagePath;
+  late String imagePath;
   late int isFavorited;
   final String icon;
 

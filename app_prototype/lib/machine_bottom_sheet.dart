@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/machine_class.dart';
-
 import 'main.dart';
 
 // All code on this page was developed by the team using the flutter framework
@@ -61,9 +60,6 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
               },
                   icon: const Icon(Icons.camera_alt)) :
                     ElevatedButton( onPressed: () {
-                      setState(() {
-                      selectedMachine?.imagePath = '';
-                      });
                         Navigator.pop(context);
                       },
                       child: const Text("Save")),
@@ -152,10 +148,12 @@ class _CameraScreenState extends State<CameraScreen> {
                   IconButton(
                     icon: const Icon(Icons.check),
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      selectedMachine?.imagePath = image.path;
-                      dbHelper.updateMachine(selectedMachine!);
+                      setState(() {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        selectedMachine?.imagePath = image.path;
+                        dbHelper.updateMachine(selectedMachine!);
+                      });
                     }
                   ),
                 ]),

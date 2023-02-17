@@ -271,6 +271,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 appBar: AppBar(
                     title: const Text("Is this image ok?"),
                     automaticallyImplyLeading: false,
+                    
                     leading: IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () {
