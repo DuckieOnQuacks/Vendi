@@ -45,7 +45,7 @@ class _HomepageState extends State<Homepage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Google Maps"), automaticallyImplyLeading: false,
+        title: const Text("Vendi"), automaticallyImplyLeading: false,
         actions: [
           IconButton(
               icon: const Icon(Icons.add),
