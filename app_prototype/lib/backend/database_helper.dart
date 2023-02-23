@@ -18,6 +18,10 @@ class DatabaseHelper {
   static const columnImagePath = 'imagePath';
   static const columnFavorite = 'favorite';
   static const columnIcon = 'icon';
+  static const columnCash = 'cash';
+  static const columnCard = 'card';
+  static const columnStock = 'stock';
+  static const columnOperational = 'operational';
 
   late Database db;
 
@@ -44,7 +48,11 @@ class DatabaseHelper {
             $columnLon INTEGER NOT NULL,
             $columnImagePath TEXT NOT NULL,
             $columnFavorite INTEGER NOT NULL DEFAULT '0',
-            $columnIcon TEXT NOT NULL)
+            $columnIcon TEXT NOT NULL,
+            $columnCard INTEGER NOT NULL,
+            $columnCash INTEGER NOT NULL,
+            $columnOperational INTEGER NOT NULL,
+            $columnStock INTEGER NOT NULL)
             ''');
   }
 

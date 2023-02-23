@@ -20,6 +20,10 @@ class Machine {
   late String imagePath;
   late int isFavorited;
   final String icon;
+  final int card;
+  final int cash;
+  final int operational;
+  final int stock;
 
   // Constructor
   Machine(
@@ -30,7 +34,11 @@ class Machine {
       required this.lon,
       required this.imagePath,
       required this.isFavorited,
-      required this.icon});
+      required this.icon,
+      required this.card,
+      required this.cash,
+      required this.operational,
+      required this.stock});
 
   factory Machine.fromJson(Map<String, dynamic> json) => Machine(
       id: json['id'],
@@ -40,7 +48,11 @@ class Machine {
       lon: json['longitude'],
       imagePath: json['imagePath'],
       isFavorited: json['favorite'],
-      icon: json['icon']
+      icon: json['icon'],
+      card: json['card'],
+      cash: json['cash'],
+      operational: json['operational'],
+      stock: json['stock']
   );
 
   Map<String, dynamic> toJson() => {
@@ -51,6 +63,10 @@ class Machine {
         'longitude': lon,
         'imagePath': imagePath,
         'favorite': isFavorited,
-        'icon': icon
+        'icon': icon,
+        'card': card,
+        'cash': cash,
+        'operational': operational,
+        'stock': stock
   };
 }

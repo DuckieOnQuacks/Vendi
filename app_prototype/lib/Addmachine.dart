@@ -25,7 +25,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
   bool _isDrinkSelected = false;
   bool _isSupplySelected = false;
   Position? _currentPosition;
-
+  late int _selectedValueOperational = 2;
+  late int _selectedValueCash = 2;
+  late int _selectedValueCard = 2;
+  late int _selectedValueStock = 2;
 
   @override
   void initState() {
@@ -71,11 +74,13 @@ class _AddMachinePageState extends State<AddMachinePage> {
   @override
   Widget build(BuildContext context) {
     _getCurrentLocation();
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
-            Image.asset('assets/images/logo.png',
+            Image.asset(
+              'assets/images/logo.png',
               fit: BoxFit.contain,
               height: 32,
             )
@@ -147,22 +152,110 @@ class _AddMachinePageState extends State<AddMachinePage> {
               const SizedBox(height: 16.0),
               const Text('Is the machine currently operating?',
                   style: TextStyle(fontSize: 16)),
-              const DropdownButtonMenu(),
+              DropdownButton(
+                value: _selectedValueOperational,
+                items: const [
+                  DropdownMenuItem(
+                    child: Text('Yes'),
+                    value: 1,
+                  ),
+                  DropdownMenuItem(
+                    child: Text('No'),
+                    value: 0,
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Not Sure'),
+                    value: 2,
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedValueOperational = value!;
+                  });
+                },
+              ),
               const SizedBox(height: 20.0),
               const Text('Is the machine stocked more than halfway?',
                   style: TextStyle(fontSize: 16)),
-              const DropdownButtonMenu(),
+              DropdownButton(
+                value: _selectedValueStock,
+                items: const [
+                  DropdownMenuItem(
+                    child: Text('Yes'),
+                    value: 1,
+                  ),
+                  DropdownMenuItem(
+                    child: Text('No'),
+                    value: 0,
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Not Sure'),
+                    value: 2,
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedValueStock = value!;
+                  });
+                },
+              ),
+              //const DropdownButtonMenu(),
               const SizedBox(height: 20.0),
               const Text('Does the machine take cash?',
                   style: TextStyle(fontSize: 16)),
-              const DropdownButtonMenu(),
+              DropdownButton(
+                value: _selectedValueCash,
+                items: const [
+                  DropdownMenuItem(
+                    child: Text('Yes'),
+                    value: 1,
+                  ),
+                  DropdownMenuItem(
+                    child: Text('No'),
+                    value: 0,
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Not Sure'),
+                    value: 2,
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedValueCash = value!;
+                  });
+                },
+              ),
+              //const DropdownButtonMenu(),
               const SizedBox(height: 20.0),
               const Text('Does the machine take card?',
                   style: TextStyle(fontSize: 16)),
-              const DropdownButtonMenu(),
+              DropdownButton(
+                value: _selectedValueCard,
+                items: const [
+                  DropdownMenuItem(
+                    child: Text('Yes'),
+                    value: 1,
+                  ),
+                  DropdownMenuItem(
+                    child: Text('No'),
+                    value: 0,
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Not Sure'),
+                    value: 2,
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedValueCard = value!;
+                  });
+                },
+              ),
+              // const DropdownButtonMenu(),
               const SizedBox(height: 20.0),
               const Text('*Required', style: TextStyle(color: Colors.red)),
               const SizedBox(height: 20.0),
+
               Center(
                 //submit button
                 child: TextButton(
@@ -173,7 +266,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text('Confirm Submission'),
-                              content: Text(
+                              content: const Text(
                                   'Are you sure you want to submit a form for a new vending machine?'),
                               actions: <Widget>[
                                 TextButton(
@@ -182,6 +275,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                   },
                                   child: Text('Cancel'),
                                 ),
+                                //Creating a machine class object out of the choices made by the user
                                 TextButton(
                                   onPressed: () {
                                     setState(() {
@@ -191,13 +285,17 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             desc: _floorController.text,
                                             lat: _currentPosition!.latitude,
                                             lon: _currentPosition!.longitude,
-                                            imagePath:
-                                              machineImage,
+                                            imagePath: machineImage,
                                             isFavorited: 0,
                                             icon:
-                                                "assets/images/BlueMachine.png");
+                                                "assets/images/BlueMachine.png",
+                                            card: 1,
+                                            cash: 1,
+                                            operational:
+                                                _selectedValueOperational,
+                                            stock: 1);
                                         dbHelper.addMachine(test1);
-                                      _isDrinkSelected = false;
+                                        _isDrinkSelected = false;
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -210,11 +308,15 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             desc: _floorController.text,
                                             lat: _currentPosition!.latitude,
                                             lon: _currentPosition!.longitude,
-                                            imagePath:
-                                                machineImage,
+                                            imagePath: machineImage,
                                             isFavorited: 0,
                                             icon:
-                                                "assets/images/PinkMachine.png");
+                                                "assets/images/PinkMachine.png",
+                                            card: 1,
+                                            cash: 1,
+                                            operational:
+                                                _selectedValueOperational,
+                                            stock: 1);
                                         dbHelper.addMachine(test2);
                                         _isSnackSelected = false;
                                         Navigator.push(
@@ -229,11 +331,15 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             desc: _floorController.text,
                                             lat: _currentPosition!.latitude,
                                             lon: _currentPosition!.longitude,
-                                            imagePath:
-                                                machineImage,
+                                            imagePath: machineImage,
                                             isFavorited: 0,
                                             icon:
-                                                "assets/images/YellowMachine.png");
+                                                "assets/images/YellowMachine.png",
+                                            card: 1,
+                                            cash: 1,
+                                            operational:
+                                                _selectedValueOperational,
+                                            stock: 1);
                                         dbHelper.addMachine(test3);
                                         _isSupplySelected = false;
                                         Navigator.push(
@@ -355,44 +461,6 @@ class _CameraScreenState extends State<CameraScreen> {
         },
         child: const Icon(Icons.camera),
       ),
-    );
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////////////
-class DropdownButtonMenu extends StatefulWidget {
-  const DropdownButtonMenu({super.key});
-
-  @override
-  State<DropdownButtonMenu> createState() => _DropdownButtonMenuState();
-}
-
-class _DropdownButtonMenuState extends State<DropdownButtonMenu> {
-  String dropdownValue = list.first;
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
-      elevation: 16,
-      style: const TextStyle(color: Colors.black87),
-      underline: Container(
-        height: 2,
-        color: Colors.pinkAccent,
-      ),
-      onChanged: (String? value) {
-        // This is called when the user selects an item.
-        setState(() {
-          dropdownValue = value!;
-        });
-      },
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
     );
   }
 }
