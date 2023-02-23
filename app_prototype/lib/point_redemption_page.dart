@@ -8,7 +8,6 @@ class PointsRedemptionPage extends StatelessWidget {
 
   //popup window
   createAlertDialog(BuildContext context) {
-    TextEditingController customController = TextEditingController();
 
     return showDialog(
         context: context,

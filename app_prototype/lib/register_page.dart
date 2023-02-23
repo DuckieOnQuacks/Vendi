@@ -9,7 +9,7 @@ final TextEditingController passwordController = TextEditingController();
 final TextEditingController confirmPassword = TextEditingController();
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -91,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(left: 20.0),
+                    padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
                       controller: usernameController,
                       decoration: const InputDecoration(
@@ -192,7 +192,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     onPressed: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (BuildContext context) {
-                        return LoginPage();
+                        return const LoginPage();
                       }));
                     },
                     child: const Text(

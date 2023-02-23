@@ -8,7 +8,7 @@ final TextEditingController usernameController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(left: 20.0),
+                    padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
                       controller: usernameController,
                       decoration: const InputDecoration(

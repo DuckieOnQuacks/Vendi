@@ -35,7 +35,6 @@ class _HomepageState extends State<Homepage> {
   final Map<String, Marker> _markers = {};
 
   _getCurrentLocation() async {
-    final Geolocator geolocator = Geolocator();
     // Check if location permission is granted
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -43,7 +42,9 @@ class _HomepageState extends State<Homepage> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         // User has denied location permission, handle the error
-        print('Location permission denied');
+        if (kDebugMode) {
+          print('Location permission denied');
+        }
         return;
       }
     }
@@ -55,7 +56,9 @@ class _HomepageState extends State<Homepage> {
         _currentPosition = position;
       });
     }).catchError((e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     });
   }
 
@@ -80,7 +83,7 @@ class _HomepageState extends State<Homepage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddMachinePage()),
+                  MaterialPageRoute(builder: (context) => const AddMachinePage()),
                   //dbHelper.addMachine(test);
                 );
               },

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
@@ -47,7 +48,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
   }
 
   _getCurrentLocation() async {
-    final Geolocator geolocator = Geolocator();
     // Check if location permission is granted
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -55,7 +55,9 @@ class _AddMachinePageState extends State<AddMachinePage> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         // User has denied location permission, handle the error
-        print('Location permission denied');
+        if (kDebugMode) {
+          print('Location permission denied');
+        }
         return;
       }
     }
@@ -67,7 +69,9 @@ class _AddMachinePageState extends State<AddMachinePage> {
         _currentPosition = position;
       });
     }).catchError((e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     });
   }
 
@@ -120,7 +124,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
               const Text('Select Machine Type(s)*',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               CheckboxListTile(
-                title: Text('Snack'),
+                title: const Text('Snack'),
                 value: _isSnackSelected,
                 onChanged: (value) {
                   setState(() {
@@ -129,7 +133,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 },
               ),
               CheckboxListTile(
-                title: Text('Drink'),
+                title: const Text('Drink'),
                 value: _isDrinkSelected,
                 onChanged: (value) {
                   setState(() {
@@ -138,7 +142,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 },
               ),
               CheckboxListTile(
-                title: Text('Supply'),
+                title: const Text('Supply'),
                 value: _isSupplySelected,
                 onChanged: (value) {
                   setState(() {
@@ -156,16 +160,16 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 value: _selectedValueOperational,
                 items: const [
                   DropdownMenuItem(
-                    child: Text('Yes'),
                     value: 1,
+                    child: Text('Yes'),
                   ),
                   DropdownMenuItem(
-                    child: Text('No'),
                     value: 0,
+                    child: Text('No'),
                   ),
                   DropdownMenuItem(
-                    child: Text('Not Sure'),
                     value: 2,
+                    child: Text('Not Sure'),
                   ),
                 ],
                 onChanged: (value) {
@@ -181,16 +185,16 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 value: _selectedValueStock,
                 items: const [
                   DropdownMenuItem(
-                    child: Text('Yes'),
                     value: 1,
+                    child: Text('Yes'),
                   ),
                   DropdownMenuItem(
-                    child: Text('No'),
                     value: 0,
+                    child: Text('No'),
                   ),
                   DropdownMenuItem(
-                    child: Text('Not Sure'),
                     value: 2,
+                    child: Text('Not Sure'),
                   ),
                 ],
                 onChanged: (value) {
@@ -207,16 +211,16 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 value: _selectedValueCash,
                 items: const [
                   DropdownMenuItem(
-                    child: Text('Yes'),
                     value: 1,
+                    child: Text('Yes'),
                   ),
                   DropdownMenuItem(
-                    child: Text('No'),
                     value: 0,
+                    child: Text('No'),
                   ),
                   DropdownMenuItem(
-                    child: Text('Not Sure'),
                     value: 2,
+                    child: Text('Not Sure'),
                   ),
                 ],
                 onChanged: (value) {
@@ -233,16 +237,16 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 value: _selectedValueCard,
                 items: const [
                   DropdownMenuItem(
-                    child: Text('Yes'),
                     value: 1,
+                    child: Text('Yes'),
                   ),
                   DropdownMenuItem(
-                    child: Text('No'),
                     value: 0,
+                    child: Text('No'),
                   ),
                   DropdownMenuItem(
-                    child: Text('Not Sure'),
                     value: 2,
+                    child: Text('Not Sure'),
                   ),
                 ],
                 onChanged: (value) {
@@ -265,7 +269,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Confirm Submission'),
+                              title: const Text('Confirm Submission'),
                               content: const Text(
                                   'Are you sure you want to submit a form for a new vending machine?'),
                               actions: <Widget>[
@@ -273,7 +277,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },
-                                  child: Text('Cancel'),
+                                  child: const Text('Cancel'),
                                 ),
                                 //Creating a machine class object out of the choices made by the user
                                 TextButton(
@@ -300,7 +304,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  BottomBar()),
+                                                  const BottomBar()),
                                         );
                                       } else if (_isSnackSelected == true) {
                                         Machine test2 = Machine(
@@ -323,7 +327,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  BottomBar()),
+                                                  const BottomBar()),
                                         );
                                       } else if (_isSupplySelected == true) {
                                         Machine test3 = Machine(
@@ -346,12 +350,12 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  BottomBar()),
+                                                  const BottomBar()),
                                         );
                                       }
                                     });
                                   },
-                                  child: Text('Submit'),
+                                  child: const Text('Submit'),
                                 ),
                               ],
                             );
@@ -382,7 +386,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
 
   void openCamera() async {
     // Ensure that there is a camera available on the device
-    if (cameras == null || cameras.isEmpty) {
+    if (cameras.isEmpty) {
       return;
     }
 

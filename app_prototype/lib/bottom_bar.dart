@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vendi_app/favorites_page.dart';
 import 'package:vendi_app/favorites_page_setup.dart';
 import 'package:vendi_app/home_page.dart';
 import 'package:vendi_app/points_page.dart';

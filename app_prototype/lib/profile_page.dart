@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           actions: <Widget>[
-            IconButton(onPressed: signUserOut, icon: Icon(Icons.logout))
+            IconButton(onPressed: signUserOut, icon: const Icon(Icons.logout))
           ],
         ),
         backgroundColor: Colors.white,

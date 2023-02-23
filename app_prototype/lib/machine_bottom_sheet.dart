@@ -10,7 +10,7 @@ import 'main.dart';
 Machine? selectedMachine;
 
 class MachineBottomSheet extends StatefulWidget {
-  MachineBottomSheet(Machine machine) {
+  MachineBottomSheet(Machine machine, {super.key}) {
     super.key;
     selectedMachine = machine;
   }
@@ -104,7 +104,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
   // Method that opens the camera
   void openCamera() async {
     // Ensure that there is a camera available on the device
-    if (cameras == null || cameras.isEmpty) {
+    if (cameras.isEmpty) {
       return;
     }
 

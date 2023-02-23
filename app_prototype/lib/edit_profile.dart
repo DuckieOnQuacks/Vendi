@@ -206,7 +206,7 @@ class _EditProfileState extends State<EditProfile> {
 
   void openCamera() async {
     // Ensure that there is a camera available on the device
-    if (cameras == null || cameras.isEmpty) {
+    if (cameras.isEmpty) {
       return;
     }
 
