@@ -15,10 +15,14 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
-
   int currentPage = 0;
   // What pages to load depending on the bottom bar index
-  List<Widget> pages = [const Homepage(), const FavoritesPageSetup(), const PointsPage(), ProfilePage()];
+  List<Widget> pages = [
+    const Homepage(),
+    const FavoritesPageSetup(),
+    const PointsPage(),
+    ProfilePage()
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,13 +31,24 @@ class _BottomBarState extends State<BottomBar> {
       // Navigation bar at the bottom of the screen allows you to go between different pages
       bottomNavigationBar: NavigationBar(
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.pin_drop), label: 'Locations',),
-          NavigationDestination(icon: Icon(Icons.thumb_up), label: 'Favorites',),
-          NavigationDestination(icon: Icon(Icons.attach_money), label: 'Points',),
-          NavigationDestination(icon: Icon(Icons.person), label: 'Profile',),
+          NavigationDestination(
+            icon: Icon(Icons.pin_drop),
+            label: 'Locations',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.thumb_up),
+            label: 'Favorites',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.attach_money),
+            label: 'Points',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
-        onDestinationSelected: (int index)
-        {
+        onDestinationSelected: (int index) {
           setState(() {
             currentPage = index;
           });

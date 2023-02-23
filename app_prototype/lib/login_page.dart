@@ -15,7 +15,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   void signUserIn() async {
     showDialog(
       context: context,
@@ -43,10 +42,10 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: Colors.pinkAccent,
           title: Center(
             child: Text(
-            message,
-            style: const TextStyle(color: Colors.white),
+              message,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
-        ),
         );
       },
     );
@@ -61,31 +60,31 @@ class _LoginPageState extends State<LoginPage> {
         body: SafeArea(
             child: Center(
                 child: SingleChildScrollView(
-                  child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/YellowMachine.png',
-              scale: 5,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Hello Again!',
-              style: GoogleFonts.bebasNeue(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/YellowMachine.png',
+                scale: 5,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Hello Again!',
+                style: GoogleFonts.bebasNeue(
                   fontWeight: FontWeight.bold,
                   fontSize: 50,
+                ),
               ),
-            ),
-            const SizedBox(height: 10), //Creates space between text
-            Text('Welcome back to Vendi, you\'ve been missed',
+              const SizedBox(height: 10), //Creates space between text
+              Text('Welcome back to Vendi, you\'ve been missed',
                   style: GoogleFonts.bebasNeue(
                     fontSize: 19,
                   )),
-            const SizedBox(height: 40),
-            //email text field
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
+              const SizedBox(height: 40),
+              //email text field
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     border: Border.all(color: Colors.white),
@@ -101,13 +100,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                ),
               ),
-            ),
-            const SizedBox(height: 10), //Create Space between both boxes
-            //Password text field
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
+              const SizedBox(height: 10), //Create Space between both boxes
+              //Password text field
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     border: Border.all(color: Colors.white),
@@ -124,13 +123,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            //sign in button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: ElevatedButton(
+              const SizedBox(height: 10),
+              //sign in button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: ElevatedButton(
                   onPressed: () {
                     setState(() {
                       signUserIn();
@@ -155,12 +154,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   const Text(
                     'Not a member?',
                     style: TextStyle(
@@ -182,10 +181,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-              ],
-            ),
-          ],
-        ),
-                ))));
+                ],
+              ),
+            ],
+          ),
+        ))));
   }
 }

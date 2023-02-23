@@ -13,8 +13,7 @@ class FavoritesPage extends StatefulWidget {
 
 class _FavoritePageState extends State<FavoritesPage> {
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return FutureBuilder(
       future: dbHelper.getAllFavorited(),
       builder: (context, AsyncSnapshot<List<Machine>> snapshot) {
@@ -40,7 +39,8 @@ class _FavoritePageState extends State<FavoritesPage> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text('Confirm Delete'),
-                              content: Text('Are you sure you want to delete this item?'),
+                              content: Text(
+                                  'Are you sure you want to delete this item?'),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {
@@ -52,7 +52,8 @@ class _FavoritePageState extends State<FavoritesPage> {
                                   onPressed: () {
                                     setState(() {
                                       favMachines[index].isFavorited = 0;
-                                      dbHelper.updateMachine(favMachines[index]);
+                                      dbHelper
+                                          .updateMachine(favMachines[index]);
                                       dbHelper.getAllFavorited();
                                       Navigator.of(context).pop(true);
                                     });
@@ -67,7 +68,6 @@ class _FavoritePageState extends State<FavoritesPage> {
                             // Perform deletion logic here
                           }
                         });
-
                       });
                     },
                   ),
@@ -77,7 +77,9 @@ class _FavoritePageState extends State<FavoritesPage> {
                   subtitle: Text(
                     favMachines[index].desc,
                   ),
-                  onTap:() {print('onTap pressed');},
+                  onTap: () {
+                    print('onTap pressed');
+                  },
                   tileColor: Colors.grey[200],
                 ),
               ),

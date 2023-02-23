@@ -14,7 +14,8 @@ class PointsPage extends StatelessWidget {
         appBar: AppBar(
           title: Row(
             children: [
-              Image.asset('assets/images/logo.png',
+              Image.asset(
+                'assets/images/logo.png',
                 fit: BoxFit.contain,
                 height: 32,
               )

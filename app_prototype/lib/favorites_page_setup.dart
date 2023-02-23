@@ -14,7 +14,8 @@ class FavoritesPageSetup extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            Image.asset('assets/images/logo.png',
+            Image.asset(
+              'assets/images/logo.png',
               fit: BoxFit.contain,
               height: 32,
             )
@@ -24,7 +25,6 @@ class FavoritesPageSetup extends StatelessWidget {
       ),
       body: Container(
         color: Colors.white,
-
         child: Column(
           children: const [
             Expanded(

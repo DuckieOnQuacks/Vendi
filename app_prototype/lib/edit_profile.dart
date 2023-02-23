@@ -32,7 +32,8 @@ class _EditProfileState extends State<EditProfile> {
         appBar: AppBar(
           title: Row(
             children: [
-              Image.asset('assets/images/logo.png',
+              Image.asset(
+                'assets/images/logo.png',
                 fit: BoxFit.contain,
                 height: 32,
               )
@@ -190,12 +191,11 @@ class _EditProfileState extends State<EditProfile> {
                                   const EdgeInsets.all(25)),
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.pink),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      side: const BorderSide(
-                                          color: Colors.grey)))),
+                          shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: const BorderSide(color: Colors.grey)))),
                       child: const Text('Update Profile',
                           style: TextStyle(
                               color: Colors.white,
@@ -280,7 +280,6 @@ class _CameraScreenState extends State<CameraScreen> {
                 appBar: AppBar(
                     title: const Text("Is this image ok?"),
                     automaticallyImplyLeading: false,
-
                     leading: IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () {

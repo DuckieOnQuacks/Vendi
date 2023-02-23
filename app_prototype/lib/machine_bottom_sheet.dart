@@ -10,8 +10,10 @@ import 'main.dart';
 Machine? selectedMachine;
 
 class MachineBottomSheet extends StatefulWidget {
-  MachineBottomSheet(Machine machine)
-    {super.key; selectedMachine = machine;}
+  MachineBottomSheet(Machine machine) {
+    super.key;
+    selectedMachine = machine;
+  }
 
   @override
   State<MachineBottomSheet> createState() => _MachineBottomSheetState();
@@ -28,68 +30,78 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
       cameras = availableCameras;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          selectedMachine?.imagePath == ''? Text('Check the box to add this machine to your favorites. Click the Camera icon to upload a photo!', style: GoogleFonts.bebasNeue(fontSize: 25,)) :
-              Text('If you\'re happy with the image, click save!', style: GoogleFonts.bebasNeue(fontSize: 25)),
+      child: Column(children: [
+        const SizedBox(height: 20),
+        selectedMachine?.imagePath == ''
+            ? Text(
+                'Check the box to add this machine to your favorites. Click the Camera icon to upload a photo!',
+                style: GoogleFonts.bebasNeue(
+                  fontSize: 25,
+                ))
+            : Text('If you\'re happy with the image, click save!',
+                style: GoogleFonts.bebasNeue(fontSize: 25)),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              StatefulBuilder(builder: (BuildContext context, setState) {
-
-                // Checkbox for favoriting the machine
-                return Checkbox(
-                  value: selectedMachine?.isFavorited == 1,
-                  onChanged: (bool? checked) {
-                    setState(() {
-                      selectedMachine?.isFavorited = checked ?? false ? 1 : 0;
-                      dbHelper.addMachine(selectedMachine!);
-                    });
-                  },
-                );
-              }),
-              // Camera button for opening the camera
-              selectedMachine?.imagePath == ''? IconButton(onPressed: ()
-              {
-                openCamera();
-              },
-                  icon: const Icon(Icons.camera_alt)) :
-                    ElevatedButton( onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Save")),
-                  ],
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            StatefulBuilder(builder: (BuildContext context, setState) {
+              // Checkbox for favoriting the machine
+              return Checkbox(
+                value: selectedMachine?.isFavorited == 1,
+                onChanged: (bool? checked) {
+                  setState(() {
+                    selectedMachine?.isFavorited = checked ?? false ? 1 : 0;
+                    dbHelper.addMachine(selectedMachine!);
+                  });
+                },
+              );
+            }),
+            // Camera button for opening the camera
+            selectedMachine?.imagePath == ''
+                ? IconButton(
+                    onPressed: () {
+                      openCamera();
+                    },
+                    icon: const Icon(Icons.camera_alt))
+                : ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Save")),
+          ],
         ),
 
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            selectedMachine?.imagePath == ''
+                ? const SizedBox.shrink()
+                : SizedBox(
+                    width: 200,
+                    height: 250,
+                    child: Image.file(File(selectedMachine!.imagePath)),
+                  ),
+          ],
+        ),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              selectedMachine?.imagePath == ''? const SizedBox.shrink() : SizedBox(
-                width: 200, height: 250,
-                child: Image.file(File(selectedMachine!.imagePath)),
-              ),
-            ],
-          ),
-
-          // Interactable close menu button
-          ElevatedButton( onPressed: () {
-            setState(() {
-              //selectedMachine?.imagePath = '';
-            });
-            Navigator.pop(context);
-          },
-              child: const Text("Close Menu"))
-        ]
-      ),
+        // Interactable close menu button
+        ElevatedButton(
+            onPressed: () {
+              setState(() {
+                //selectedMachine?.imagePath = '';
+              });
+              Navigator.pop(context);
+            },
+            child: const Text("Close Menu"))
+      ]),
     );
   }
-    // Method that opens the camera
+
+  // Method that opens the camera
   void openCamera() async {
     // Ensure that there is a camera available on the device
     if (cameras == null || cameras.isEmpty) {
@@ -100,7 +112,8 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
     CameraDescription camera = cameras[0];
 
     // Open the camera and store the resulting CameraController
-    CameraController controller = CameraController(camera, ResolutionPreset.high);
+    CameraController controller =
+        CameraController(camera, ResolutionPreset.high);
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it
@@ -109,10 +122,9 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
       MaterialPageRoute(
         builder: (context) => CameraScreen(controller),
       ),
-    ).then((value)=>setState((){}));
+    ).then((value) => setState(() {}));
   }
 }
-
 
 class CameraScreen extends StatefulWidget {
   CameraScreen(this.controller);
@@ -135,39 +147,40 @@ class _CameraScreenState extends State<CameraScreen> {
             // Take a picture and store it as a file
             var image = await widget.controller.takePicture();
 
-            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+            await Navigator.of(context)
+                .push(MaterialPageRoute(builder: (BuildContext context) {
               // Checks whether or not the picture is fine for the user
               return Scaffold(
-                appBar: AppBar(title: const Text("Is this image ok?"),
-                automaticallyImplyLeading: false,
-                leading: IconButton(icon: const Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.check),
-                    onPressed: () {
-                      setState(() {
+                appBar: AppBar(
+                    title: const Text("Is this image ok?"),
+                    automaticallyImplyLeading: false,
+                    leading: IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
                         Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                        selectedMachine?.imagePath = image.path;
-                        dbHelper.updateMachine(selectedMachine!);
-                      });
-                    }
-                  ),
-                ]),
+                      },
+                    ),
+                    actions: [
+                      IconButton(
+                          icon: const Icon(Icons.check),
+                          onPressed: () {
+                            setState(() {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              selectedMachine?.imagePath = image.path;
+                              dbHelper.updateMachine(selectedMachine!);
+                            });
+                          }),
+                    ]),
                 body: Image.file(File(image.path)),
               );
-            }
-            ));
+            }));
           } catch (e) {
             // If an error occurs, log the error to the console
             debugPrint(e.toString());
           }
         },
         child: const Icon(Icons.camera),
-
       ),
     );
   }

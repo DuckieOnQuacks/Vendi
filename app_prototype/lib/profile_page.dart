@@ -8,8 +8,9 @@ class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 
   void signUserOut() {
-  FirebaseAuth.instance.signOut();
-}
+    FirebaseAuth.instance.signOut();
+  }
+
   final user = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -19,9 +20,9 @@ class ProfilePage extends StatelessWidget {
           title: const Text("Profile"),
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
-          actions: <Widget>[IconButton(
-              onPressed: signUserOut,
-              icon: Icon(Icons.logout))],
+          actions: <Widget>[
+            IconButton(onPressed: signUserOut, icon: Icon(Icons.logout))
+          ],
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -41,8 +42,10 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(user.email!, style: Theme.of(context).textTheme.headline4),
-                  Text(user.email!, style: Theme.of(context).textTheme.bodyText2),
+                  Text(user.email!,
+                      style: Theme.of(context).textTheme.headline4),
+                  Text(user.email!,
+                      style: Theme.of(context).textTheme.bodyText2),
                   const SizedBox(height: 20),
                   SizedBox(
                     width: 200,
