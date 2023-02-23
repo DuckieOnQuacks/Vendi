@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../machine_class.dart';
+import 'machine_class.dart';
 
 class DatabaseHelper {
   static const int version = 1;
@@ -37,12 +37,12 @@ class DatabaseHelper {
   Future onCreate(Database db, int version) async {
         await db.execute('''
         CREATE TABLE $table(
-            $columnId INTEGER NOT NULL, 
+            $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
             $columnName TEXT NO NULL,
-            $columnDesc TEXT NOT NULL, 
-            $columnLat INTEGER NOT NULL, 
-            $columnLon INTEGER NOT NULL, 
-            $columnImagePath TEXT NOT NULL, 
+            $columnDesc TEXT NOT NULL,
+            $columnLat INTEGER NOT NULL,
+            $columnLon INTEGER NOT NULL,
+            $columnImagePath TEXT NOT NULL,
             $columnFavorite INTEGER NOT NULL DEFAULT '0',
             $columnIcon TEXT NOT NULL)
             ''');

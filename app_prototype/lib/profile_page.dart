@@ -1,17 +1,28 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendi_app/edit_profile.dart';
-
 
 // All code on this page was developed by the team using the flutter framework
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  ProfilePage({super.key});
+
+  void signUserOut() {
+  FirebaseAuth.instance.signOut();
+}
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile"), automaticallyImplyLeading: false,),
+        appBar: AppBar(
+          title: const Text("Profile"),
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.pinkAccent,
+          actions: <Widget>[IconButton(
+              onPressed: signUserOut,
+              icon: Icon(Icons.logout))],
+        ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Center(
@@ -25,30 +36,31 @@ class ProfilePage extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: const Image(
-                          image: AssetImage(
-                              'assets/images/KermitProfile.jpg'
-                          ),
+                        image: AssetImage('assets/images/KermitProfile.jpg'),
                       ),
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text('Kermit', style: Theme.of(context).textTheme.headline4),
-                  Text('kermit@gmail.com', style: Theme.of(context).textTheme.bodyText2),
+                  Text(user.email!, style: Theme.of(context).textTheme.headline4),
+                  Text(user.email!, style: Theme.of(context).textTheme.bodyText2),
                   const SizedBox(height: 20),
                   SizedBox(
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
                           return const EditProfile();
                         }));
                       },
-
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow, side: BorderSide.none, shape: const StadiumBorder()),
-                      child: const Text('Edit Profile', style: TextStyle(color: Colors.black)),
-                      ),
+                          backgroundColor: Colors.yellow,
+                          side: BorderSide.none,
+                          shape: const StadiumBorder()),
+                      child: const Text('Edit Profile',
+                          style: TextStyle(color: Colors.black)),
                     ),
+                  ),
                   const SizedBox(height: 30),
                   const Divider(),
                   const SizedBox(height: 10),
@@ -56,8 +68,6 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
           ),
-        )
-
-    );
+        ));
   }
 }

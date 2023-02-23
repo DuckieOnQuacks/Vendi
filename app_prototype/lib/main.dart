@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'db/database_helper.dart';
+import 'package:provider/provider.dart';
+import 'package:vendi_app/backend/auth_page.dart';
+import 'backend/database_helper.dart';
 import 'login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -19,7 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: AuthPage(),
     );
   }
 }
+

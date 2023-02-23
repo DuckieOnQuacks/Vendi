@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vendi_app/machine_class.dart';
+import 'package:vendi_app/backend/machine_class.dart';
 import 'main.dart';
 
 // All code on this page was developed by the team using the flutter framework
@@ -167,6 +167,7 @@ class _CameraScreenState extends State<CameraScreen> {
           }
         },
         child: const Icon(Icons.camera),
+
       ),
     );
   }

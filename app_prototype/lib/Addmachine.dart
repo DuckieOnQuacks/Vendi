@@ -1,20 +1,20 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:path/path.dart' as Path;
-import 'package:vendi_app/home_page.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:vendi_app/main.dart';
+import 'home_page.dart';
+import 'backend/machine_class.dart';
+import 'bottom_bar.dart';
 
-
-const List<String> list = <String>['I don\'t know','Yes', 'No'];
+const List<String> list = <String>['I don\'t know', 'Yes', 'No'];
+late String machineImage;
 
 class AddMachinePage extends StatefulWidget {
   const AddMachinePage({Key? key}) : super(key: key);
 
-
   @override
   _AddMachinePageState createState() => _AddMachinePageState();
-
 }
 
 class _AddMachinePageState extends State<AddMachinePage> {
@@ -24,7 +24,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
   bool _isSnackSelected = false;
   bool _isDrinkSelected = false;
   bool _isSupplySelected = false;
-
+  Position? _currentPosition;
 
 
   @override
@@ -43,8 +43,34 @@ class _AddMachinePageState extends State<AddMachinePage> {
     super.dispose();
   }
 
+  _getCurrentLocation() async {
+    final Geolocator geolocator = Geolocator();
+    // Check if location permission is granted
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      // Request location permission if it is not granted
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // User has denied location permission, handle the error
+        print('Location permission denied');
+        return;
+      }
+    }
+
+    // Retrieve the current location if location permission is granted
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _getCurrentLocation();
     return Scaffold(
       appBar: AppBar(
         title: Text('Add a Machine'),
@@ -52,135 +78,188 @@ class _AddMachinePageState extends State<AddMachinePage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16.0),
-            const Text('Please take a front facing picture of the machine*',
-                style: TextStyle(fontSize: 16)),
-            //camera icon
-            Center(
-              child: IconButton(onPressed: () {
-                openCamera();
-              },
-                  icon: const Icon(Icons.camera_alt)),
-            ),
-            const SizedBox(height:  40.0),
-            //input fields
-            const Text('Building Name*',
-                style: TextStyle(fontSize: 16)),
-            TextField(
-              controller: _buildingController,
-            ),
-            const SizedBox(height: 16.0),
-            const Text('Floor Number*',
-                style: TextStyle(fontSize: 16)),
-            TextField(
-              controller: _floorController,
-            ),
-            const SizedBox(height:  40.0),
-            const Text('Select Machine Type(s)*',
-                style: TextStyle(fontSize: 16,
-                fontWeight: FontWeight.bold)),
-            CheckboxListTile(
-              title: Text('Snack'),
-              value: _isSnackSelected,
-              onChanged: (value) {
-                setState(() {
-                  _isSnackSelected = value!;
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: Text('Drink'),
-              value: _isDrinkSelected,
-              onChanged: (value) {
-                setState(() {
-                  _isDrinkSelected = value!;
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: Text('Supply'),
-              value: _isSupplySelected,
-              onChanged: (value) {
-                setState(() {
-                  _isSupplySelected = value!;
-                });
-              },
-            ),
-            const SizedBox(height:  40.0),
-            const Text('Select Machine Options',
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16.0),
-            const Text('Is the machine currently operating?',
-                style: TextStyle(fontSize: 16)),
-            const DropdownButtonMenu(),
-            const SizedBox(height: 20.0),
-            const Text('Is the machine stocked more than halfway?',
-                style: TextStyle(fontSize: 16)),
-            const DropdownButtonMenu(),
-            const SizedBox(height: 20.0),
-            const Text('Does the machine take cash?',
-                style: TextStyle(fontSize: 16)),
-            const DropdownButtonMenu(),
-            const SizedBox(height: 20.0),
-            const Text('Does the machine take card?',
-                style: TextStyle(fontSize: 16)),
-            const DropdownButtonMenu(),
-            const SizedBox(height:  20.0),
-            const Text('*Required',
-                style: TextStyle(color: Colors.red)),
-            const SizedBox(height:  20.0),
-            Center(
-              //submit button
-              child: TextButton(
-                onPressed: () {
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16.0),
+              const Text('Please take a front facing picture of the machine*',
+                  style: TextStyle(fontSize: 16)),
+              //camera icon
+              Center(
+                child: IconButton(
+                    onPressed: () {
+                      openCamera();
+                    },
+                    icon: const Icon(Icons.camera_alt)),
+              ),
+              const SizedBox(height: 40.0),
+              //input fields
+              const Text('Building Name*', style: TextStyle(fontSize: 16)),
+              TextField(
+                controller: _buildingController,
+              ),
+              const SizedBox(height: 16.0),
+              const Text('Floor Number*', style: TextStyle(fontSize: 16)),
+              TextField(
+                controller: _floorController,
+              ),
+              const SizedBox(height: 40.0),
+              const Text('Select Machine Type(s)*',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              CheckboxListTile(
+                title: Text('Snack'),
+                value: _isSnackSelected,
+                onChanged: (value) {
                   setState(() {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Confirm Submission'),
-                          content: Text('Are you sure you want to submit a form for a new vending machine?'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(false);
-                              },
-                              child: Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                });
-                              },
-                              child: Text('Submit'),
-                            ),
-                          ],
-                        );
-                      },
-                    ).then((value) {
-                      if (value != null && value == true) {
-                        // Perform deletion logic here
-                      }
-                    });
-
+                    _isSnackSelected = value!;
                   });
                 },
-                  child: const Text(
-                    'Submit', style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.blueAccent,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  )
               ),
-            )
-          ],
-        ),
+              CheckboxListTile(
+                title: Text('Drink'),
+                value: _isDrinkSelected,
+                onChanged: (value) {
+                  setState(() {
+                    _isDrinkSelected = value!;
+                  });
+                },
+              ),
+              CheckboxListTile(
+                title: Text('Supply'),
+                value: _isSupplySelected,
+                onChanged: (value) {
+                  setState(() {
+                    _isSupplySelected = value!;
+                  });
+                },
+              ),
+              const SizedBox(height: 40.0),
+              const Text('Select Machine Options',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16.0),
+              const Text('Is the machine currently operating?',
+                  style: TextStyle(fontSize: 16)),
+              const DropdownButtonMenu(),
+              const SizedBox(height: 20.0),
+              const Text('Is the machine stocked more than halfway?',
+                  style: TextStyle(fontSize: 16)),
+              const DropdownButtonMenu(),
+              const SizedBox(height: 20.0),
+              const Text('Does the machine take cash?',
+                  style: TextStyle(fontSize: 16)),
+              const DropdownButtonMenu(),
+              const SizedBox(height: 20.0),
+              const Text('Does the machine take card?',
+                  style: TextStyle(fontSize: 16)),
+              const DropdownButtonMenu(),
+              const SizedBox(height: 20.0),
+              const Text('*Required', style: TextStyle(color: Colors.red)),
+              const SizedBox(height: 20.0),
+              Center(
+                //submit button
+                child: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Confirm Submission'),
+                              content: Text(
+                                  'Are you sure you want to submit a form for a new vending machine?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(false);
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      if (_isDrinkSelected == true) {
+                                        Machine test1 = Machine(
+                                            name: _buildingController.text,
+                                            desc: _floorController.text,
+                                            lat: _currentPosition!.latitude,
+                                            lon: _currentPosition!.longitude,
+                                            imagePath:
+                                              machineImage,
+                                            isFavorited: 0,
+                                            icon:
+                                                "assets/images/BlueMachine.png");
+                                        dbHelper.addMachine(test1);
+                                      _isDrinkSelected = false;
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomBar()),
+                                        );
+                                      } else if (_isSnackSelected == true) {
+                                        Machine test2 = Machine(
+                                            name: _buildingController.text,
+                                            desc: _floorController.text,
+                                            lat: _currentPosition!.latitude,
+                                            lon: _currentPosition!.longitude,
+                                            imagePath:
+                                                machineImage,
+                                            isFavorited: 0,
+                                            icon:
+                                                "assets/images/PinkMachine.png");
+                                        dbHelper.addMachine(test2);
+                                        _isSnackSelected = false;
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomBar()),
+                                        );
+                                      } else if (_isSupplySelected == true) {
+                                        Machine test3 = Machine(
+                                            name: _buildingController.text,
+                                            desc: _floorController.text,
+                                            lat: _currentPosition!.latitude,
+                                            lon: _currentPosition!.longitude,
+                                            imagePath:
+                                                machineImage,
+                                            isFavorited: 0,
+                                            icon:
+                                                "assets/images/YellowMachine.png");
+                                        dbHelper.addMachine(test3);
+                                        _isSupplySelected = false;
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomBar()),
+                                        );
+                                      }
+                                    });
+                                  },
+                                  child: Text('Submit'),
+                                ),
+                              ],
+                            );
+                          },
+                        ).then((value) {
+                          if (value != null && value == true) {
+                            // Perform deletion logic here
+                          }
+                        });
+                      });
+                    },
+                    child: const Text(
+                      'Submit',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -197,8 +276,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
     CameraDescription camera = cameras[0];
 
     // Open the camera and store the resulting CameraController
-    CameraController controller = CameraController(
-        camera, ResolutionPreset.high);
+    CameraController controller =
+        CameraController(camera, ResolutionPreset.high);
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it
@@ -210,8 +289,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
     );
   }
 }
-
-
 
 class CameraScreen extends StatefulWidget {
   CameraScreen(this.controller);
@@ -234,15 +311,19 @@ class _CameraScreenState extends State<CameraScreen> {
             // Take a picture and store it as a file
             var image = await widget.controller.takePicture();
 
-            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+            await Navigator.of(context)
+                .push(MaterialPageRoute(builder: (BuildContext context) {
               // Checks whether or not the picture is fine for the user
               return Scaffold(
-                appBar: AppBar(title: const Text("Is this image ok?"),
+                appBar: AppBar(
+                    title: const Text("Is this image ok?"),
                     automaticallyImplyLeading: false,
-                    leading: IconButton(icon: const Icon(Icons.close),
+                    leading: IconButton(
+                      icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.of(context).pop();
-                      },),
+                      },
+                    ),
                     actions: [
                       IconButton(
                           icon: const Icon(Icons.check),
@@ -250,16 +331,15 @@ class _CameraScreenState extends State<CameraScreen> {
                             setState(() {
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
+                              machineImage = image.path;
                               //selectedMachine?.imagePath = image.path;
-                            //  dbHelper.updateMachine(selectedMachine!);
+                              //  dbHelper.updateMachine(selectedMachine!);
                             });
-                          }
-                      ),
+                          }),
                     ]),
                 body: Image.file(File(image.path)),
               );
-            }
-            ));
+            }));
           } catch (e) {
             // If an error occurs, log the error to the console
             debugPrint(e.toString());
@@ -270,6 +350,7 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 }
+
 /////////////////////////////////////////////////////////////////////////////////
 class DropdownButtonMenu extends StatefulWidget {
   const DropdownButtonMenu({super.key});

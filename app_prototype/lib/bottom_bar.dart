@@ -18,7 +18,7 @@ class _BottomBarState extends State<BottomBar> {
 
   int currentPage = 0;
   // What pages to load depending on the bottom bar index
-  List<Widget> pages = const [Homepage(), FavoritesPageSetup(), PointsPage(), ProfilePage()];
+  List<Widget> pages = [const Homepage(), const FavoritesPageSetup(), const PointsPage(), ProfilePage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

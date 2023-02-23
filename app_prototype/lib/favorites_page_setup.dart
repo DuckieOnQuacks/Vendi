@@ -15,9 +15,11 @@ class FavoritesPageSetup extends StatelessWidget {
         title: const Text(
           'Favorites Page',
         ),
+        backgroundColor: Colors.pinkAccent,
       ),
       body: Container(
         color: Colors.white,
+
         child: Column(
           children: const [
             Expanded(

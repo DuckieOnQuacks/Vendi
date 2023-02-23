@@ -1,13 +1,21 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vendi_app/bottom_bar.dart';
 import 'package:vendi_app/login_page.dart';
 
 
 // All code on this page was developed by the team using the flutter framework
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+
+class RegisterPage extends StatefulWidget {
+  RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+
+class _RegisterPageState extends State<RegisterPage>{
 
   @override
   Widget build(BuildContext context)
@@ -110,7 +118,8 @@ class RegisterPage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                            return const LoginPage();
+
+                            return LoginPage();
                           }));
                         },
                         style: ButtonStyle (

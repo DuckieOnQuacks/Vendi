@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vendi_app/home_page.dart';
-import 'machine_class.dart';
+import 'backend/machine_class.dart';
 import 'main.dart';
 
 // All code on this page was developed by the team using the flutter framework

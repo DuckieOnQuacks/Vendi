@@ -2,19 +2,21 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
-import 'package:vendi_app/machine_class.dart';
+import 'package:vendi_app/backend/machine_class.dart';
 import 'main.dart';
 import 'Addmachine.dart';
 
 
 // List of real machines and their locations
-const currentLocation = LatLng(39.54411893434308, -119.8160761741225);
+//const _currentLocation = LatLng(39.54411893434308, -119.8160761741225);
+Position? _currentPosition;
 
-Machine test = Machine(id: 1, name: "Ansari Building", desc: 'Located on the second floor', lat: 39.54006690730848, lon: -119.81491866643591, imagePath: "", isFavorited: 0, icon: "assets/images/PinkMachine.png");
+//Machine test = Machine(id: 1, name: "Ansari Building", desc: 'Located on the second floor', lat: 39.54006690730848, lon: -119.81491866643591, imagePath: "", isFavorited: 0, icon: "assets/images/PinkMachine.png");
 
-Machine test2 = Machine(id: 2, name: "Schulich Lecture Hall", desc: 'Located on the first floor', lat: 39.543534319081886, lon: -119.81577690579334, imagePath: "app_prototype/appdata/machineImages/24E55E52-B42B-4C75-A3AD-042B4C19A059.jpg", isFavorited: 0, icon: "assets/images/BlueMachine.png");
+//Machine test2 = Machine(id: 2, name: "Schulich Lecture Hall", desc: 'Located on the first floor', lat: 39.543534319081886, lon: -119.81577690579334, imagePath: "app_prototype/appdata/machineImages/24E55E52-B42B-4C75-A3AD-042B4C19A059.jpg", isFavorited: 0, icon: "assets/images/BlueMachine.png");
 
 //final machines = [
  // MachineClass("Ansari Building", 'assets/images/BlueMachine.png' , 'Located on the second floor', 0, LatLng(39.54006690730848, -119.81491866643591)),
@@ -39,10 +41,36 @@ class _HomepageState extends State<Homepage> {
   late GoogleMapController _mapController;
   final Map<String, Marker> _markers = {};
 
+
+  _getCurrentLocation() async {
+    final Geolocator geolocator = Geolocator();
+    // Check if location permission is granted
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      // Request location permission if it is not granted
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // User has denied location permission, handle the error
+        print('Location permission denied');
+        return;
+      }
+    }
+
+    // Retrieve the current location if location permission is granted
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _getCurrentLocation();
     // The stateless widget for the google maps home page
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Vendi"), automaticallyImplyLeading: false,
@@ -53,16 +81,18 @@ class _HomepageState extends State<Homepage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => AddMachinePage()),
-                  //dbHelper.addMachine(test);
+                    //dbHelper.addMachine(test);
                   );
               },
             ),
             ],
+            backgroundColor: Colors.pinkAccent,
             ),
+
       body: GoogleMap(
                   mapToolbarEnabled: false,
-                  initialCameraPosition: const CameraPosition(
-                    target: currentLocation,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(_currentPosition?.latitude ?? 0.0, _currentPosition?.longitude ?? 0.0),
                     zoom: 16,
                   ),
                   onMapCreated: (controller) async {

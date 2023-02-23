@@ -29,7 +29,7 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     bool isValid;
     return Scaffold(
-        appBar: AppBar(title: const Text("Edit Profile")),
+        appBar: AppBar(title: const Text("Edit Profile"),backgroundColor: Colors.pinkAccent),
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey[300],
         body: SafeArea(
@@ -65,7 +65,7 @@ class _EditProfileState extends State<EditProfile> {
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
-                              side: const BorderSide(color: Colors.yellow)))),
+                              side: const BorderSide(color: Colors.grey)))),
                   child: const Text('Upload New Profile Picture',
                       style: TextStyle(
                           color: Colors.white,
@@ -81,7 +81,7 @@ class _EditProfileState extends State<EditProfile> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.pink[200],
+                    color: Colors.white,
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -103,7 +103,7 @@ class _EditProfileState extends State<EditProfile> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.pink[200],
+                    color: Colors.white,
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -125,7 +125,7 @@ class _EditProfileState extends State<EditProfile> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.pink[200],
+                    color: Colors.white,
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -148,7 +148,7 @@ class _EditProfileState extends State<EditProfile> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.pink[200],
+                    color: Colors.white,
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -180,13 +180,13 @@ class _EditProfileState extends State<EditProfile> {
                               MaterialStateProperty.all<EdgeInsetsGeometry>(
                                   const EdgeInsets.all(25)),
                           backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.yellow),
+                              MaterialStateProperty.all<Color>(Colors.pink),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                       side: const BorderSide(
-                                          color: Colors.yellow)))),
+                                          color: Colors.grey)))),
                       child: const Text('Update Profile',
                           style: TextStyle(
                               color: Colors.white,
@@ -271,7 +271,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 appBar: AppBar(
                     title: const Text("Is this image ok?"),
                     automaticallyImplyLeading: false,
-                    
+
                     leading: IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () {
