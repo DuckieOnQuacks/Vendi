@@ -18,7 +18,7 @@ class ProfilePage extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Profile"),
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.pinkAccent,
+          backgroundColor: Colors.white,
           actions: <Widget>[IconButton(
               onPressed: signUserOut,
               icon: Icon(Icons.logout))],

@@ -127,12 +127,12 @@ class _RegisterPageState extends State<RegisterPage>{
                                 const EdgeInsets.all(25)
                             ),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.deepPurple
+                                Colors.pink
                             ),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    side: const BorderSide(color: Colors.deepPurple)
+                                    side: const BorderSide(color: Colors.pink)
                                 )
                             )
                         ),

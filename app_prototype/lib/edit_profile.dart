@@ -29,8 +29,17 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     bool isValid;
     return Scaffold(
-        appBar: AppBar(title: const Text("Edit Profile"),backgroundColor: Colors.pinkAccent),
-        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Image.asset('assets/images/logo.png',
+                fit: BoxFit.contain,
+                height: 32,
+              )
+            ],
+          ),
+          backgroundColor: Colors.white,
+        ),
         backgroundColor: Colors.grey[300],
         body: SafeArea(
             child: Center(

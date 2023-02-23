@@ -30,9 +30,17 @@ class PointsRedemptionPage extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-          appBar: AppBar(title: const Text("Redeem Points")),
-          resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.grey[50],
+          appBar: AppBar(
+            title: Row(
+              children: [
+                Image.asset('assets/images/logo.png',
+                  fit: BoxFit.contain,
+                  height: 32,
+                )
+              ],
+            ),
+            backgroundColor: Colors.white,
+          ),
           body: SafeArea(
               child: Center(
                   child: Column(

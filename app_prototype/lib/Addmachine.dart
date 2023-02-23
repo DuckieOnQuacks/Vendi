@@ -73,7 +73,15 @@ class _AddMachinePageState extends State<AddMachinePage> {
     _getCurrentLocation();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add a Machine'),
+        title: Row(
+          children: [
+            Image.asset('assets/images/logo.png',
+              fit: BoxFit.contain,
+              height: 32,
+            )
+          ],
+        ),
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

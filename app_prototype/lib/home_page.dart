@@ -73,10 +73,19 @@ class _HomepageState extends State<Homepage> {
     // The stateless widget for the google maps home page
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Vendi"), automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+          Image.asset('assets/images/logo.png',
+          fit: BoxFit.contain,
+          height: 32,
+        )
+  ],
+        ),
+
         actions: [
           IconButton(
-              icon: const Icon(Icons.add),
+              icon: const Icon(Icons.add,
+              color: Colors.pink),
               onPressed:(){
                   Navigator.push(
                     context,
@@ -86,7 +95,7 @@ class _HomepageState extends State<Homepage> {
               },
             ),
             ],
-            backgroundColor: Colors.pinkAccent,
+            backgroundColor: Colors.white,
             ),
 
       body: GoogleMap(

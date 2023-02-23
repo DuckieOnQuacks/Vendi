@@ -113,11 +113,11 @@ class _LoginPageState extends State<LoginPage> {
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                         const EdgeInsets.all(25)),
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.deepPurple),
+                        MaterialStateProperty.all<Color>(Colors.pink),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Colors.deepPurple)))),
+                            side: const BorderSide(color: Colors.pink)))),
                 child: const Center(
                   child: Text(
                     'Sign In',

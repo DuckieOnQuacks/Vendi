@@ -11,11 +11,16 @@ class FavoritesPageSetup extends StatelessWidget {
     //var newMachines = machines.where((machine) => machine.isFavorited == true).toList();
     // Sets up a favorites page using a scaffold object
     return Scaffold(
-      appBar: AppBar( automaticallyImplyLeading: false,
-        title: const Text(
-          'Favorites Page',
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/images/logo.png',
+              fit: BoxFit.contain,
+              height: 32,
+            )
+          ],
         ),
-        backgroundColor: Colors.pinkAccent,
+        backgroundColor: Colors.white,
       ),
       body: Container(
         color: Colors.white,

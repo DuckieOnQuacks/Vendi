@@ -12,9 +12,15 @@ class PointsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Your Points"),
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.pinkAccent,
+          title: Row(
+            children: [
+              Image.asset('assets/images/logo.png',
+                fit: BoxFit.contain,
+                height: 32,
+              )
+            ],
+          ),
+          backgroundColor: Colors.white,
         ),
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey[50],
