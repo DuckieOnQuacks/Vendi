@@ -17,11 +17,51 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Profile"),
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/images/logo.png',
+                fit: BoxFit.contain,
+                height: 32,
+              )
+            ],
+          ),
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           actions: <Widget>[
-            IconButton(onPressed: signUserOut, icon: const Icon(Icons.logout))
+            IconButton(
+              icon: const Icon(Icons.logout, color: Colors.pink),
+              onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Confirm Log Out'),
+                        content: const Text(
+                            'Are you sure you want to log out of your account?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              signUserOut();
+                            },
+                            child: const Text('Sign Out'),
+                          ),
+                        ],
+                      );
+                    },
+                  ).then((value) {
+                    if (value != null && value == true) {
+                      // Perform deletion logic here
+                    }
+                  });
+              },
+            ),
           ],
         ),
         backgroundColor: Colors.white,
