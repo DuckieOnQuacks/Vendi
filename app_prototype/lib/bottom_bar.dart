@@ -14,6 +14,7 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
+  int _selectedIndex = 0;
   int currentPage = 0;
   // What pages to load depending on the bottom bar index
   List<Widget> pages = [
@@ -22,38 +23,44 @@ class _BottomBarState extends State<BottomBar> {
     const PointsPage(),
     ProfilePage()
   ];
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[currentPage],
-
-      // Navigation bar at the bottom of the screen allows you to go between different pages
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(
+      body: Center(
+        child: pages.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
             icon: Icon(Icons.pin_drop),
             label: 'Locations',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.thumb_up),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
             label: 'Favorites',
           ),
-          NavigationDestination(
+          BottomNavigationBarItem(
             icon: Icon(Icons.attach_money),
             label: 'Points',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.person),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
             label: 'Profile',
           ),
         ],
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPage = index;
-          });
-        },
-        selectedIndex: currentPage,
+        currentIndex: _selectedIndex,
+        unselectedItemColor: Colors.grey[700],
+        selectedItemColor: Colors.pink,
+        onTap: _onItemTapped,
       ),
     );
   }
 }
+
+

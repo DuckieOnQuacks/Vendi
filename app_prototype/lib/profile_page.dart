@@ -49,6 +49,7 @@ class ProfilePage extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               signUserOut();
+                              Navigator.of(context, rootNavigator: true).pop();
                             },
                             child: const Text('Sign Out'),
                           ),
