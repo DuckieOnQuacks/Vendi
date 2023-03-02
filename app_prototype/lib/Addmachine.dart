@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -9,6 +10,7 @@ import 'bottom_bar.dart';
 
 const List<String> list = <String>['I don\'t know', 'Yes', 'No'];
 late String machineImage;
+String imageUrl = ' ';
 
 class AddMachinePage extends StatefulWidget {
   const AddMachinePage({Key? key}) : super(key: key);
@@ -92,7 +94,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
     //Create document and write data to firestore
     await docMachine.set(json);
   }
-
   @override
   Widget build(BuildContext context) {
     _getCurrentLocation();
@@ -308,7 +309,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           desc: _floorController.text,
                                           lat: _currentPosition!.latitude,
                                           lon: _currentPosition!.longitude,
-                                          imagePath: machineImage,
+                                          imagePath: imageUrl,
                                           isFavorited: 0,
                                           icon: "assets/images/BlueMachine.png",
                                           card: 1,
@@ -331,7 +332,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           desc: _floorController.text,
                                           lat: _currentPosition!.latitude,
                                           lon: _currentPosition!.longitude,
-                                          imagePath: machineImage,
+                                          imagePath: imageUrl,
                                           isFavorited: 0,
                                           icon: "assets/images/PinkMachine.png",
                                           card: 1,
@@ -354,7 +355,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           desc: _floorController.text,
                                           lat: _currentPosition!.latitude,
                                           lon: _currentPosition!.longitude,
-                                          imagePath: machineImage,
+                                          imagePath: imageUrl,
                                           isFavorited: 0,
                                           icon: "assets/images/YellowMachine.png",
                                           card: 1,
@@ -436,6 +437,18 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
+
+  Future<void> uploadImage(String imagePath) async {
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+    // Get a reference to the Firebase Storage bucket
+    Reference storageRef = FirebaseStorage.instance.ref();
+    // Upload the image file to Firebase Storage
+    Reference uploadTask = storageRef.child('images');
+    Reference referenceImage = uploadTask.child(uniqueFileName);
+    await referenceImage.putFile(File(imagePath));
+    imageUrl = await referenceImage.getDownloadURL();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -463,14 +476,12 @@ class _CameraScreenState extends State<CameraScreen> {
                     actions: [
                       IconButton(
                           icon: const Icon(Icons.check),
-                          onPressed: () {
-                            setState(() {
+                          onPressed: () async {
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
-                              machineImage = image.path;
+                              await uploadImage(image.path);
                               //selectedMachine?.imagePath = image.path;
-                              //  dbHelper.updateMachine(selectedMachine!);
-                            });
+                              //dbHelper.updateMachine(selectedMachine!);
                           }),
                     ]),
                 body: Image.file(File(image.path)),

@@ -49,6 +49,7 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   font_awesome_flutter:
+  firebase_storage:
 
   # The package adds a package for creating a splash screen for the app. Once receieved run:
   # flutter pub run flutter_native_splash:create
