@@ -43,9 +43,10 @@ class FirebaseHelper {
 
   //Creates instance, gets snapshot, queries for machines that have card payments.
   //Returns list of machines with card payments enabled
-  Future<List<Machine>> getMachinesWithCardValueOne() async {
+  Future<int> getMachineCardValue(Machine machine) async {
     final machinesCollection = FirebaseFirestore.instance.collection(tableName);
-    final querySnapshot = await machinesCollection.where('card', isEqualTo: 1).get();
-    return querySnapshot.docs.map((doc) => Machine.fromJson(doc.data())).toList();
+    final querySnapshot = await machinesCollection.where('id', isEqualTo: machine.id).get();
+    final machineData = querySnapshot.docs.first.data();
+    return machineData['card'];
   }
 }
