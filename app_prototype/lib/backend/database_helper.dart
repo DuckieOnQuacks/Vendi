@@ -58,7 +58,6 @@ class DatabaseHelper {
             ''');
   }
 
-
   Future<void> saveMachine(Machine machine) async {
     // Check if the machine already exists in the database
     final machineExists = await db.query(

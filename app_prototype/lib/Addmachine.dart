@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:vendi_app/backend/firebase_helper.dart';
 import 'backend/machine_class.dart';
 import 'bottom_bar.dart';
 
@@ -76,24 +77,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
     });
   }
 
-  Future addMachine(Machine machine) async {
-    final docMachine = FirebaseFirestore.instance.collection('Machines').doc();
-    final machineTable = Machine(
-        id: docMachine.id,
-        name: machine.name,
-        desc: machine.desc,
-        lat: machine.lat,
-        lon: machine.lon,
-        imagePath: machine.imagePath,
-        icon: machine.icon,
-        card: machine.card,
-        cash: machine.cash,
-        operational: machine.operational,
-        stock: machine.stock);
-    final json = machineTable.toJson();
-    //Create document and write data to firestore
-    await docMachine.set(json);
-  }
+
   @override
   Widget build(BuildContext context) {
     _getCurrentLocation();
@@ -317,7 +301,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           operational: _selectedValueOperational,
                                           stock: 1,
                                         );
-                                        addMachine(test1);
+                                        FirebaseHelper().addMachine(test1);
                                         _isDrinkSelected = false;
                                         Navigator.push(
                                           context,
@@ -340,7 +324,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           operational: _selectedValueOperational,
                                           stock: 1,
                                         );
-                                        addMachine(test2);
+                                        FirebaseHelper().addMachine(test2);
                                         _isSnackSelected = false;
                                         Navigator.push(
                                           context,
@@ -363,7 +347,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           operational: _selectedValueOperational,
                                           stock: 1,
                                         );
-                                        addMachine(test3);
+                                        FirebaseHelper().addMachine(test3);
                                         _isSupplySelected = false;
                                         Navigator.push(
                                           context,
@@ -428,7 +412,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
 }
 
 class CameraScreen extends StatefulWidget {
-  CameraScreen(this.controller);
+  const CameraScreen(this.controller, {super.key});
 
   final CameraController controller;
 
