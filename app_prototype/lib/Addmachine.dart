@@ -1,10 +1,9 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:vendi_app/main.dart';
-import 'home_page.dart';
 import 'backend/machine_class.dart';
 import 'bottom_bar.dart';
 
@@ -73,6 +72,25 @@ class _AddMachinePageState extends State<AddMachinePage> {
         print(e);
       }
     });
+  }
+
+  Future addMachine(Machine machine) async {
+    final docMachine = FirebaseFirestore.instance.collection('Machines').doc();
+    final machineTable = Machine(
+        id: docMachine.id,
+        name: machine.name,
+        desc: machine.desc,
+        lat: machine.lat,
+        lon: machine.lon,
+        imagePath: machine.imagePath,
+        icon: machine.icon,
+        card: machine.card,
+        cash: machine.cash,
+        operational: machine.operational,
+        stock: machine.stock);
+    final json = machineTable.toJson();
+    //Create document and write data to firestore
+    await docMachine.set(json);
   }
 
   @override
@@ -285,20 +303,20 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                     setState(() {
                                       if (_isDrinkSelected == true) {
                                         Machine test1 = Machine(
-                                            name: _buildingController.text,
-                                            desc: _floorController.text,
-                                            lat: _currentPosition!.latitude,
-                                            lon: _currentPosition!.longitude,
-                                            imagePath: machineImage,
-                                            isFavorited: 0,
-                                            icon:
-                                                "assets/images/BlueMachine.png",
-                                            card: 1,
-                                            cash: 1,
-                                            operational:
-                                                _selectedValueOperational,
-                                            stock: 1);
-                                        dbHelper.addMachine(test1);
+                                          id: '',
+                                          name: _buildingController.text,
+                                          desc: _floorController.text,
+                                          lat: _currentPosition!.latitude,
+                                          lon: _currentPosition!.longitude,
+                                          imagePath: machineImage,
+                                          isFavorited: 0,
+                                          icon: "assets/images/BlueMachine.png",
+                                          card: 1,
+                                          cash: 1,
+                                          operational: _selectedValueOperational,
+                                          stock: 1,
+                                        );
+                                        addMachine(test1);
                                         _isDrinkSelected = false;
                                         Navigator.push(
                                           context,
@@ -308,20 +326,20 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                         );
                                       } else if (_isSnackSelected == true) {
                                         Machine test2 = Machine(
-                                            name: _buildingController.text,
-                                            desc: _floorController.text,
-                                            lat: _currentPosition!.latitude,
-                                            lon: _currentPosition!.longitude,
-                                            imagePath: machineImage,
-                                            isFavorited: 0,
-                                            icon:
-                                                "assets/images/PinkMachine.png",
-                                            card: 1,
-                                            cash: 1,
-                                            operational:
-                                                _selectedValueOperational,
-                                            stock: 1);
-                                        dbHelper.addMachine(test2);
+                                          id: '',
+                                          name: _buildingController.text,
+                                          desc: _floorController.text,
+                                          lat: _currentPosition!.latitude,
+                                          lon: _currentPosition!.longitude,
+                                          imagePath: machineImage,
+                                          isFavorited: 0,
+                                          icon: "assets/images/PinkMachine.png",
+                                          card: 1,
+                                          cash: 1,
+                                          operational: _selectedValueOperational,
+                                          stock: 1,
+                                        );
+                                        addMachine(test2);
                                         _isSnackSelected = false;
                                         Navigator.push(
                                           context,
@@ -331,20 +349,20 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                         );
                                       } else if (_isSupplySelected == true) {
                                         Machine test3 = Machine(
-                                            name: _buildingController.text,
-                                            desc: _floorController.text,
-                                            lat: _currentPosition!.latitude,
-                                            lon: _currentPosition!.longitude,
-                                            imagePath: machineImage,
-                                            isFavorited: 0,
-                                            icon:
-                                                "assets/images/YellowMachine.png",
-                                            card: 1,
-                                            cash: 1,
-                                            operational:
-                                                _selectedValueOperational,
-                                            stock: 1);
-                                        dbHelper.addMachine(test3);
+                                          id: '',
+                                          name: _buildingController.text,
+                                          desc: _floorController.text,
+                                          lat: _currentPosition!.latitude,
+                                          lon: _currentPosition!.longitude,
+                                          imagePath: machineImage,
+                                          isFavorited: 0,
+                                          icon: "assets/images/YellowMachine.png",
+                                          card: 1,
+                                          cash: 1,
+                                          operational: _selectedValueOperational,
+                                          stock: 1,
+                                        );
+                                        addMachine(test3);
                                         _isSupplySelected = false;
                                         Navigator.push(
                                           context,

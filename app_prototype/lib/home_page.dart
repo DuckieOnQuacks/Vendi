@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +7,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/machine_class.dart';
-import 'main.dart';
 import 'Addmachine.dart';
 
 // List of real machines and their locations
@@ -62,6 +62,19 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
+  Future<List<Machine>> getAllMachines() async {
+    final machinesCollection = FirebaseFirestore.instance.collection('Machines');
+    final querySnapshot = await machinesCollection.get();
+    return querySnapshot.docs.map((doc) => Machine.fromJson(doc.data())).toList();
+  }
+
+  Future<int> getMachineCount() async {
+    final machinesCollection = FirebaseFirestore.instance.collection('Machines');
+    final querySnapshot = await machinesCollection.get();
+    print(querySnapshot.size);
+    return querySnapshot.size;
+  }
+
   @override
   Widget build(BuildContext context) {
     _getCurrentLocation();
@@ -100,10 +113,8 @@ class _HomepageState extends State<Homepage> {
           ),
           onMapCreated: (controller) async {
             _mapController = controller;
-            var count =
-                await dbHelper.queryRowCount(); //Grab number of rows in db
-            var machineList =
-                await dbHelper.getAllMachines(); //Grab list of machines
+            var count = await getMachineCount(); //Grab number of rows in db
+            var machineList = await getAllMachines(); //Grab list of machines
             for (int i = 0; i < count; i++) {
               //Loop through the machines
               addMarker(machineList[i]);
@@ -134,7 +145,6 @@ class _HomepageState extends State<Homepage> {
       icon: BitmapDescriptor.fromBytes((markerIcon)),
     );
     _markers[machines.id.toString()] = marker;
-    setState(() {});
   }
 
   // Sourced from https://github.com/flutter/flutter/issues/34657 to resize images in code

@@ -168,7 +168,7 @@ class _CameraScreenState extends State<CameraScreen> {
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
                               selectedMachine?.imagePath = image.path;
-                              dbHelper.updateMachine(selectedMachine!);
+                              //dbHelper.updateMachine(selectedMachine!);
                             });
                           }),
                     ]),

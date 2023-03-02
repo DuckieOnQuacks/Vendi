@@ -52,8 +52,7 @@ class _FavoritePageState extends State<FavoritesPage> {
                                   onPressed: () {
                                     setState(() {
                                       favMachines[index].isFavorited = 0;
-                                      dbHelper
-                                          .updateMachine(favMachines[index]);
+                                      dbHelper.addMachine(favMachines[index]);
                                       dbHelper.getAllFavorited();
                                       Navigator.of(context).pop(true);
                                     });

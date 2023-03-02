@@ -10,13 +10,10 @@ final dbHelper = DatabaseHelper();
 Future<void> main() async {
   // Ensuring that the widgets are initialized
   WidgetsFlutterBinding.ensureInitialized();
-
   // Initializing the database helper
   await dbHelper.init();
-
   // Initializing Firebase
   await Firebase.initializeApp();
-
   // Running the MyApp widget
   runApp(const MyApp());
 }
@@ -30,7 +27,6 @@ class MyApp extends StatelessWidget {
     // Returning a MaterialApp widget with the debug banner turned off
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-
       // The home page of the app is the AuthPage widget
       home: AuthPage(),
     );

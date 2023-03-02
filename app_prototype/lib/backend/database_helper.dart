@@ -43,7 +43,7 @@ class DatabaseHelper {
   Future onCreate(Database db, int version) async {
     await db.execute('''
         CREATE TABLE $table(
-            $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $columnId TEXT NO NULL,
             $columnName TEXT NO NULL,
             $columnDesc TEXT NOT NULL,
             $columnLat INTEGER NOT NULL,
@@ -60,8 +60,7 @@ class DatabaseHelper {
 
   // Add a machine to the database
   Future<int> addMachine(Machine machine) async {
-    return await db.insert(table, machine.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    return await db.insert(table, machine.toJson(),conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   // Update a machine in the database

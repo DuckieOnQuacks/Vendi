@@ -26,7 +26,9 @@ class _LoginPageState extends State<LoginPage> {
     );
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: usernameController.text, password: passwordController.text);
+          email: usernameController.text,
+          password: passwordController.text
+      );
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -49,6 +51,12 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -170,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (BuildContext context) {
-                        return RegisterPage();
+                        return const RegisterPage();
                       }));
                     },
                     child: const Text(

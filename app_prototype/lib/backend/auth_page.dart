@@ -23,8 +23,9 @@ class AuthPage extends StatelessWidget{
               return const BottomBar();
             }
             // If the user is not signed in, show the login screen.
-            else {
-              return LoginPage();
+            else
+            {
+              return const LoginPage();
             }
           }
       ),

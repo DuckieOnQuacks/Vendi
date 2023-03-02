@@ -36,18 +36,19 @@ dependencies:
   path_provider:
   path:
   image_picker:
-  provider: ^5.0.0
+  provider:
 
   # Google maps sdk
-  geolocator: '^9.0.2'
-  google_maps_flutter: '^2.2.1'
-  location: '^4.4.0'
+  geolocator:
+  google_maps_flutter:
+  location:
 
   #FireBase Imports
-  firebase_core: ^2.4.1
-  google_sign_in: ^5.0.3
-  firebase_auth: ^4.2.5
-  font_awesome_flutter: ^9.0.0
+  firebase_core:
+  google_sign_in:
+  firebase_auth:
+  cloud_firestore:
+  font_awesome_flutter:
 
   # The package adds a package for creating a splash screen for the app. Once receieved run:
   # flutter pub run flutter_native_splash:create
