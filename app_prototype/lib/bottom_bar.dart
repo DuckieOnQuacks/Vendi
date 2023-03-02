@@ -14,18 +14,18 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
-  int _selectedIndex = 0;
-  int currentPage = 0;
+  int selectedIndex = 0;
   // What pages to load depending on the bottom bar index
-  List<Widget> pages = [
-    const Homepage(),
-    const FavoritesPageSetup(),
-    const PointsPage(),
-    ProfilePage()
-  ];
+  final Map<int, Widget> _pages = {
+    0: const Homepage(),
+    1: const FavoritesPageSetup(),
+    2: const PointsPage(),
+    3: ProfilePage(),
+  };
+
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
   }
 
@@ -33,7 +33,7 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: pages.elementAt(_selectedIndex),
+        child: _pages[selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -54,7 +54,7 @@ class _BottomBarState extends State<BottomBar> {
             label: 'Profile',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: selectedIndex,
         unselectedItemColor: Colors.grey[700],
         selectedItemColor: Colors.pink,
         onTap: _onItemTapped,
