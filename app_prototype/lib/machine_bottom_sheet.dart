@@ -55,7 +55,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                 onChanged: (bool? checked) {
                   setState(() {
                     selectedMachine?.isFavorited = checked ?? false ? 1 : 0;
-                    dbHelper.addMachine(selectedMachine!);
+                    dbHelper.saveMachine(selectedMachine!);
                   });
                 },
               );
@@ -83,7 +83,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                 : SizedBox(
                     width: 200,
                     height: 250,
-                    child: Image.file(File(selectedMachine!.imagePath)),
+                    child: Image.network(selectedMachine!.imagePath),
                   ),
           ],
         ),
@@ -168,7 +168,7 @@ class _CameraScreenState extends State<CameraScreen> {
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
                               selectedMachine?.imagePath = image.path;
-                              //dbHelper.updateMachine(selectedMachine!);
+                              dbHelper.saveMachine(selectedMachine!);
                             });
                           }),
                     ]),

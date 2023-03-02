@@ -58,17 +58,30 @@ class DatabaseHelper {
             ''');
   }
 
-  // Add a machine to the database
-  Future<int> addMachine(Machine machine) async {
-    return await db.insert(table, machine.toJson(),conflictAlgorithm: ConflictAlgorithm.replace);
-  }
+  Future<void> saveMachine(Machine machine) async {
+    // Check if the machine already exists in the database
+    final machineExists = await db.query(
+      'Machine',
+      where: 'id = ?',
+      whereArgs: [machine.id],
+    );
 
-  // Update a machine in the database
-  Future<int> updateMachine(Machine machine) async {
-    return await db.update(table, machine.toJson(),
-        where: 'id =?',
+    if (machineExists.isNotEmpty) {
+      // Update the existing machine in the database
+      await db.update(
+        'Machine',
+        machine.toJson(),
+        where: 'id = ?',
         whereArgs: [machine.id],
-        conflictAlgorithm: ConflictAlgorithm.replace);
+      );
+    } else {
+      // Add the new machine to the database
+      await db.insert(
+        'Machine',
+        machine.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
   }
 
   // Delete a machine from the database

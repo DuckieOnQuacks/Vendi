@@ -1,14 +1,17 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:vendi_app/backend/firebase_helper.dart';
 import 'backend/machine_class.dart';
 import 'bottom_bar.dart';
 
 const List<String> list = <String>['I don\'t know', 'Yes', 'No'];
 late String machineImage;
+String imageUrl = ' ';
 
 class AddMachinePage extends StatefulWidget {
   const AddMachinePage({Key? key}) : super(key: key);
@@ -74,24 +77,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
     });
   }
 
-  Future addMachine(Machine machine) async {
-    final docMachine = FirebaseFirestore.instance.collection('Machines').doc();
-    final machineTable = Machine(
-        id: docMachine.id,
-        name: machine.name,
-        desc: machine.desc,
-        lat: machine.lat,
-        lon: machine.lon,
-        imagePath: machine.imagePath,
-        icon: machine.icon,
-        card: machine.card,
-        cash: machine.cash,
-        operational: machine.operational,
-        stock: machine.stock);
-    final json = machineTable.toJson();
-    //Create document and write data to firestore
-    await docMachine.set(json);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -308,7 +293,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           desc: _floorController.text,
                                           lat: _currentPosition!.latitude,
                                           lon: _currentPosition!.longitude,
-                                          imagePath: machineImage,
+                                          imagePath: imageUrl,
                                           isFavorited: 0,
                                           icon: "assets/images/BlueMachine.png",
                                           card: 1,
@@ -316,7 +301,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           operational: _selectedValueOperational,
                                           stock: 1,
                                         );
-                                        addMachine(test1);
+                                        FirebaseHelper().addMachine(test1);
                                         _isDrinkSelected = false;
                                         Navigator.push(
                                           context,
@@ -331,7 +316,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           desc: _floorController.text,
                                           lat: _currentPosition!.latitude,
                                           lon: _currentPosition!.longitude,
-                                          imagePath: machineImage,
+                                          imagePath: imageUrl,
                                           isFavorited: 0,
                                           icon: "assets/images/PinkMachine.png",
                                           card: 1,
@@ -339,7 +324,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           operational: _selectedValueOperational,
                                           stock: 1,
                                         );
-                                        addMachine(test2);
+                                        FirebaseHelper().addMachine(test2);
                                         _isSnackSelected = false;
                                         Navigator.push(
                                           context,
@@ -354,7 +339,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           desc: _floorController.text,
                                           lat: _currentPosition!.latitude,
                                           lon: _currentPosition!.longitude,
-                                          imagePath: machineImage,
+                                          imagePath: imageUrl,
                                           isFavorited: 0,
                                           icon: "assets/images/YellowMachine.png",
                                           card: 1,
@@ -362,7 +347,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           operational: _selectedValueOperational,
                                           stock: 1,
                                         );
-                                        addMachine(test3);
+                                        FirebaseHelper().addMachine(test3);
                                         _isSupplySelected = false;
                                         Navigator.push(
                                           context,
@@ -427,7 +412,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
 }
 
 class CameraScreen extends StatefulWidget {
-  CameraScreen(this.controller);
+  const CameraScreen(this.controller, {super.key});
 
   final CameraController controller;
 
@@ -436,6 +421,18 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
+
+  Future<void> uploadImage(String imagePath) async {
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+    // Get a reference to the Firebase Storage bucket
+    Reference storageRef = FirebaseStorage.instance.ref();
+    // Upload the image file to Firebase Storage
+    Reference uploadTask = storageRef.child('images');
+    Reference referenceImage = uploadTask.child(uniqueFileName);
+    await referenceImage.putFile(File(imagePath));
+    imageUrl = await referenceImage.getDownloadURL();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -463,14 +460,12 @@ class _CameraScreenState extends State<CameraScreen> {
                     actions: [
                       IconButton(
                           icon: const Icon(Icons.check),
-                          onPressed: () {
-                            setState(() {
+                          onPressed: () async {
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
-                              machineImage = image.path;
+                              await uploadImage(image.path);
                               //selectedMachine?.imagePath = image.path;
-                              //  dbHelper.updateMachine(selectedMachine!);
-                            });
+                              //dbHelper.updateMachine(selectedMachine!);
                           }),
                     ]),
                 body: Image.file(File(image.path)),
