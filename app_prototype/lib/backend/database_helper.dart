@@ -55,7 +55,7 @@ class DatabaseHelper {
             $columnCash INTEGER NOT NULL,
             $columnOperational INTEGER NOT NULL,
             $columnStock INTEGER NOT NULL)
-            ''');
+        ''');
   }
 
   Future<void> saveMachine(Machine machine) async {
