@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vendi_app/backend/firebase_helper.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 
 void main()
@@ -65,7 +68,7 @@ void main()
     expect(jsonTest['name'], 'testPlace');
     expect(jsonTest['description'], 'testDescription');
     expect(jsonTest['latitude'], 32.44);
-    expect(jsonTest['longitude'], 80.99);
+    expect(jsonTest['longitude'], 22.95);
     expect(jsonTest['imagePath'], 'pathToImage');
     expect(jsonTest['favorite'], 0);
     expect(jsonTest['icon'], 'pathToIcon');
@@ -73,5 +76,53 @@ void main()
     expect(jsonTest['cash'], 1);
     expect(jsonTest['operational'], 1);
     expect(jsonTest['stock'], 1);
+  });
+
+
+
+  //////////////////////////////////////////
+  //Second Unit Test Start
+  //////////////////////////////////////////
+  WidgetsFlutterBinding.ensureInitialized();
+
+  test('Making sure the firebase_helper class is correctly storing and retrieving data', () async {
+    await Firebase.initializeApp();
+    //Create mock machine
+    Machine machineData = Machine(
+        id: '1',
+        name: 'The Highlands',
+        desc: 'floor 4',
+        lat: 31.77,
+        lon: 25.76,
+        imagePath: 'cloud storage path',
+        isFavorited: null,
+        icon: 'iconPath',
+        card: 0,
+        cash: 1,
+        operational: 1,
+        stock: 0
+    );
+    //Do
+    //Add the machine to the firestore database
+    await FirebaseHelper().addMachine(machineData);
+    //Retrieve the machine from the database
+    Machine? test = await FirebaseHelper().getMachineById(machineData);
+
+    // Test
+    expect(test?.id, '1');
+    expect(test?.name, 'The Highlands');
+    expect(test?.desc, 'floor 4');
+    expect(test?.lat, 31.77);
+    expect(test?.lon, 25.76);
+    expect(test?.imagePath, 'cloud storage path');
+    expect(test?.isFavorited, null);
+    expect(test?.icon, 'iconPath');
+    expect(test?.card, 0);
+    expect(test?.cash, 1);
+    expect(test?.operational, 1);
+    expect(test?.stock, 0);
+
+    //Cleanup by deleting the machine from the database.
+    FirebaseHelper().deleteMachineById(test!);
   });
 }

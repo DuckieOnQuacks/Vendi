@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/login_page.dart';
 
 // All code on this page was developed by the team using the flutter framework
-final TextEditingController usernameController = TextEditingController();
-final TextEditingController passwordController = TextEditingController();
-final TextEditingController confirmPassword = TextEditingController();
+final usernameController = TextEditingController();
+final passwordController = TextEditingController();
+final confirmPassword = TextEditingController();
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -153,9 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    setState(() {
                       signUserUp();
-                    });
                   },
                   style: ButtonStyle(
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
@@ -189,8 +187,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
+                    onPressed: () async {
+                      await Navigator.of(context).push(
                           MaterialPageRoute(builder: (BuildContext context) {
                         return const LoginPage();
                       }));

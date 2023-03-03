@@ -219,17 +219,18 @@ class _EditProfileState extends State<EditProfile> {
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it
-    Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CameraScreen(controller),
       ),
-    ).then((value) => setState(() {}));
+    );
+    setState(() {});
   }
 }
 
 createAlertDialog(BuildContext context) {
-  TextEditingController customController = TextEditingController();
+  late final TextEditingController customController = TextEditingController();
 
   return showDialog(
       context: context,
@@ -254,7 +255,7 @@ createAlertDialog(BuildContext context) {
 }
 
 class CameraScreen extends StatefulWidget {
-  CameraScreen(this.controller);
+  const CameraScreen(this.controller, {super.key});
 
   final CameraController controller;
 

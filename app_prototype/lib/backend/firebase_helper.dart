@@ -9,7 +9,7 @@ class FirebaseHelper {
   Future addMachine(Machine machine) async {
     final docMachine = FirebaseFirestore.instance.collection(tableName).doc();
     final machineTable = Machine(
-        id: docMachine.id,
+        id: machine.id,
         name: machine.name,
         desc: machine.desc,
         lat: machine.lat,
@@ -49,4 +49,26 @@ class FirebaseHelper {
     final machineData = querySnapshot.docs.first.data();
     return machineData['card'];
   }
+
+  Future<Machine?> getMachineById(Machine machine) async {
+    final machinesCollection = FirebaseFirestore.instance.collection(tableName);
+    final querySnapshot = await machinesCollection.where('id', isEqualTo: machine.id).limit(1).get();
+    if (querySnapshot.size == 0) {
+      return null; // No machine with the given ID found
+    } else {
+      return Machine.fromJson(querySnapshot.docs.first.data());
+    }
+  }
+
+  Future<void> deleteMachineById(Machine machine) async {
+    final machinesCollection = FirebaseFirestore.instance.collection('Machines');
+    final querySnapshot = await machinesCollection.where('id', isEqualTo: machine.id).get();
+    if (querySnapshot.size > 0) {
+      final machineDoc = querySnapshot.docs.first.reference;
+      await machineDoc.delete();
+      print("Machine deleted");
+    }
+  }
+
+
 }

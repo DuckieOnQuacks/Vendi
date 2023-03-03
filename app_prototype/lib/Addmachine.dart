@@ -402,7 +402,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it
-    Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CameraScreen(controller),
