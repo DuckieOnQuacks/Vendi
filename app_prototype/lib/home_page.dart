@@ -20,6 +20,7 @@ class _HomepageState extends State<Homepage> {
   late GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
   Position? currentPosition;
+  final MapType _currentMapType = MapType.satellite;
 
   // Helper method to get the current position
   Future<Position?> getCurrentPosition() async {
@@ -82,6 +83,7 @@ class _HomepageState extends State<Homepage> {
       body: currentPosition == null
           ? const Center(child: CircularProgressIndicator())
           : GoogleMap(
+        mapType: _currentMapType,
         mapToolbarEnabled: false,
         initialCameraPosition: CameraPosition(
           target: LatLng(currentPosition!.latitude, currentPosition!.longitude),
