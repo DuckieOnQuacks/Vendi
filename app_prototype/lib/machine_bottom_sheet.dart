@@ -39,9 +39,11 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
         Machine machine = snapshot.data!;
         return Center(
           child: Column(children: [
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+
                 Image.asset(machine.icon, height: 50),
                 const SizedBox(width: 20),
                 if(machine.icon == 'assets/images/BlueMachine.png')...[

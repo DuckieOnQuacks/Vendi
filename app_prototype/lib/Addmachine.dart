@@ -302,10 +302,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           imagePath: imageUrl,
                                           isFavorited: 0,
                                           icon: "assets/images/BlueMachine.png",
-                                          card: 1,
-                                          cash: 1,
+                                          card: _selectedValueCard,
+                                          cash: _selectedValueCash,
                                           operational: _selectedValueOperational,
-                                          stock: 1,
+                                          stock: _selectedValueStock,
                                         );
                                         FirebaseHelper().addMachine(test1);
                                         _isDrinkSelected = false;
@@ -325,10 +325,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           imagePath: imageUrl,
                                           isFavorited: 0,
                                           icon: "assets/images/PinkMachine.png",
-                                          card: 1,
-                                          cash: 1,
+                                          card: _selectedValueCard,
+                                          cash: _selectedValueCash,
                                           operational: _selectedValueOperational,
-                                          stock: 1,
+                                          stock: _selectedValueStock,
                                         );
                                         FirebaseHelper().addMachine(test2);
                                         _isSnackSelected = false;
@@ -348,10 +348,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           imagePath: imageUrl,
                                           isFavorited: 0,
                                           icon: "assets/images/YellowMachine.png",
-                                          card: 1,
-                                          cash: 1,
+                                          card: _selectedValueCard,
+                                          cash: _selectedValueCash,
                                           operational: _selectedValueOperational,
-                                          stock: 1,
+                                          stock: _selectedValueStock,
                                         );
                                         FirebaseHelper().addMachine(test3);
                                         _isSupplySelected = false;

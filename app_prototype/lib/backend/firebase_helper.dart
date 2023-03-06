@@ -9,7 +9,7 @@ class FirebaseHelper {
   Future addMachine(Machine machine) async {
     final docMachine = FirebaseFirestore.instance.collection(tableName).doc();
     final machineTable = Machine(
-        id: machine.id,
+        id: docMachine.id,
         name: machine.name,
         desc: machine.desc,
         lat: machine.lat,
