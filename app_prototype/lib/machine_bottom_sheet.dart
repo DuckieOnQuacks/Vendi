@@ -44,8 +44,16 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
               children: <Widget>[
                 Image.asset(machine.icon, height: 50),
                 const SizedBox(width: 20),
-                Text('Beverage Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
-                const SizedBox(width: 20),
+                if(machine.icon == 'assets/images/BlueMachine.png')...[
+                  Text('Snack Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
+                  const SizedBox(width: 20),
+                ]else if(machine.icon == 'assets/images/PinkMachine.png')...[
+                  Text('Beverage Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
+                  const SizedBox(width: 20),
+                ] else...[
+                  Text('Supply Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
+                  const SizedBox(width: 20),
+                ],
                 StatefulBuilder(builder: (BuildContext context, setState) {
                   // Checkbox for favoriting the machine
                   return FavoriteButton(
