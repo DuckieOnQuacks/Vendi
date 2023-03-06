@@ -267,8 +267,14 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CameraPreview(widget.controller),
-      // Add a floating action button to take pictures
+      body: Stack(
+        children: [
+          // Add the camera preview widget to the stack
+          Positioned.fill(
+            child: CameraPreview(widget.controller),
+          ),
+        ]
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           try {

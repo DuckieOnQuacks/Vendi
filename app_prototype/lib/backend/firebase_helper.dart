@@ -69,6 +69,4 @@ class FirebaseHelper {
       print("Machine deleted");
     }
   }
-
-
 }

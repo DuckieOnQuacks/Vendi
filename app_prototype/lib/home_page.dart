@@ -87,7 +87,7 @@ class _HomepageState extends State<Homepage> {
         mapToolbarEnabled: false,
         initialCameraPosition: CameraPosition(
           target: LatLng(currentPosition!.latitude, currentPosition!.longitude),
-          zoom: 16,
+          zoom: 18,
         ),
         onMapCreated: (controller) async {
           mapController = controller;
@@ -130,3 +130,5 @@ class _HomepageState extends State<Homepage> {
         .asUint8List();
   }
 }
+
+

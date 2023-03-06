@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vendi_app/favorites_page_setup.dart';
 import 'package:vendi_app/home_page.dart';
 import 'package:vendi_app/points_page.dart';
 import 'package:vendi_app/profile_page.dart';
+
+import 'favorites_page.dart';
 
 // All code on this page was developed by the team using the flutter framework
 

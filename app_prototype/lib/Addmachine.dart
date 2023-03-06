@@ -436,7 +436,29 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CameraPreview(widget.controller),
+      body: Stack(
+        children: [
+          // Add the camera preview widget to the stack
+          Positioned.fill(
+            child: CameraPreview(widget.controller),
+          ),
+
+          // Add the guidelines to the stack
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.5),
+                  width: 7,
+                ),
+              ),
+              width: 300,
+              height: 600,
+            ),
+          ),
+        ],
+      ),
       // Add a floating action button to take pictures
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -444,30 +466,31 @@ class _CameraScreenState extends State<CameraScreen> {
             // Take a picture and store it as a file
             var image = await widget.controller.takePicture();
 
+            // Navigate to the confirmation screen
             await Navigator.of(context)
                 .push(MaterialPageRoute(builder: (BuildContext context) {
               // Checks whether or not the picture is fine for the user
               return Scaffold(
                 appBar: AppBar(
-                    title: const Text("Is this image ok?"),
-                    automaticallyImplyLeading: false,
-                    leading: IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () {
+                  title: const Text("Is this image ok?"),
+                  automaticallyImplyLeading: false,
+                  leading: IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.check),
+                      onPressed: () async {
                         Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        await uploadImage(image.path);
                       },
                     ),
-                    actions: [
-                      IconButton(
-                          icon: const Icon(Icons.check),
-                          onPressed: () async {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                              await uploadImage(image.path);
-                              //selectedMachine?.imagePath = image.path;
-                              //dbHelper.updateMachine(selectedMachine!);
-                          }),
-                    ]),
+                  ],
+                ),
                 body: Image.file(File(image.path)),
               );
             }));
@@ -481,3 +504,4 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 }
+
