@@ -57,16 +57,16 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                 },
               );
             }),
-      ],
+          ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget> [
-              SizedBox(width: 15),
-              Text('Ansari Building,', style: GoogleFonts.bebasNeue(fontSize: 25)),
-              SizedBox(width: 10),
-              Text('3rd Floor', style: GoogleFonts.bebasNeue(fontSize: 25)),
-    ],
+          children: <Widget> [
+            SizedBox(width: 15),
+            Text('Ansari Building,', style: GoogleFonts.bebasNeue(fontSize: 25)),
+            SizedBox(width: 10),
+            Text('3rd Floor', style: GoogleFonts.bebasNeue(fontSize: 25)),
+          ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -79,15 +79,70 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
             Text('12:00pm', style: GoogleFonts.getFont('Bebas Neue', fontSize: 25, color: Colors.grey[600])),
           ],
         ),
+
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            selectedMachine?.imagePath == ''
-                ? const SizedBox.shrink()
-                : SizedBox(
-              width: 200,
-              height: 250,
-              child: Image.network(selectedMachine!.imagePath),
+            Expanded(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 60),
+                      const SizedBox(width: 20),
+                      SizedBox(width: 5),
+                      Image.asset('assets/images/card.png', height: 30),
+                      SizedBox(width: 20),
+                      Text('Card accepted', style: GoogleFonts.bebasNeue(fontSize: 16)),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 60),
+                      const SizedBox(width: 20),
+                      SizedBox(width: 5),
+                      Image.asset('assets/images/nocash.png', height: 30),
+                      SizedBox(width: 20),
+                      Text('cash not accepted', style: GoogleFonts.bebasNeue(fontSize: 16)),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 60),
+                      const SizedBox(width: 20),
+                      const Icon(Icons.clear_rounded, color: Colors.red),
+                      const SizedBox(width: 20),
+                      Text('Stocked', style: GoogleFonts.bebasNeue(fontSize: 16)),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 60),
+                      const SizedBox(width: 20),
+                      const Icon(Icons.check, color: Colors.green),
+                      const SizedBox(width: 20),
+                      Text('Operational', style: GoogleFonts.bebasNeue(fontSize: 16)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  selectedMachine?.imagePath == ''
+                      ? const SizedBox.shrink()
+                      : SizedBox(
+                    width: 200,
+                    height: 250,
+                    child: Image.network(selectedMachine!.imagePath),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
