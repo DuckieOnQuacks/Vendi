@@ -85,6 +85,8 @@ class _HomepageState extends State<Homepage> {
           : GoogleMap(
         mapType: _currentMapType,
         mapToolbarEnabled: false,
+        myLocationEnabled: true, // Add this line to enable the user's location
+        myLocationButtonEnabled: true, // Add this line to enable the location button
         initialCameraPosition: CameraPosition(
           target: LatLng(currentPosition!.latitude, currentPosition!.longitude),
           zoom: 18,

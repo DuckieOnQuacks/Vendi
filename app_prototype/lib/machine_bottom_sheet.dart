@@ -22,8 +22,6 @@ class MachineBottomSheet extends StatefulWidget {
 }
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
-
-
   bool isFavorite = selectedMachine?.isFavorited == 1;
 
   @override
@@ -34,9 +32,9 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget> [
             Image.asset('assets/images/BlueMachine.png', height: 50),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             Text('Beverage Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             StatefulBuilder(builder: (BuildContext context, setState) {
               // Checkbox for favoriting the machine
               return FavoriteButton(

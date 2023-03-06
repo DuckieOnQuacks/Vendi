@@ -116,11 +116,17 @@ class _AddMachinePageState extends State<AddMachinePage> {
               //input fields
               const Text('Building Name*', style: TextStyle(fontSize: 16)),
               TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Ex: Davidson Building'
+                ),
                 controller: _buildingController,
               ),
               const SizedBox(height: 16.0),
               const Text('Floor Number*', style: TextStyle(fontSize: 16)),
               TextField(
+                decoration: const InputDecoration(
+                    hintText: 'Ex: Floor 2'
+                ),
                 controller: _floorController,
               ),
               const SizedBox(height: 40.0),
