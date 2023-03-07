@@ -32,6 +32,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
   late int _selectedValueCash = 0;
   late int _selectedValueCard = 0;
 
+  int? _selectedOption;
+
   @override
   void initState() {
     super.initState();
@@ -131,30 +133,36 @@ class _AddMachinePageState extends State<AddMachinePage> {
               const SizedBox(height: 40.0),
               const Text('Select Machine Type(s)*',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              CheckboxListTile(
+              RadioListTile<int>(
                 title: const Text('Snack'),
-                value: _isSnackSelected,
+                value: 0,
+                groupValue: _selectedOption,
                 onChanged: (value) {
                   setState(() {
-                    _isSnackSelected = value!;
+                    _selectedOption = value;
+                    _isSnackSelected = true;
                   });
                 },
               ),
-              CheckboxListTile(
+              RadioListTile<int>(
                 title: const Text('Drink'),
-                value: _isDrinkSelected,
+                value: 1,
+                groupValue: _selectedOption,
                 onChanged: (value) {
                   setState(() {
-                    _isDrinkSelected = value!;
+                    _selectedOption = value;
+                    _isDrinkSelected = true;
                   });
                 },
               ),
-              CheckboxListTile(
+              RadioListTile<int>(
                 title: const Text('Supply'),
-                value: _isSupplySelected,
+                value: 2,
+                groupValue: _selectedOption,
                 onChanged: (value) {
                   setState(() {
-                    _isSupplySelected = value!;
+                    _selectedOption = value;
+                    _isSupplySelected = true;
                   });
                 },
               ),

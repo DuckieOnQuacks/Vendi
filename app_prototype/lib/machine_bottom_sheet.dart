@@ -225,7 +225,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   ],
                 ),
 
-                // Interactable close menu button
+                // Intractable close menu button
                 ElevatedButton(
                     onPressed: () {
                       Navigator.push(

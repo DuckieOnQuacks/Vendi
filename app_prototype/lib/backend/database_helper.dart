@@ -21,7 +21,6 @@ class DatabaseHelper {
   static const columnIcon = 'icon';
   static const columnCash = 'cash';
   static const columnCard = 'card';
-  static const columnStock = 'stock';
   static const columnOperational = 'operational';
 
   late Database db;
@@ -52,8 +51,7 @@ class DatabaseHelper {
             $columnIcon TEXT NOT NULL,
             $columnCard INTEGER NOT NULL,
             $columnCash INTEGER NOT NULL,
-            $columnOperational INTEGER NOT NULL,
-            $columnStock INTEGER NOT NULL)
+            $columnOperational INTEGER NOT NULL)
         ''');
   }
 
