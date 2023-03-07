@@ -31,6 +31,7 @@ class PointsRedemptionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.pinkAccent),
           title: Row(
             children: [
               Image.asset(

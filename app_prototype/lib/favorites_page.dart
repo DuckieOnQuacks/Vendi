@@ -117,6 +117,7 @@ class FavoritesPageSetup extends StatelessWidget {
     // Sets up a favorites page using a scaffold object
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Row(
           children: [
             Image.asset(

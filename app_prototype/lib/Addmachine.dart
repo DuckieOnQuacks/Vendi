@@ -82,6 +82,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
     _getCurrentLocation();
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.pinkAccent),
         title: Row(
           children: [
             Image.asset(
