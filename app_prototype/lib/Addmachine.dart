@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:vendi_app/backend/firebase_helper.dart';
 import 'backend/machine_class.dart';
 import 'bottom_bar.dart';
+import 'package:vendi_app/backend/flask_helper.dart';
 
 const List<String> list = <String>['I don\'t know', 'Yes', 'No'];
 late String machineImage;
@@ -490,6 +491,7 @@ class _CameraScreenState extends State<CameraScreen> {
                     IconButton(
                       icon: const Icon(Icons.check),
                       onPressed: () async {
+                        predict(image);
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
                         await uploadImage(image.path);
