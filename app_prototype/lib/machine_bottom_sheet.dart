@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/backend/firebase_helper.dart';
@@ -21,8 +22,10 @@ class MachineBottomSheet extends StatefulWidget {
 }
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
-  bool isFavorite = selectedMachine?.isFavorited == 1;
+  Future<int?> isFavorite = dbHelper.getMachineFavoriteStatus(selectedMachine!);
   Future<Machine?> selectedMachineDB = FirebaseHelper().getMachineById(selectedMachine!);
+  FirebaseStorage storage = FirebaseStorage.instance;
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +40,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
         return const Center(child: Text('No data found'));
       } else {
         Machine machine = snapshot.data!;
+        print(machine.imagePath);
         return Center(
           child: Column(children: [
             const SizedBox(height: 10),
@@ -56,26 +60,36 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   Text('Supply Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
                   const SizedBox(width: 20),
                 ],
-                StatefulBuilder(builder: (BuildContext context, setState) {
+                //StatefulBuilder(builder: (BuildContext context, setState) {
                   // Checkbox for favoriting the machine
-                  return FavoriteButton(
-                    isFavorite: isFavorite,
-                    valueChanged: (value) {
-                      setState(() {
-                        isFavorite = value;
-                      });
-                      if (isFavorite) {
-                        selectedMachine?.isFavorited = 1;
-                        dbHelper.saveMachine(selectedMachine!);
-                        // Add to favorites
+                  FutureBuilder<int?>(
+                    future: dbHelper.getMachineFavoriteStatus(selectedMachine!),
+                    builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        int isFavorite = snapshot.data ?? 0;
+                        return FavoriteButton(
+                          isFavorite: isFavorite == 1,
+                          valueChanged: (value) {
+                            setState(() {
+                              isFavorite = value ? 1 : 0;
+                            });
+                            if (isFavorite == 1) {
+                              selectedMachine?.isFavorited = 1;
+                              dbHelper.saveMachine(selectedMachine!);
+                              // Add to favorites
+                            } else {
+                              // Remove from favorites
+                              selectedMachine?.isFavorited = 0;
+                              dbHelper.saveMachine(selectedMachine!);
+                            }
+                          },
+                        );
                       } else {
-                        // Remove from favorites
-                        selectedMachine?.isFavorited = 0;
-                        dbHelper.saveMachine(selectedMachine!);
+                        return const CircularProgressIndicator();
                       }
                     },
-                  );
-                }),
+                  ),
+               // }),
               ],
             ),
             Row(
@@ -95,11 +109,21 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                 Text('Last updated:',
                     style: GoogleFonts.bebasNeue(fontSize: 25)),
                 const SizedBox(width: 10),
-                Text('January 1, 2023', style: GoogleFonts.getFont(
-                    'Bebas Neue', fontSize: 25, color: Colors.grey[600])),
-                const SizedBox(width: 5),
-                Text('12:00pm', style: GoogleFonts.getFont(
-                    'Bebas Neue', fontSize: 25, color: Colors.grey[600])),
+                FutureBuilder<String>(
+                  future: machine.getImageCreationTime(),
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData) {
+                      return const Text('No data found');
+                    } else {
+                      return Text(snapshot.data!, style: GoogleFonts.getFont(
+                          'Bebas Neue', fontSize: 25, color: Colors.grey[600]));
+                    }
+                  },
+                ),
               ],
             ),
 

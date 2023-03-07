@@ -1,5 +1,8 @@
 
 // Define the class Machine
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
+
 class Machine {
   // Variables to store machine data
   final String id; // Unique ID for each machine (nullable)
@@ -61,4 +64,17 @@ class Machine {
     'operational': operational,
     'stock': stock
   };
+
+  Future<String> getImageCreationTime() async {
+    //We have to parse this link for the image id https://firebasestorage.googleapis.com/v0/b/vendimaps-371008.appspot.com/o/images%2F1677749160576?alt=media&token=27f39227-eebd-4b7b-9d89-101df695f290
+    final Uri uri = Uri.parse(imagePath);
+    final String imagePathDecoded = Uri.decodeFull(uri.path); // decode URL encoding in path
+    final String imageId = imagePathDecoded.split('/').last; // get last segment of path
+    //Once we have the name of the corresponding machines image. Retrieve the metadata.
+    final Reference storageRef = FirebaseStorage.instance.ref().child('images/$imageId');
+    final FullMetadata metadata = await storageRef.getMetadata();
+    final DateTime? creationTime = metadata.timeCreated;
+    final String formattedDate = DateFormat('MM/dd/yyyy hh:mm a').format(creationTime!);
+    return formattedDate;
+  }
 }

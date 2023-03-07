@@ -38,10 +38,14 @@ dependencies:
   image_picker:
   provider:
   favorite_button:
+
   # Google maps sdk
   geolocator:
   google_maps_flutter:
   location:
+
+  #For datetime
+  intl:
 
   #FireBase Imports
   firebase_core:

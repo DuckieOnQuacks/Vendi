@@ -111,4 +111,19 @@ class DatabaseHelper {
     final results = await db.rawQuery('SELECT COUNT(*) FROM $table');
     return Sqflite.firstIntValue(results) ?? 0;
   }
-}
+
+  Future<int?> getMachineFavoriteStatus(Machine machine) async {
+    final result = await db.query(
+      'Machine',
+      where: 'id = ?',
+      whereArgs: [machine.id],
+      columns: ['favorite'],
+    );
+    if (result.isEmpty) {
+      return null;
+    } else {
+      return result.first['favorite'] as int?;
+    }
+  }
+  }
+
