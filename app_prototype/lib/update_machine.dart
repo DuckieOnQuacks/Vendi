@@ -13,24 +13,16 @@ const List<String> list = <String>['I don\'t know', 'Yes', 'No'];
 late String machineImage;
 String imageUrl = ' ';
 
-class AddMachinePage extends StatefulWidget {
-  const AddMachinePage({Key? key}) : super(key: key);
+class UpdateMachinePage extends StatefulWidget {
+  const UpdateMachinePage({Key? key}) : super(key: key);
 
   @override
-  _AddMachinePageState createState() => _AddMachinePageState();
+  _UpdateMachinePageState createState() => _UpdateMachinePageState();
 }
 
-class _AddMachinePageState extends State<AddMachinePage> {
+class _UpdateMachinePageState extends State<UpdateMachinePage> {
   late List<CameraDescription> cameras;
-  final _buildingController = TextEditingController();
-  final _floorController = TextEditingController();
-  bool _isSnackSelected = false;
-  bool _isDrinkSelected = false;
-  bool _isSupplySelected = false;
-  Position? _currentPosition;
-  late int _selectedValueOperational = 0;
-  late int _selectedValueCash = 0;
-  late int _selectedValueCard = 0;
+  late int _selectedValueOperational = 2;
 
   @override
   void initState() {
@@ -41,45 +33,11 @@ class _AddMachinePageState extends State<AddMachinePage> {
     });
   }
 
-  @override
-  void dispose() {
-    _buildingController.dispose();
-    _floorController.dispose();
-    super.dispose();
-  }
-
-  _getCurrentLocation() async {
-    // Check if location permission is granted
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      // Request location permission if it is not granted
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // User has denied location permission, handle the error
-        if (kDebugMode) {
-          print('Location permission denied');
-        }
-        return;
-      }
-    }
-
-    // Retrieve the current location if location permission is granted
-    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
-    }).catchError((e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    });
-  }
 
 
   @override
   Widget build(BuildContext context) {
-    _getCurrentLocation();
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -99,9 +57,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              //photo
               const SizedBox(height: 16.0),
               const Text('Please take a front facing picture of the machine*',
-                  style: TextStyle(fontSize: 16)),
+                  style: TextStyle(fontSize: 20,  fontWeight: FontWeight.bold)),
               //camera icon
               Center(
                 child: IconButton(
@@ -111,58 +70,14 @@ class _AddMachinePageState extends State<AddMachinePage> {
                     icon: const Icon(Icons.camera_alt)),
               ),
               const SizedBox(height: 40.0),
-              //input fields
-              const Text('Building Name*', style: TextStyle(fontSize: 16)),
-              TextField(
-                decoration: const InputDecoration(
-                  hintText: 'Ex: Davidson Building'
-                ),
-                controller: _buildingController,
-              ),
-              const SizedBox(height: 16.0),
-              const Text('Floor Number*', style: TextStyle(fontSize: 16)),
-              TextField(
-                decoration: const InputDecoration(
-                    hintText: 'Ex: Floor 2'
-                ),
-                controller: _floorController,
-              ),
-              const SizedBox(height: 40.0),
-              const Text('Select Machine Type(s)*',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              CheckboxListTile(
-                title: const Text('Snack'),
-                value: _isSnackSelected,
-                onChanged: (value) {
-                  setState(() {
-                    _isSnackSelected = value!;
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text('Drink'),
-                value: _isDrinkSelected,
-                onChanged: (value) {
-                  setState(() {
-                    _isDrinkSelected = value!;
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text('Supply'),
-                value: _isSupplySelected,
-                onChanged: (value) {
-                  setState(() {
-                    _isSupplySelected = value!;
-                  });
-                },
-              ),
-              const SizedBox(height: 40.0),
-              const Text('Select Machine Options',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              //operating
               const SizedBox(height: 16.0),
               const Text('Is the machine currently operating?',
-                  style: TextStyle(fontSize: 16)),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10.0),
+              const Text('Note: If you did not attempt to buy anything from the machine, please select "Not Sure"',
+                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16)),
+              const SizedBox(height: 10.0),
               DropdownButton(
                 value: _selectedValueOperational,
                 items: const [
@@ -174,6 +89,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
                     value: 0,
                     child: Text('No'),
                   ),
+                  DropdownMenuItem(
+                    value: 2,
+                    child: Text('Not Sure'),
+                  ),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -181,56 +100,11 @@ class _AddMachinePageState extends State<AddMachinePage> {
                   });
                 },
               ),
-
-              const SizedBox(height: 20.0),
-              const Text('Does the machine take cash?*',
-                  style: TextStyle(fontSize: 16)),
-              DropdownButton(
-                value: _selectedValueCash,
-                items: const [
-                  DropdownMenuItem(
-                    value: 1,
-                    child: Text('Yes'),
-                  ),
-                  DropdownMenuItem(
-                    value: 0,
-                    child: Text('No'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedValueCash = value!;
-                  });
-                },
-              ),
-              //const DropdownButtonMenu(),
-              const SizedBox(height: 20.0),
-              const Text('Does the machine take card?*',
-                  style: TextStyle(fontSize: 16)),
-              DropdownButton(
-                value: _selectedValueCard,
-                items: const [
-                  DropdownMenuItem(
-                    value: 1,
-                    child: Text('Yes'),
-                  ),
-                  DropdownMenuItem(
-                    value: 0,
-                    child: Text('No'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedValueCard = value!;
-                  });
-                },
-              ),
-              // const DropdownButtonMenu(),
               const SizedBox(height: 20.0),
               const Text('*Required', style: TextStyle(color: Colors.red)),
               const SizedBox(height: 20.0),
 
-              Center(
+         /*     Center(
                 //submit button
                 child: TextButton(
                     onPressed: () {
@@ -241,7 +115,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                             return AlertDialog(
                               title: const Text('Confirm Submission'),
                               content: const Text(
-                                  'Are you sure you want to submit a form for a new vending machine?'),
+                                  'Are you sure you want to submit a form to update this vending machine?'),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {
@@ -266,6 +140,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           card: _selectedValueCard,
                                           cash: _selectedValueCash,
                                           operational: _selectedValueOperational,
+                                          stock: _selectedValueStock,
                                         );
                                         FirebaseHelper().addMachine(test1);
                                         _isDrinkSelected = false;
@@ -273,7 +148,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const BottomBar()),
+                                              const BottomBar()),
                                         );
                                       } else if (_isSnackSelected == true) {
                                         Machine test2 = Machine(
@@ -288,6 +163,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           card: _selectedValueCard,
                                           cash: _selectedValueCash,
                                           operational: _selectedValueOperational,
+                                          stock: _selectedValueStock,
                                         );
                                         FirebaseHelper().addMachine(test2);
                                         _isSnackSelected = false;
@@ -295,7 +171,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const BottomBar()),
+                                              const BottomBar()),
                                         );
                                       } else if (_isSupplySelected == true) {
                                         Machine test3 = Machine(
@@ -310,6 +186,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           card: _selectedValueCard,
                                           cash: _selectedValueCash,
                                           operational: _selectedValueOperational,
+                                          stock: _selectedValueStock,
                                         );
                                         FirebaseHelper().addMachine(test3);
                                         _isSupplySelected = false;
@@ -317,7 +194,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const BottomBar()),
+                                              const BottomBar()),
                                         );
                                       }
                                     });
@@ -342,7 +219,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     )),
-              )
+              ) */
             ],
           ),
         ),
@@ -362,7 +239,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
 
     // Open the camera and store the resulting CameraController
     CameraController controller =
-        CameraController(camera, ResolutionPreset.high);
+    CameraController(camera, ResolutionPreset.high);
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it

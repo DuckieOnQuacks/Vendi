@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/backend/firebase_helper.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'package:favorite_button/favorite_button.dart';
-import 'Addmachine.dart';
+import 'update_machine.dart';
 import 'main.dart';
 
 // All code on this page was developed by the team using the flutter framework
@@ -231,7 +231,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const AddMachinePage()),
+                            builder: (context) => const UpdateMachinePage()),
                       );
                     },
                     child: const Text("Update Machine"))
