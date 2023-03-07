@@ -28,10 +28,9 @@ class _AddMachinePageState extends State<AddMachinePage> {
   bool _isDrinkSelected = false;
   bool _isSupplySelected = false;
   Position? _currentPosition;
-  late int _selectedValueOperational = 2;
-  late int _selectedValueCash = 2;
-  late int _selectedValueCard = 2;
-  late int _selectedValueStock = 2;
+  late int _selectedValueOperational = 0;
+  late int _selectedValueCash = 0;
+  late int _selectedValueCard = 0;
 
   @override
   void initState() {
@@ -81,7 +80,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
   @override
   Widget build(BuildContext context) {
     _getCurrentLocation();
-
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -176,10 +174,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                     value: 0,
                     child: Text('No'),
                   ),
-                  DropdownMenuItem(
-                    value: 2,
-                    child: Text('Not Sure'),
-                  ),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -187,32 +181,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                   });
                 },
               ),
-              const SizedBox(height: 20.0),
-              const Text('Is the machine stocked more than halfway?',
-                  style: TextStyle(fontSize: 16)),
-              DropdownButton(
-                value: _selectedValueStock,
-                items: const [
-                  DropdownMenuItem(
-                    value: 1,
-                    child: Text('Yes'),
-                  ),
-                  DropdownMenuItem(
-                    value: 0,
-                    child: Text('No'),
-                  ),
-                  DropdownMenuItem(
-                    value: 2,
-                    child: Text('Not Sure'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedValueStock = value!;
-                  });
-                },
-              ),
-              //const DropdownButtonMenu(),
+
               const SizedBox(height: 20.0),
               const Text('Does the machine take cash?',
                   style: TextStyle(fontSize: 16)),
@@ -226,10 +195,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                   DropdownMenuItem(
                     value: 0,
                     child: Text('No'),
-                  ),
-                  DropdownMenuItem(
-                    value: 2,
-                    child: Text('Not Sure'),
                   ),
                 ],
                 onChanged: (value) {
@@ -252,10 +217,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                   DropdownMenuItem(
                     value: 0,
                     child: Text('No'),
-                  ),
-                  DropdownMenuItem(
-                    value: 2,
-                    child: Text('Not Sure'),
                   ),
                 ],
                 onChanged: (value) {
@@ -305,7 +266,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           card: _selectedValueCard,
                                           cash: _selectedValueCash,
                                           operational: _selectedValueOperational,
-                                          stock: _selectedValueStock,
                                         );
                                         FirebaseHelper().addMachine(test1);
                                         _isDrinkSelected = false;
@@ -328,7 +288,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           card: _selectedValueCard,
                                           cash: _selectedValueCash,
                                           operational: _selectedValueOperational,
-                                          stock: _selectedValueStock,
                                         );
                                         FirebaseHelper().addMachine(test2);
                                         _isSnackSelected = false;
@@ -351,7 +310,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                           card: _selectedValueCard,
                                           cash: _selectedValueCash,
                                           operational: _selectedValueOperational,
-                                          stock: _selectedValueStock,
                                         );
                                         FirebaseHelper().addMachine(test3);
                                         _isSupplySelected = false;

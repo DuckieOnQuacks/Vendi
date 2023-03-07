@@ -18,8 +18,7 @@ class FirebaseHelper {
         icon: machine.icon,
         card: machine.card,
         cash: machine.cash,
-        operational: machine.operational,
-        stock: machine.stock);
+        operational: machine.operational);
     final json = machineTable.toJson();
     //Create document and write data to firestore
     await docMachine.set(json);

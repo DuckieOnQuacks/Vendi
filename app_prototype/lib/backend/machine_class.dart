@@ -16,7 +16,6 @@ class Machine {
   final int card; // Whether the machine accepts card payments or not
   final int cash; // Whether the machine accepts cash payments or not
   final int operational; // Whether the machine is operational or not
-  final int stock; // Amount of stock in the machine
 
   // Constructor for the Machine class
   Machine(
@@ -30,8 +29,7 @@ class Machine {
         required this.icon,
         required this.card,
         required this.cash,
-        required this.operational,
-        required this.stock});
+        required this.operational});
 
   // Factory method to create a Machine object from JSON data
   factory Machine.fromJson(Map<String, dynamic> json) => Machine(
@@ -45,8 +43,7 @@ class Machine {
       icon: json['icon'],
       card: json['card'],
       cash: json['cash'],
-      operational: json['operational'],
-      stock: json['stock']
+      operational: json['operational']
   );
 
   // Method to convert a Machine object to JSON data
@@ -61,8 +58,7 @@ class Machine {
     'icon': icon,
     'card': card,
     'cash': cash,
-    'operational': operational,
-    'stock': stock
+    'operational': operational
   };
 
   Future<String> getImageCreationTime() async {

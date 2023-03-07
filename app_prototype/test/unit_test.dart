@@ -25,7 +25,6 @@ void main()
       'card': 1,
       'cash': 1,
       'operational': 1,
-      'stock': 0
     };
 
     // Do
@@ -43,7 +42,6 @@ void main()
     expect(machineTest.card, 1);
     expect(machineTest.cash, 1);
     expect(machineTest.operational, 1);
-    expect(machineTest.stock, 0);
   });
 
 
@@ -64,7 +62,7 @@ void main()
       card: 0,
       cash: 1,
       operational: 1,
-      stock: 1
+
     );
 
     // Do
@@ -82,7 +80,6 @@ void main()
     expect(jsonTest['card'], 0);
     expect(jsonTest['cash'], 1);
     expect(jsonTest['operational'], 1);
-    expect(jsonTest['stock'], 1);
   });
 
 
@@ -105,7 +102,6 @@ void main()
         card: 0,
         cash: 1,
         operational: 1,
-        stock: 0
     );
     //Do
     //Add the machine to the firestore database
@@ -125,7 +121,6 @@ void main()
     expect(test?.card, 0);
     expect(test?.cash, 1);
     expect(test?.operational, 1);
-    expect(test?.stock, 0);
 
     //Cleanup by deleting the machine from the database.
     FirebaseHelper().deleteMachineById(test!);
