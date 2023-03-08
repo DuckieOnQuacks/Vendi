@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'machine_class.dart';
+import 'user_class.dart';
 
 class FirebaseHelper {
   // Variables to store machine data
   String tableName = 'Machines';
+  String userTable = 'Users';
 
   //Creates a machine table that is to be sent to the firebase database, before it is sent it converts it to JSON format
   Future addMachine(Machine machine) async {
@@ -23,6 +26,7 @@ class FirebaseHelper {
     //Create document and write data to firestore
     await docMachine.set(json);
   }
+
 
   //Makes a Firestore instance, gets a snapshot fo the data inside the Machine collection
   //Returns a list of machines and the data inside them
@@ -82,4 +86,20 @@ class FirebaseHelper {
       print('Machine updated');
     }
   }
+
+
+  //Creates a machine table that is to be sent to the firebase database, before it is sent it converts it to JSON format
+  Future addUser(userInfo user) async {
+    final docUser = FirebaseFirestore.instance.collection(userTable).doc();
+    final userTableTemp = userInfo(
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        points: user.points
+    );
+    final json = userTableTemp.toJson();
+    //Create document and write data to firestore
+    await docUser.set(json);
+  }
+
 }
