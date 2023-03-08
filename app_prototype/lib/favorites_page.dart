@@ -4,7 +4,6 @@ import 'backend/machine_class.dart';
 import 'main.dart';
 
 // All code on this page was developed by the team using the flutter framework
-
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
 
@@ -40,6 +39,14 @@ class _FavoritePageState extends State<FavoritesPage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final favMachines = snapshot.data!;
+          //Check to see if the favorite machine list is empty
+          if(favMachines.isEmpty)
+            {
+              return const Center(
+                child: Text("No Favorite Machines"),
+              );
+            }
+          //If not display the machines
           return ListView.builder(
             padding: const EdgeInsets.only(top: 10),
             itemCount: favMachines.length,

@@ -4,28 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/login_page.dart';
 import 'dart:core';
+import 'backend/firebase_helper.dart';
+import 'backend/user_class.dart';
 
-
-
-// All code on this page was developed by the team using the flutter framework
-final usernameController = TextEditingController();
-final passwordController = TextEditingController();
-final confirmPassword = TextEditingController();
-final firstName = TextEditingController();
-final lastName = TextEditingController();
-final points = TextEditingController();
 
 
 //Object Cleanup, removes from tree permanently
-@override
-void dispose() {
-  usernameController.dispose();
-  passwordController.dispose();
-  confirmPassword.dispose();
-  firstName.dispose();
-  lastName.dispose();
-
-}
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
@@ -35,6 +19,14 @@ class RegisterPage extends StatefulWidget {
 
 //Register
 class _RegisterPageState extends State<RegisterPage> {
+  // All code on this page was developed by the team using the flutter framework
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
+  final TextEditingController firstName = TextEditingController();
+  final TextEditingController lastName = TextEditingController();
+  int points = 0;
+
   void signUserUp() async {
     showDialog(
       context: context,
@@ -89,31 +81,39 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
 
+
 //signs the user up and syncs data into database
 Future createAccount()async{
     //checks to see if passwords are correct
   if (passwordController.text == confirmPassword.text) {
     await FirebaseAuth.instance.createUserWithEmailAndPassword
       (email: usernameController.text, password: passwordController.text);
-  };
+  }
   //adds remaining details to user account
-  userDetails(
-    firstName.text.trim(),
-    lastName.text.trim(),
-    usernameController.text.trim(),
-    int.parse(points.text.trim()), //converts into an integer
-  );
+  userInfo user = userInfo(firstname: firstName.text, lastname: lastName.text, email: usernameController.text, points: points);
+  FirebaseHelper().addUser(user);
+  Navigator.of(context).pop(true);
+
 }
 
 //Adds all account details
-Future userDetails(String fName, String lName, String email, int points)async {
-    await FirebaseFirestore.instance.collection('users').add({
+Future userDetails(String fName, String lName, String email, int points) async {
+    await FirebaseFirestore.instance.collection('Users').add({
       'first name': firstName,
       'last name': lastName,
       'email': email,
       'points': points,
-
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    confirmPassword.dispose();
+    firstName.dispose();
+    lastName.dispose();
   }
 
   @override
@@ -261,7 +261,7 @@ Future userDetails(String fName, String lName, String email, int points)async {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: ElevatedButton(
                   onPressed: () {
-                      signUserUp();
+                      createAccount();
                   },
                   style: ButtonStyle(
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
