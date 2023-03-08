@@ -13,6 +13,6 @@ void predict(XFile imageFile) async
   request.files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 
   var response = await request.send();
-  var responseJson = jsonDecode(response.toString());
-  print(responseJson['result']);
+  var responseJson = jsonDecode(await response.stream.bytesToString());
+  print(responseJson);
 }
