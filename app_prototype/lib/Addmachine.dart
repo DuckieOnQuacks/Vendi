@@ -10,7 +10,6 @@ import 'backend/machine_class.dart';
 import 'bottom_bar.dart';
 import 'package:vendi_app/backend/flask_helper.dart';
 
-const List<String> list = <String>['I don\'t know', 'Yes', 'No'];
 late String machineImage;
 String imageUrl = ' ';
 
@@ -29,7 +28,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
   bool _isDrinkSelected = false;
   bool _isSupplySelected = false;
   Position? _currentPosition;
-  late int _selectedValueOperational = 0;
+  late int _selectedValueOperational = 2;
   late int _selectedValueCash = 0;
   late int _selectedValueCard = 0;
 
@@ -112,7 +111,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
                     onPressed: () {
                       openCamera();
                     },
+
+
                     icon: const Icon(Icons.camera_alt)),
+
               ),
               const SizedBox(height: 40.0),
               //input fields
@@ -132,7 +134,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 controller: _floorController,
               ),
               const SizedBox(height: 40.0),
-              const Text('Select Machine Type(s)*',
+              const Text('Select Machine Type*',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               RadioListTile<int>(
                 title: const Text('Snack'),
@@ -176,6 +178,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
               DropdownButton(
                 value: _selectedValueOperational,
                 items: const [
+                  DropdownMenuItem(
+                    value: 2,
+                    child: Text('Not Sure'),
+                  ),
                   DropdownMenuItem(
                     value: 1,
                     child: Text('Yes'),
@@ -410,6 +416,19 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.pinkAccent),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              fit: BoxFit.contain,
+              height: 32,
+            )
+          ],
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: Stack(
         children: [
           // Add the camera preview widget to the stack

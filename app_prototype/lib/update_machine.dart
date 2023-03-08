@@ -278,6 +278,19 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.pinkAccent),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              fit: BoxFit.contain,
+              height: 32,
+            )
+          ],
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: Stack(
         children: [
           // Add the camera preview widget to the stack
