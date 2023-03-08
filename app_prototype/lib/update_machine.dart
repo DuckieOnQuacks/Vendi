@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:vendi_app/backend/firebase_helper.dart';
+import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'backend/machine_class.dart';
 import 'bottom_bar.dart';
 
@@ -22,7 +23,6 @@ class UpdateMachinePage extends StatefulWidget {
 
 class _UpdateMachinePageState extends State<UpdateMachinePage> {
   late List<CameraDescription> cameras;
-  late int _selectedValueOperational = 2;
 
   @override
   void initState() {
@@ -32,8 +32,6 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
       cameras = availableCameras;
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +78,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                   style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16)),
               const SizedBox(height: 10.0),
               DropdownButton(
-                value: _selectedValueOperational,
+                value: selectedMachine?.operational,
                 items: const [
                   DropdownMenuItem(
                     value: 1,
@@ -97,15 +95,14 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                 ],
                 onChanged: (value) {
                   setState(() {
-                    _selectedValueOperational = value!;
+                    FirebaseHelper().updateMachine(selectedMachine!);
                   });
                 },
               ),
               const SizedBox(height: 20.0),
               const Text('*Required', style: TextStyle(color: Colors.red)),
               const SizedBox(height: 20.0),
-
-         /*     Center(
+              Center(
                 //submit button
                 child: TextButton(
                     onPressed: () {
@@ -127,79 +124,13 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                                 //Creating a machine class object out of the choices made by the user
                                 TextButton(
                                   onPressed: () {
-                                    setState(() {
-                                      if (_isDrinkSelected == true) {
-                                        Machine test1 = Machine(
-                                          id: '',
-                                          name: _buildingController.text,
-                                          desc: _floorController.text,
-                                          lat: _currentPosition!.latitude,
-                                          lon: _currentPosition!.longitude,
-                                          imagePath: imageUrl,
-                                          isFavorited: 0,
-                                          icon: "assets/images/BlueMachine.png",
-                                          card: _selectedValueCard,
-                                          cash: _selectedValueCash,
-                                          operational: _selectedValueOperational,
-                                          stock: _selectedValueStock,
-                                        );
-                                        FirebaseHelper().addMachine(test1);
-                                        _isDrinkSelected = false;
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
+                                        selectedMachine?.imagePath = imageUrl;
+                                        FirebaseHelper().updateMachine(selectedMachine!);
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) =>
                                               const BottomBar()),
                                         );
-                                      } else if (_isSnackSelected == true) {
-                                        Machine test2 = Machine(
-                                          id: '',
-                                          name: _buildingController.text,
-                                          desc: _floorController.text,
-                                          lat: _currentPosition!.latitude,
-                                          lon: _currentPosition!.longitude,
-                                          imagePath: imageUrl,
-                                          isFavorited: 0,
-                                          icon: "assets/images/PinkMachine.png",
-                                          card: _selectedValueCard,
-                                          cash: _selectedValueCash,
-                                          operational: _selectedValueOperational,
-                                          stock: _selectedValueStock,
-                                        );
-                                        FirebaseHelper().addMachine(test2);
-                                        _isSnackSelected = false;
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                              const BottomBar()),
-                                        );
-                                      } else if (_isSupplySelected == true) {
-                                        Machine test3 = Machine(
-                                          id: '',
-                                          name: _buildingController.text,
-                                          desc: _floorController.text,
-                                          lat: _currentPosition!.latitude,
-                                          lon: _currentPosition!.longitude,
-                                          imagePath: imageUrl,
-                                          isFavorited: 0,
-                                          icon: "assets/images/YellowMachine.png",
-                                          card: _selectedValueCard,
-                                          cash: _selectedValueCash,
-                                          operational: _selectedValueOperational,
-                                          stock: _selectedValueStock,
-                                        );
-                                        FirebaseHelper().addMachine(test3);
-                                        _isSupplySelected = false;
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                              const BottomBar()),
-                                        );
-                                      }
-                                    });
-                                  },
+                                      },
                                   child: const Text('Submit'),
                                 ),
                               ],
@@ -220,7 +151,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     )),
-              ) */
+              )
             ],
           ),
         ),

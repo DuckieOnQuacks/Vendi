@@ -3,16 +3,30 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
 
-void predict(XFile imageFile) async
+Future<bool> predict(XFile file) async
 {
-  final image = File(imageFile.path);
+  http.StreamedResponse response;
+  var responseJson;
+  final image = File(file.path);
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.217:5000/image')
+    Uri.parse('http://71.94.11.69:5050/image')
   );
-  request.files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+  request.files.add(await http.MultipartFile.fromPath('image', file.path));
 
-  var response = await request.send();
-  var responseJson = jsonDecode(await response.stream.bytesToString());
-  print(responseJson);
-}
+  try {
+    response = await request.send();
+    responseJson = jsonDecode(await response.stream.bytesToString());
+    print(responseJson);
+    double castedJson = responseJson.toDouble();
+  }catch (e){
+    print('Error occurred while sending request: $e');
+    return false;
+  }
+
+    if(responseJson < 0.5) {
+      return true;
+    } else {
+      return false;
+    }
+  }
