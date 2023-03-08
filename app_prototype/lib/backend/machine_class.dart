@@ -15,7 +15,7 @@ class Machine {
   final String icon; // Icon of the machine on Google Maps
   final int card; // Whether the machine accepts card payments or not
   final int cash; // Whether the machine accepts cash payments or not
-  final int operational; // Whether the machine is operational or not
+  late final int operational; // Whether the machine is operational or not
 
   // Constructor for the Machine class
   Machine(

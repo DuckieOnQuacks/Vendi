@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -477,10 +476,32 @@ class _CameraScreenState extends State<CameraScreen> {
                     IconButton(
                       icon: const Icon(Icons.check),
                       onPressed: () async {
-                        predict(image);
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                        await uploadImage(image.path);
+                        bool status = await predict(image);
+                        if (status == true) {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          await uploadImage(image.path);
+                        }
+                        else {
+                          Navigator.of(context).pop();
+                          showDialog(
+                            context: context, builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Error'),
+                              content: const Text(
+                                  "Image not accepted. Please try again."),
+                              actions: [
+                                ElevatedButton(
+                                  child: const Text("Ok"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          },
+                          );
+                        }
                       },
                     ),
                   ],

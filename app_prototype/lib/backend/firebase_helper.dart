@@ -68,4 +68,18 @@ class FirebaseHelper {
       print("Machine deleted");
     }
   }
+
+  Future<void> updateMachine(Machine machine) async {
+    final machinesCollection = FirebaseFirestore.instance.collection('Machines');
+    final querySnapshot = await machinesCollection.where('id', isEqualTo: machine.id).get();
+    if (querySnapshot.size > 0) {
+      final machineDoc = querySnapshot.docs.first.reference;
+      await machineDoc.update({
+        'imagePath': machine.imagePath,
+        'operational': machine.operational,
+        // add more fields as needed
+      });
+      print('Machine updated');
+    }
+  }
 }

@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/register_page.dart';
 
 // All code on this page was developed by the team using the flutter framework
-final TextEditingController usernameController = TextEditingController();
-final TextEditingController passwordController = TextEditingController();
+late final TextEditingController usernameController = TextEditingController();
+late final TextEditingController passwordController = TextEditingController();
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
