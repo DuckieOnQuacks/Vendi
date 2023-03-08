@@ -38,6 +38,7 @@ dependencies:
   image_picker:
   provider:
   favorite_button:
+  sleek_circular_slider:
 
   # Google maps sdk
   geolocator:

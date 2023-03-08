@@ -53,14 +53,14 @@ class PointsRedemptionPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 50,
                 )),
-            Text('100 Vendi Points',
+            Text('500 Vendi Points',
                 style: GoogleFonts.chicle(
                   fontWeight: FontWeight.bold,
                   fontSize: 50,
                 )),
             const SizedBox(height: 10),
             const SizedBox(height: 10),
-            Text('Redeem \$1 reward',
+            Text('Redeem \$5 reward',
                 style: GoogleFonts.bebasNeue(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -84,7 +84,7 @@ class PointsRedemptionPage extends StatelessWidget {
                             side: const BorderSide(color: Colors.pinkAccent)))),
                 child: const Center(
                   child: Text(
-                    'Swap 25 points',
+                    'Swap 500 points',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

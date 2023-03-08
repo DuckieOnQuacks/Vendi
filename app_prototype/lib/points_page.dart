@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path/path.dart';
 import 'package:vendi_app/point_redemption_page.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 // All code on this page was developed by the team using the flutter framework
 
@@ -31,10 +33,9 @@ class PointsPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/YellowMachine.png',
-              scale: 5,
+              'assets/images/3MachinesStacked.png',
+              scale: 2,
             ),
-            const SizedBox(height: 25),
             Text(
               'Kermit, you have',
               style: GoogleFonts.bebasNeue(
@@ -42,24 +43,47 @@ class PointsPage extends StatelessWidget {
                 fontSize: 50,
               ),
             ),
-            const SizedBox(height: 1),
-            Text(
-              '100',
-              style: GoogleFonts.chicle(
-                fontSize: 100,
+            const SizedBox(height: 20),
+            SleekCircularSlider(
+              min: 0,
+              max: 500,
+              appearance: CircularSliderAppearance(
+                size: 250,
+                startAngle: 180,
+                angleRange: 180,
+                customColors: CustomSliderColors(
+                  // trackColor: Colors.red,
+                  trackColor: Colors.pink,
+                  progressBarColors: [Colors.pinkAccent, Colors.yellow, Colors.lightBlueAccent],
+                  //progressBarColor: Colors.lightBlueAccent,
+                  dotColor: Colors.white,
+                  shadowColor: Colors.pink[900],
+                ),
+                infoProperties: InfoProperties(
+                  mainLabelStyle: GoogleFonts.chicle(fontSize: 50, fontWeight: FontWeight.bold),
+                  bottomLabelText: 'Vendi Points',
+                  bottomLabelStyle: GoogleFonts.bebasNeue(fontSize: 40, fontWeight: FontWeight.bold),
+                  modifier: (double value) {
+                    final roundedValue = value
+                        .toStringAsFixed(1);
+                    return roundedValue;
+                  },
+                ),
               ),
+              initialValue: 250,
+              onChange: (double value){
+                print(value);
+              },
+              onChangeStart: (double value){
+                print('Start $value');
+              },
+              onChangeEnd: (double value){
+                print('End $value');
+              },
             ),
-            Text(
-              'Vendi points.',
-              style: GoogleFonts.bebasNeue(
-                fontWeight: FontWeight.bold,
-                fontSize: 50,
-              ),
-            ),
-            const SizedBox(height: 10),
-            //sign in button
+
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              padding: const EdgeInsets.symmetric(horizontal: 80.0),
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context)
@@ -69,7 +93,7 @@ class PointsPage extends StatelessWidget {
                 },
                 style: ButtonStyle(
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        const EdgeInsets.all(25)),
+                        const EdgeInsets.all(20)),
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.pinkAccent),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
