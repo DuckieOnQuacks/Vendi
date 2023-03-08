@@ -1,13 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/login_page.dart';
+import 'dart:core';
+
+
 
 // All code on this page was developed by the team using the flutter framework
 final usernameController = TextEditingController();
 final passwordController = TextEditingController();
 final confirmPassword = TextEditingController();
+final firstName = TextEditingController();
+final lastName = TextEditingController();
+final points = TextEditingController();
 
+
+//Object Cleanup, removes from tree permanently
+@override
+void dispose() {
+  usernameController.dispose();
+  passwordController.dispose();
+  confirmPassword.dispose();
+  firstName.dispose();
+  lastName.dispose();
+
+}
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
@@ -15,6 +33,7 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
+//Register
 class _RegisterPageState extends State<RegisterPage> {
   void signUserUp() async {
     showDialog(
@@ -32,7 +51,16 @@ class _RegisterPageState extends State<RegisterPage> {
             email: usernameController.text, password: passwordController.text);
       } else {
         //show error message if they arent the same
-        showErrorMessage("Passwords don't match!");
+        showErrorMessage("Passwords don't match!"); //calls box and displays message
+      }
+
+      //Checks if length of passwords entered are greater than 6
+      if (passwordController.text.length > 6 && confirmPassword.text.length > 6) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: usernameController.text, password: passwordController.text);
+      } else {
+        //show error message if they arent the same
+        showErrorMessage("Length must be greater than 6!"); //calls box and displays message
       }
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
@@ -41,6 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  //error message box
   //Show error message if password or email is invalid
   void showErrorMessage(String message) {
     showDialog(
@@ -57,6 +86,34 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       },
     );
+  }
+
+
+//signs the user up and syncs data into database
+Future createAccount()async{
+    //checks to see if passwords are correct
+  if (passwordController.text == confirmPassword.text) {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword
+      (email: usernameController.text, password: passwordController.text);
+  };
+  //adds remaining details to user account
+  userDetails(
+    firstName.text.trim(),
+    lastName.text.trim(),
+    usernameController.text.trim(),
+    int.parse(points.text.trim()), //converts into an integer
+  );
+}
+
+//Adds all account details
+Future userDetails(String fName, String lName, String email, int points)async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'first name': firstName,
+      'last name': lastName,
+      'email': email,
+      'points': points,
+
+    });
   }
 
   @override
@@ -81,7 +138,54 @@ class _RegisterPageState extends State<RegisterPage> {
                     fontSize: 50,
                   )),
               const SizedBox(height: 40),
-              //email text field
+              //firstname text field
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: TextField(
+                      controller: firstName,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'First Name',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10), //Create Space between both boxes
+
+              //Last name text field
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: TextField(
+                      controller: lastName,
+                      obscureText: false,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Last Name',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              //Email Text
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
@@ -102,7 +206,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10), //Create Space between both boxes
+              const SizedBox(height: 10),
+
               //Password text field
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -116,7 +221,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
                       controller: passwordController,
-                      obscureText: true, //Hides password
+                      obscureText: true, //Hides password text
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Password',
@@ -125,7 +230,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 10), //Create Space between both boxes
+
+              //email text field
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
@@ -138,17 +245,18 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
                       controller: confirmPassword,
-                      obscureText: true, //Hides password
+                      obscureText: true, //Hides password text
                       decoration: const InputDecoration(
                         border: InputBorder.none,
-                        hintText: ' Confirm Password',
+                        hintText: 'Confirm Password',
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20), //Create Space between both boxes
               //Create account button
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: ElevatedButton(
