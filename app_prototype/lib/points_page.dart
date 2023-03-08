@@ -70,7 +70,7 @@ class PointsPage extends StatelessWidget {
                   },
                 ),
               ),
-              initialValue: 250,
+              initialValue: 500,
               onChange: (double value){
                 print(value);
               },

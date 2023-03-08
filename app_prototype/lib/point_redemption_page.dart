@@ -27,6 +27,7 @@ class PointsRedemptionPage extends StatelessWidget {
         });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,10 +96,10 @@ class PointsRedemptionPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            Text('Redeem \$2 reward',
+            Text('Want more information on how Vendi Points work?',
                 style: GoogleFonts.bebasNeue(
                   fontWeight: FontWeight.bold,
-                  fontSize: 30,
+                  fontSize: 20,
                 )),
             const SizedBox(height: 10),
             //button will go to popup window
@@ -106,57 +107,40 @@ class PointsRedemptionPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: ElevatedButton(
                 onPressed: () {
-                  createAlertDialog(context);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Vendi Point Information'),
+                        content: const Text(
+                            '100 Vendi points is equal to \$1. Points can be redeemed beginning at 500 points. Once 500 points is reached, the user can redeem points in \$1 incriminates. For instance, a user can redeem 800 Vendi Points for \$8. Each time a user adds a new machine they will gain 30 points. Each time a user updates an existing machine the user will gain 15 points.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
                 },
                 style: ButtonStyle(
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        const EdgeInsets.all(25)),
+                        const EdgeInsets.all(15)),
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.lightBlue),
+                        MaterialStateProperty.all<Color>(Colors.white),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Colors.lightBlue)))),
+                            side: const BorderSide(color: Colors.white)))),
                 child: const Center(
                   child: Text(
-                    'Swap 50 points',
+                    'Click here',
                     style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 40),
-            Text('Redeem \$4 reward',
-                style: GoogleFonts.bebasNeue(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                )),
-            const SizedBox(height: 10),
-            //button will go to popup window
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  createAlertDialog(context);
-                },
-                style: ButtonStyle(
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        const EdgeInsets.all(25)),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.deepPurple),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Colors.deepPurple)))),
-                child: const Center(
-                  child: Text(
-                    'Swap 100 points',
-                    style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
