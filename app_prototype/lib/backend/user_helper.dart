@@ -9,9 +9,9 @@ class userInfo {
   // Constructor for the Machine class
   userInfo(
       {required this.firstname,
-      required this.lastname,
-      required this.email,
-      required this.points});
+        required this.lastname,
+        required this.email,
+        required this.points});
 
   // Factory method to create a Machine object from JSON data
   factory userInfo.fromJson(Map<String, dynamic> json) => userInfo(
@@ -22,9 +22,9 @@ class userInfo {
 
   // Method to convert a Machine object to JSON data
   Map<String, dynamic> toJson() => {
-        'firstname': firstname,
-        'lastname': lastname,
-        'email': email,
-        'points': points,
-      };
+    'firstname': firstname,
+    'lastname': lastname,
+    'email': email,
+    'points': points,
+  };
 }

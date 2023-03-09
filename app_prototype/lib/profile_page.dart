@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendi_app/edit_profile.dart';
+import 'backend/user_helper.dart';
+
 
 // All code on this page was developed by the team using the flutter framework
 
@@ -11,107 +14,164 @@ class ProfilePage extends StatelessWidget {
     FirebaseAuth.instance.signOut();
   }
 
-  final user = FirebaseAuth.instance.currentUser!;
+  late final user = FirebaseAuth.instance.currentUser!;
+
+  String firstName = '';
+  String lastName = '';
+  int points = 0;
+
+  Future<userInfo?> getUserByEmail(String email) async {
+    try {
+      final db = FirebaseFirestore.instance;
+      final query = db.collection('Users').where('email', isEqualTo: email);
+      final snapshot = await query.get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final userData = snapshot.docs.single.data();
+        final firstName = userData['first name'] as String?;
+        final lastName = userData['last name'] as String?;
+        final points = userData['points'] as int?;
+
+        if (firstName != null && lastName != null && points != null) {
+          return userInfo(
+            firstname: firstName,
+            lastname: lastName,
+            email: user.email!,
+            points: points,
+          );
+        }
+      }
+
+      print('No user found with email $email');
+      return null;
+    } catch (e) {
+      print('Error getting user by email: $e');
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: [
-              Image.asset(
-                'assets/images/logo.png',
-                fit: BoxFit.contain,
-                height: 32,
-              )
-            ],
-          ),
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.logout, color: Colors.pink),
-              onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Confirm Log Out'),
-                        content: const Text(
-                            'Are you sure you want to log out of your account?'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(false);
-                            },
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              signUserOut();
-                              Navigator.of(context, rootNavigator: true).pop();
-                            },
-                            child: const Text('Sign Out'),
-                          ),
-                        ],
-                      );
-                    },
-                  ).then((value) {
-                    if (value != null && value == true) {
-                      // Perform deletion logic here
-                    }
-                  });
-              },
-            ),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              fit: BoxFit.contain,
+              height: 32,
+            )
           ],
         ),
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: 120,
-                    height: 120,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: const Image(
-                        image: AssetImage('assets/images/KermitProfile.jpg'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.pink),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirm Log Out'),
+                    content: const Text(
+                        'Are you sure you want to log out of your account?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                        child: const Text('Cancel'),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(user.email!,
-                      style: Theme.of(context).textTheme.headline4),
-                  Text(user.email!,
-                      style: Theme.of(context).textTheme.bodyText2),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: 200,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          return const EditProfile();
-                        }));
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow,
-                          side: BorderSide.none,
-                          shape: const StadiumBorder()),
-                      child: const Text('Edit Profile',
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  const Divider(),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ),
+                      TextButton(
+                        onPressed: () {
+                          signUserOut();
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                        child: const Text('Sign Out'),
+                      ),
+                    ],
+                  );
+                },
+              ).then((value) {
+                if (value != null && value == true) {
+                  // Perform deletion logic here
+                }
+              });
+            },
           ),
-        ));
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: FutureBuilder<userInfo?>(
+        future: getUserByEmail(user.email!),
+        builder: (BuildContext context, AsyncSnapshot<userInfo?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Error fetching user data'));
+          } else if (!snapshot.hasData) {
+            return const Center(child: Text('No user data found'));
+          } else {
+            final user = snapshot.data!;
+            return SingleChildScrollView(
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: const Image(
+                            image: AssetImage(
+                                'assets/images/KermitProfile.jpg'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(user.firstname, style: const TextStyle(fontSize: 30)),
+                          const SizedBox(width: 5),
+                          Text(user.lastname, style: const TextStyle(fontSize: 30)),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: 200,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return const EditProfile();
+                                  }),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.yellow,
+                              side: BorderSide.none,
+                              shape: const StadiumBorder()),
+                          child: const Text('Edit Profile',
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      const Divider(),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    );
   }
 }
+

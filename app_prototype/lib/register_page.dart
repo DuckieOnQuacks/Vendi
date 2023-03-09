@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vendi_app/backend/user_helper.dart';
 import 'package:vendi_app/login_page.dart';
 import 'dart:core';
-import 'backend/firebase_helper.dart';
-import 'backend/user_class.dart';
 
 
 
@@ -20,7 +19,7 @@ class RegisterPage extends StatefulWidget {
 //Register
 class _RegisterPageState extends State<RegisterPage> {
   // All code on this page was developed by the team using the flutter framework
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPassword = TextEditingController();
   final TextEditingController firstName = TextEditingController();
@@ -40,7 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
       //Check if password is confirmed
       if (passwordController.text == confirmPassword.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: usernameController.text, password: passwordController.text);
+            email: emailController.text, password: passwordController.text);
       } else {
         //show error message if they arent the same
         showErrorMessage("Passwords don't match!"); //calls box and displays message
@@ -49,16 +48,26 @@ class _RegisterPageState extends State<RegisterPage> {
       //Checks if length of passwords entered are greater than 6
       if (passwordController.text.length > 6 && confirmPassword.text.length > 6) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: usernameController.text, password: passwordController.text);
+            email: emailController.text, password: passwordController.text);
       } else {
         //show error message if they arent the same
         showErrorMessage("Length must be greater than 6!"); //calls box and displays message
       }
+      addUserDetails();
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       showErrorMessage(e.code);
     }
+  }
+
+  Future addUserDetails() async {
+    await FirebaseFirestore.instance.collection('Users').add({
+      'first name': firstName.text.trim(),
+      'last name': lastName.text.trim(),
+      'email': emailController.text.trim(),
+      'points': points,
+    });
   }
 
   //error message box
@@ -80,36 +89,21 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-
-//signs the user up and syncs data into database
-Future createAccount()async{
+  //signs the user up and syncs data into database
+  Future createAccount()async{
     //checks to see if passwords are correct
   if (passwordController.text == confirmPassword.text) {
     await FirebaseAuth.instance.createUserWithEmailAndPassword
-      (email: usernameController.text, password: passwordController.text);
+      (email: emailController.text, password: passwordController.text);
   }
-  //adds remaining details to user account
-  userInfo user = userInfo(firstname: firstName.text, lastname: lastName.text, email: usernameController.text, points: points);
-  FirebaseHelper().addUser(user);
+  addUserDetails();
   Navigator.of(context).pop(true);
-
 }
-
-//Adds all account details
-Future userDetails(String fName, String lName, String email, int points) async {
-    await FirebaseFirestore.instance.collection('Users').add({
-      'first name': firstName,
-      'last name': lastName,
-      'email': email,
-      'points': points,
-    });
-  }
 
   @override
   void dispose() {
     super.dispose();
-    usernameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     confirmPassword.dispose();
     firstName.dispose();
@@ -197,7 +191,7 @@ Future userDetails(String fName, String lName, String email, int points) async {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
-                      controller: usernameController,
+                      controller: emailController,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Email',
