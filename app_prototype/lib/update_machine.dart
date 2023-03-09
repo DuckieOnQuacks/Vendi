@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:vendi_app/backend/firebase_helper.dart';
+import 'package:vendi_app/edit_profile.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'backend/machine_class.dart';
 import 'bottom_bar.dart';
 
-const List<String> list = <String>['I don\'t know', 'Yes', 'No'];
 late String machineImage;
 String imageUrl = ' ';
+int pictureTaken = 0;
 
 class UpdateMachinePage extends StatefulWidget {
   const UpdateMachinePage({Key? key}) : super(key: key);
@@ -82,7 +83,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                 items: const [
                   DropdownMenuItem(
                     value: 1,
-                    child: Text('Yes'),
+                    child: Text('Not Sure'),
                   ),
                   DropdownMenuItem(
                     value: 0,
@@ -90,11 +91,12 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                   ),
                   DropdownMenuItem(
                     value: 2,
-                    child: Text('Not Sure'),
+                    child: Text('Yes'),
                   ),
                 ],
                 onChanged: (value) {
                   setState(() {
+                    selectedMachine?.operational = value!;
                     FirebaseHelper().updateMachine(selectedMachine!);
                   });
                 },
@@ -107,41 +109,61 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                 child: TextButton(
                     onPressed: () {
                       setState(() {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Confirm Submission'),
-                              content: const Text(
-                                  'Are you sure you want to submit a form to update this vending machine?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(false);
-                                  },
-                                  child: const Text('Cancel'),
-                                ),
-                                //Creating a machine class object out of the choices made by the user
-                                TextButton(
-                                  onPressed: () {
-                                        selectedMachine?.imagePath = imageUrl;
-                                        FirebaseHelper().updateMachine(selectedMachine!);
-                                        Navigator.push(context, MaterialPageRoute(
-                                            builder: (context) =>
-                                              const BottomBar()),
-                                        );
-                                      },
-                                  child: const Text('Submit'),
-                                ),
-                              ],
-                            );
-                          },
-                        ).then((value) {
-                          if (value != null && value == true) {
-                            // Perform deletion logic here
-                          }
-                        });
-                      });
+                        if(pictureTaken == 0) {
+                          // Show alert dialog if any of the required fields are null
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Missing Information'),
+                                content: const Text('Please enter all information.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Confirm Submission'),
+                                content: const Text(
+                                    'Are you sure you want to submit a form for a new vending machine?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  //Creating a machine class object out of the choices made by the user
+                                  TextButton(
+                                    onPressed: () {
+                                      selectedMachine?.imagePath = imageUrl;
+                                      FirebaseHelper().updateMachine(selectedMachine!);
+                                      Navigator.push(context, MaterialPageRoute(
+                                          builder: (context) =>
+                                          const BottomBar()),
+                                      );
+                                    },
+                                    child: const Text('Submit'),
+                                  ),
+                                ],
+                              );
+                            },
+                          ).then((value) {
+                            if (value != null && value == true) {
+                              // Perform deletion logic here
+                            }
+                          });
+                        }});
                     },
                     child: const Text(
                       'Submit',
@@ -270,6 +292,7 @@ class _CameraScreenState extends State<CameraScreen> {
                     IconButton(
                       icon: const Icon(Icons.check),
                       onPressed: () async {
+                        pictureTaken = 1;
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
                         await uploadImage(image.path);
@@ -290,4 +313,3 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 }
-

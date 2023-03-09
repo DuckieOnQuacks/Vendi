@@ -11,6 +11,7 @@ import 'package:vendi_app/backend/flask_helper.dart';
 
 late String machineImage;
 String imageUrl = ' ';
+int pictureTakenAdd = 0;
 
 class AddMachinePage extends StatefulWidget {
   const AddMachinePage({Key? key}) : super(key: key);
@@ -120,7 +121,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
               const Text('Building Name*', style: TextStyle(fontSize: 16)),
               TextField(
                 decoration: const InputDecoration(
-                  hintText: 'Ex: Davidson Building'
+                    hintText: 'Ex: Davidson Building'
                 ),
                 controller: _buildingController,
               ),
@@ -250,103 +251,124 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 child: TextButton(
                     onPressed: () {
                       setState(() {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Confirm Submission'),
-                              content: const Text(
-                                  'Are you sure you want to submit a form for a new vending machine?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(false);
-                                  },
-                                  child: const Text('Cancel'),
-                                ),
-                                //Creating a machine class object out of the choices made by the user
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      if (_isDrinkSelected == true) {
-                                        Machine test1 = Machine(
-                                          id: '',
-                                          name: _buildingController.text,
-                                          desc: _floorController.text,
-                                          lat: _currentPosition!.latitude,
-                                          lon: _currentPosition!.longitude,
-                                          imagePath: imageUrl,
-                                          isFavorited: 0,
-                                          icon: "assets/images/BlueMachine.png",
-                                          card: _selectedValueCard,
-                                          cash: _selectedValueCash,
-                                          operational: _selectedValueOperational,
-                                        );
-                                        FirebaseHelper().addMachine(test1);
-                                        _isDrinkSelected = false;
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const BottomBar()),
-                                        );
-                                      } else if (_isSnackSelected == true) {
-                                        Machine test2 = Machine(
-                                          id: '',
-                                          name: _buildingController.text,
-                                          desc: _floorController.text,
-                                          lat: _currentPosition!.latitude,
-                                          lon: _currentPosition!.longitude,
-                                          imagePath: imageUrl,
-                                          isFavorited: 0,
-                                          icon: "assets/images/PinkMachine.png",
-                                          card: _selectedValueCard,
-                                          cash: _selectedValueCash,
-                                          operational: _selectedValueOperational,
-                                        );
-                                        FirebaseHelper().addMachine(test2);
-                                        _isSnackSelected = false;
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const BottomBar()),
-                                        );
-                                      } else if (_isSupplySelected == true) {
-                                        Machine test3 = Machine(
-                                          id: '',
-                                          name: _buildingController.text,
-                                          desc: _floorController.text,
-                                          lat: _currentPosition!.latitude,
-                                          lon: _currentPosition!.longitude,
-                                          imagePath: imageUrl,
-                                          isFavorited: 0,
-                                          icon: "assets/images/YellowMachine.png",
-                                          card: _selectedValueCard,
-                                          cash: _selectedValueCash,
-                                          operational: _selectedValueOperational,
-                                        );
-                                        FirebaseHelper().addMachine(test3);
-                                        _isSupplySelected = false;
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const BottomBar()),
-                                        );
-                                      }
-                                    });
-                                  },
-                                  child: const Text('Submit'),
-                                ),
-                              ],
-                            );
-                          },
-                        ).then((value) {
-                          if (value != null && value == true) {
-                            // Perform deletion logic here
-                          }
-                        });
+                        if (_buildingController.text.isEmpty || _floorController.text.isEmpty || pictureTakenAdd == 0) {
+                          // Show alert dialog if any of the required fields are null
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Missing Information'),
+                                content: const Text('Please enter all information.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Confirm Submission'),
+                                content: const Text(
+                                    'Are you sure you want to submit a form for a new vending machine?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  //Creating a machine class object out of the choices made by the user
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (_isDrinkSelected == true) {
+                                          Machine test1 = Machine(
+                                            id: '',
+                                            name: _buildingController.text,
+                                            desc: _floorController.text,
+                                            lat: _currentPosition!.latitude,
+                                            lon: _currentPosition!.longitude,
+                                            imagePath: imageUrl,
+                                            isFavorited: 0,
+                                            icon: "assets/images/BlueMachine.png",
+                                            card: _selectedValueCard,
+                                            cash: _selectedValueCash,
+                                            operational: _selectedValueOperational,
+                                          );
+                                          FirebaseHelper().addMachine(test1);
+                                          _isDrinkSelected = false;
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                const BottomBar()),
+                                          );
+                                        } else if (_isSnackSelected == true) {
+                                          Machine test2 = Machine(
+                                            id: '',
+                                            name: _buildingController.text,
+                                            desc: _floorController.text,
+                                            lat: _currentPosition!.latitude,
+                                            lon: _currentPosition!.longitude,
+                                            imagePath: imageUrl,
+                                            isFavorited: 0,
+                                            icon: "assets/images/PinkMachine.png",
+                                            card: _selectedValueCard,
+                                            cash: _selectedValueCash,
+                                            operational: _selectedValueOperational,
+                                          );
+                                          FirebaseHelper().addMachine(test2);
+                                          _isSnackSelected = false;
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                const BottomBar()),
+                                          );
+                                        } else if (_isSupplySelected == true) {
+                                          Machine test3 = Machine(
+                                            id: '',
+                                            name: _buildingController.text,
+                                            desc: _floorController.text,
+                                            lat: _currentPosition!.latitude,
+                                            lon: _currentPosition!.longitude,
+                                            imagePath: imageUrl,
+                                            isFavorited: 0,
+                                            icon: "assets/images/YellowMachine.png",
+                                            card: _selectedValueCard,
+                                            cash: _selectedValueCash,
+                                            operational: _selectedValueOperational,
+                                          );
+                                          FirebaseHelper().addMachine(test3);
+                                          _isSupplySelected = false;
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                const BottomBar()),
+                                          );
+                                        }
+                                      });
+                                    },
+                                    child: const Text('Submit'),
+                                  ),
+                                ],
+                              );
+                            },
+                          ).then((value) {
+                            if (value != null && value == true) {
+                              // Perform deletion logic here
+                            }
+                          });
+                        }
                       });
                     },
                     child: const Text(
@@ -377,7 +399,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
 
     // Open the camera and store the resulting CameraController
     CameraController controller =
-        CameraController(camera, ResolutionPreset.high);
+    CameraController(camera, ResolutionPreset.high);
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it
@@ -478,6 +500,7 @@ class _CameraScreenState extends State<CameraScreen> {
                       onPressed: () async {
                         bool status = await predict(image);
                         if (status == true) {
+                          pictureTakenAdd = 1;
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                           await uploadImage(image.path);
