@@ -52,12 +52,12 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                     const SizedBox(width: 20),
                     if (machineSnapshot.icon ==
                         'assets/images/BlueMachine.png') ...[
-                      Text('Snack Machine',
+                      Text('Beverage Machine',
                           style: GoogleFonts.bebasNeue(fontSize: 30)),
                       const SizedBox(width: 20),
                     ] else if (machineSnapshot.icon ==
                         'assets/images/PinkMachine.png') ...[
-                      Text('Beverage Machine',
+                      Text('Snack Machine',
                           style: GoogleFonts.bebasNeue(fontSize: 30)),
                       const SizedBox(width: 20),
                     ] else ...[

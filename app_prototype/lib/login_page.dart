@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vendi_app/home_page.dart';
 import 'package:vendi_app/register_page.dart';
+
+import 'bottom_bar.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -30,7 +33,11 @@ class _LoginPageState extends State<LoginPage> {
           email: usernameController.text,
           password: passwordController.text
       );
-      Navigator.pop(context);
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (
+              BuildContext context) {
+            return const BottomBar();
+          }));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       showErrorMessage(e.code);

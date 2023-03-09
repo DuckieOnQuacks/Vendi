@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendi_app/edit_profile.dart';
+import 'package:vendi_app/login_page.dart';
 import 'backend/user_helper.dart';
 
 
@@ -86,7 +87,11 @@ class ProfilePage extends StatelessWidget {
                       TextButton(
                         onPressed: () {
                           signUserOut();
-                          Navigator.of(context, rootNavigator: true).pop();
+                          Navigator.of(context).push(
+                              MaterialPageRoute(builder: (
+                                  BuildContext context) {
+                                return const LoginPage();
+                              }));
                         },
                         child: const Text('Sign Out'),
                       ),

@@ -97,7 +97,11 @@ class _RegisterPageState extends State<RegisterPage> {
       (email: emailController.text, password: passwordController.text);
   }
   addUserDetails();
-  Navigator.of(context).pop(true);
+  Navigator.of(context).push(
+      MaterialPageRoute(builder: (
+          BuildContext context) {
+        return const LoginPage();
+      }));
 }
 
   @override
