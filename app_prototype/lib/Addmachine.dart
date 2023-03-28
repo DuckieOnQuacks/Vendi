@@ -41,6 +41,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
     availableCameras().then((availableCameras) {
       cameras = availableCameras;
     });
+    _getCurrentLocation();
   }
 
   @override
@@ -68,16 +69,17 @@ class _AddMachinePageState extends State<AddMachinePage> {
     // Retrieve the current location if location permission is granted
     Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
+      if (mounted) { // Add this line to check if widget is mounted
+        setState(() {
+          _currentPosition = position;
+        });
+      }
     }).catchError((e) {
       if (kDebugMode) {
         print(e);
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -511,15 +513,25 @@ class _CameraScreenState extends State<CameraScreen> {
                             context: context, builder: (BuildContext context) {
                             return AlertDialog(
                               title: const Text('Error'),
-                              content: const Text(
-                                  "Image not accepted. Please try again."),
+                              content: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text("Image is not a vending machine. AI Confidence:"),
+                                  Text(
+                                    getJson().toString(),
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  const Text("Please try again."),
+                                ],
+                              ),
                               actions: [
                                 ElevatedButton(
                                   child: const Text("Ok"),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                )
+                                ),
                               ],
                             );
                           },

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
 
+double castedJson = 0;
+
 Future<bool> predict(XFile file) async
 {
   http.StreamedResponse response;
@@ -18,7 +20,7 @@ Future<bool> predict(XFile file) async
     response = await request.send();
     responseJson = jsonDecode(await response.stream.bytesToString());
     print(responseJson);
-    double castedJson = responseJson.toDouble();
+    castedJson = responseJson.toDouble();
   }catch (e){
     print('Error occurred while sending request: $e');
     return false;
@@ -30,3 +32,8 @@ Future<bool> predict(XFile file) async
       return false;
     }
   }
+
+double getJson()
+{
+  return castedJson;
+}

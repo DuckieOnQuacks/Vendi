@@ -23,7 +23,8 @@ class MachineBottomSheet extends StatefulWidget {
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
   Future<int?> isFavorite = dbHelper.getMachineFavoriteStatus(selectedMachine!);
-  Future<Machine?> selectedMachineDB = FirebaseHelper().getMachineById(selectedMachine!);
+  Future<Machine?> selectedMachineDB =
+      FirebaseHelper().getMachineById(selectedMachine!);
   FirebaseStorage storage = FirebaseStorage.instance;
 
   @override
@@ -50,28 +51,21 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   children: <Widget>[
                     Image.asset(machineSnapshot.icon, height: 50),
                     const SizedBox(width: 20),
-                    if (machineSnapshot.icon ==
-                        'assets/images/BlueMachine.png') ...[
-                      Text('Beverage Machine',
-                          style: GoogleFonts.bebasNeue(fontSize: 30)),
+                    if (machineSnapshot.icon == 'assets/images/BlueMachine.png') ...[
+                      Text('Beverage Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
                       const SizedBox(width: 20),
-                    ] else if (machineSnapshot.icon ==
-                        'assets/images/PinkMachine.png') ...[
-                      Text('Snack Machine',
-                          style: GoogleFonts.bebasNeue(fontSize: 30)),
+                    ] else if (machineSnapshot.icon == 'assets/images/PinkMachine.png') ...[
+                      Text('Snack Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
                       const SizedBox(width: 20),
                     ] else ...[
-                      Text('Supply Machine',
-                          style: GoogleFonts.bebasNeue(fontSize: 30)),
+                      Text('Supply Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
                       const SizedBox(width: 20),
                     ],
                     // Checkbox for favouring the machine
                     //Future builder for the favorite button so that it can query the local db
                     FutureBuilder<int?>(
-                      future:
-                          dbHelper.getMachineFavoriteStatus(selectedMachine!),
-                      builder:
-                          (BuildContext context, AsyncSnapshot<int?> snapshot) {
+                      future: dbHelper.getMachineFavoriteStatus(selectedMachine!),
+                      builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           int isFavorite = snapshot.data ?? 0;
                           return FavoriteButton(
@@ -79,16 +73,16 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                             valueChanged: (value) {
                               setState(() {
                                 isFavorite = value ? 1 : 0;
+                                if (isFavorite == 1) {
+                                  selectedMachine?.isFavorited = 1;
+                                  dbHelper.saveMachine(selectedMachine!);
+                                  // Add to favorites
+                                } else {
+                                  // Remove from favorites
+                                  selectedMachine?.isFavorited = 0;
+                                  dbHelper.saveMachine(selectedMachine!);
+                                }
                               });
-                              if (isFavorite == 1) {
-                                selectedMachine?.isFavorited = 1;
-                                dbHelper.saveMachine(selectedMachine!);
-                                // Add to favorites
-                              } else {
-                                // Remove from favorites
-                                selectedMachine?.isFavorited = 0;
-                                dbHelper.saveMachine(selectedMachine!);
-                              }
                             },
                           );
                         } else {
@@ -96,8 +90,12 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         }
                       },
                     ),
+
+
                   ],
                 ),
+
+
                 //Row that shows the machine name and description
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -208,20 +206,50 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         ],
                       ),
                     ),
+                    //Enlarge image when clicked
                     Expanded(
                       child: Column(
                         children: [
                           selectedMachine?.imagePath == ''
                               ? const SizedBox.shrink()
-                              : SizedBox(
-                                  width: 200,
-                                  height: 250,
-                                  child:
-                                      Image.network(selectedMachine!.imagePath),
+                              : GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Scaffold(
+                                    body: SafeArea(
+                                      child: GestureDetector(
+                                        onTap: () => Navigator.pop(context),
+                                        child: Container(
+                                          height: MediaQuery.of(context).size.height,
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Image.network(
+                                            selectedMachine!.imagePath,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
+                              );
+                            },
+
+
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: 250,
+                              child: Image.network(
+                                selectedMachine!.imagePath,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
+
                   ],
                 ),
 

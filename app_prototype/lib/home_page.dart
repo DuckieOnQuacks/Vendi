@@ -20,7 +20,7 @@ class _HomepageState extends State<Homepage> {
   late GoogleMapController mapController;
   final Map<String, Marker> _markers = {};
   Position? currentPosition;
-  final MapType _currentMapType = MapType.satellite;
+  late MapType _currentMapType = MapType.hybrid;
 
   // Helper method to get the current position
   Future<Position?> getCurrentPosition() async {
@@ -58,6 +58,7 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,8 +86,9 @@ class _HomepageState extends State<Homepage> {
           ? const Center(child: CircularProgressIndicator())
           : GoogleMap(
         mapType: _currentMapType,
-        mapToolbarEnabled: false,
+        mapToolbarEnabled: true,
         myLocationEnabled: true, // Add this line to enable the user's location
+        buildingsEnabled: true,
         myLocationButtonEnabled: true, // Add this line to enable the location button
         initialCameraPosition: CameraPosition(
           target: LatLng(currentPosition!.latitude, currentPosition!.longitude),
