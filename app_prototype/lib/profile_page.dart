@@ -32,17 +32,20 @@ class ProfilePage extends StatelessWidget {
         final firstName = userData['first name'] as String?;
         final lastName = userData['last name'] as String?;
         final points = userData['points'] as int?;
+        final cap = userData['cap'] as int?;
+        final machinesEntered = List<String>.from(userData['machinesEntered']);
 
-        if (firstName != null && lastName != null && points != null) {
+        if (firstName != null && lastName != null && points != null && cap != null && machinesEntered != []) {
           return userInfo(
             firstname: firstName,
             lastname: lastName,
-            email: user.email!,
+            email: email,
             points: points,
+            cap: cap,
+            machinesEntered: machinesEntered,
           );
         }
       }
-
       print('No user found with email $email');
       return null;
     } catch (e) {

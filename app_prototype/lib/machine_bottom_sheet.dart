@@ -51,21 +51,28 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   children: <Widget>[
                     Image.asset(machineSnapshot.icon, height: 50),
                     const SizedBox(width: 20),
-                    if (machineSnapshot.icon == 'assets/images/BlueMachine.png') ...[
-                      Text('Beverage Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
+                    if (machineSnapshot.icon ==
+                        'assets/images/BlueMachine.png') ...[
+                      Text('Beverage Machine',
+                          style: GoogleFonts.bebasNeue(fontSize: 30)),
                       const SizedBox(width: 20),
-                    ] else if (machineSnapshot.icon == 'assets/images/PinkMachine.png') ...[
-                      Text('Snack Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
+                    ] else if (machineSnapshot.icon ==
+                        'assets/images/PinkMachine.png') ...[
+                      Text('Snack Machine',
+                          style: GoogleFonts.bebasNeue(fontSize: 30)),
                       const SizedBox(width: 20),
                     ] else ...[
-                      Text('Supply Machine', style: GoogleFonts.bebasNeue(fontSize: 30)),
+                      Text('Supply Machine',
+                          style: GoogleFonts.bebasNeue(fontSize: 30)),
                       const SizedBox(width: 20),
                     ],
                     // Checkbox for favouring the machine
                     //Future builder for the favorite button so that it can query the local db
                     FutureBuilder<int?>(
-                      future: dbHelper.getMachineFavoriteStatus(selectedMachine!),
-                      builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
+                      future:
+                          dbHelper.getMachineFavoriteStatus(selectedMachine!),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<int?> snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           int isFavorite = snapshot.data ?? 0;
                           return FavoriteButton(
@@ -90,11 +97,8 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         }
                       },
                     ),
-
-
                   ],
                 ),
-
 
                 //Row that shows the machine name and description
                 Row(
@@ -213,43 +217,45 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                           selectedMachine?.imagePath == ''
                               ? const SizedBox.shrink()
                               : GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Scaffold(
-                                    body: SafeArea(
-                                      child: GestureDetector(
-                                        onTap: () => Navigator.pop(context),
-                                        child: Container(
-                                          height: MediaQuery.of(context).size.height,
-                                          width: MediaQuery.of(context).size.width,
-                                          child: Image.network(
-                                            selectedMachine!.imagePath,
-                                            fit: BoxFit.cover,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Scaffold(
+                                          body: SafeArea(
+                                            child: GestureDetector(
+                                              onTap: () =>
+                                                  Navigator.pop(context),
+                                              child: Container(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Image.network(
+                                                  selectedMachine!.imagePath,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
+                                    );
+                                  },
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    height: 250,
+                                    child: Image.network(
+                                      selectedMachine!.imagePath,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
-                              );
-                            },
-
-
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 250,
-                              child: Image.network(
-                                selectedMachine!.imagePath,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ),
-
                   ],
                 ),
 

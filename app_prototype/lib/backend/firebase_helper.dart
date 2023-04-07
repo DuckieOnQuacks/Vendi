@@ -86,4 +86,20 @@ class FirebaseHelper {
     }
   }
 
+  Future<String?> getMachineIdByLocation(double latitude, double longitude) async {
+    final machinesCollection = FirebaseFirestore.instance.collection(tableName);
+    final querySnapshot = await machinesCollection
+        .where('latitude', isEqualTo: latitude)
+        .where('longitude', isEqualTo: longitude)
+        .limit(1)
+        .get();
+    if (querySnapshot.size == 0) {
+      return null; // No machine with the given location found
+    } else {
+      final Map<String, dynamic> data = querySnapshot.docs.first.data();
+      return data['id'] as String?;
+    }
+  }
+
+
 }

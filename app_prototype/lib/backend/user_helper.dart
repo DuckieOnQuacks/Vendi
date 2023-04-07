@@ -1,30 +1,41 @@
 
 class userInfo {
-  // Variables to store machine data
-  final String firstname; // Unique ID for each machine (nullable)
-  final String lastname; // Name of the machine
-  final String email; // Description of the machine (snack/drink/located on this floor)
+  // Variables to store user data
+  final String firstname;
+  final String lastname;
+  final String email;
   final int points;
+  final int cap;
+  final List<String> machinesEntered; // New property to store machines entered
 
-  // Constructor for the Machine class
-  userInfo(
-      {required this.firstname,
-        required this.lastname,
-        required this.email,
-        required this.points});
+  // Constructor for the userInfo class
+  userInfo({
+    required this.firstname,
+    required this.lastname,
+    required this.email,
+    required this.points,
+    required this.cap,
+    required this.machinesEntered, // Add new property to constructor
+  });
 
-  // Factory method to create a Machine object from JSON data
+  // Factory method to create a userInfo object from JSON data
   factory userInfo.fromJson(Map<String, dynamic> json) => userInfo(
-      firstname: json['firstname'],
-      lastname: json['lastname'],
-      email: json['email'],
-      points: json['points']);
+    firstname: json['firstname'],
+    lastname: json['lastname'],
+    email: json['email'],
+    points: json['points'],
+    cap: json['cap'],
+    machinesEntered: List<String>.from(json['machinesEntered']),
+  );
 
-  // Method to convert a Machine object to JSON data
+  // Method to convert a userInfo object to JSON data
   Map<String, dynamic> toJson() => {
     'firstname': firstname,
     'lastname': lastname,
     'email': email,
     'points': points,
+    'cap': cap,
+    'machinesEntered': machinesEntered,
   };
 }
+

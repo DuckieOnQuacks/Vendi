@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:vendi_app/backend/firebase_helper.dart';
 import 'backend/machine_class.dart';
 import 'bottom_bar.dart';
+
 import 'package:vendi_app/backend/flask_helper.dart';
 
 late String machineImage;
@@ -79,6 +82,29 @@ class _AddMachinePageState extends State<AddMachinePage> {
         print(e);
       }
     });
+  }
+
+  Future<void> addMachineToUser(String? machineName) async {
+    final currentUser = FirebaseAuth.instance.currentUser!;
+    final userRef = FirebaseFirestore.instance.collection('Users');
+    final query = userRef.where('email', isEqualTo: currentUser.email);
+
+    final snapshot = await query.get();
+    if (snapshot.docs.isNotEmpty) {
+      final userDoc = snapshot.docs.single;
+      final machinesEntered = List<String>.from(userDoc.get('machinesEntered'));
+      machinesEntered.add(machineName!);
+
+      await userDoc.reference.update({
+        'machinesEntered': machinesEntered,
+      }).then((_) {
+        print('Machine added successfully!');
+      }).catchError((error) {
+        print('Error adding machine: $error');
+      });
+    } else {
+      print('User not found with email ${currentUser.email}');
+    }
   }
 
   @override
@@ -289,7 +315,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                   ),
                                   //Creating a machine class object out of the choices made by the user
                                   TextButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       setState(() {
                                         if (_isDrinkSelected == true) {
                                           Machine test1 = Machine(
@@ -305,14 +331,18 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             cash: _selectedValueCash,
                                             operational: _selectedValueOperational,
                                           );
-                                          FirebaseHelper().addMachine(test1);
-                                          _isDrinkSelected = false;
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                const BottomBar()),
-                                          );
+                                          FirebaseHelper().addMachine(test1).then((_) async {
+                                            final machineId = await FirebaseHelper().getMachineIdByLocation(test1.lat, test1.lon);
+                                            print(machineId);
+                                            if (machineId != null) {
+                                              addMachineToUser(machineId);
+                                            }
+                                            _isDrinkSelected = false;
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const BottomBar()),
+                                            );
+                                          });
                                         } else if (_isSnackSelected == true) {
                                           Machine test2 = Machine(
                                             id: '',
@@ -327,14 +357,17 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             cash: _selectedValueCash,
                                             operational: _selectedValueOperational,
                                           );
-                                          FirebaseHelper().addMachine(test2);
-                                          _isSnackSelected = false;
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                const BottomBar()),
-                                          );
+                                          FirebaseHelper().addMachine(test2).then((_) async {
+                                            final machineId = await FirebaseHelper().getMachineIdByLocation(test2.lat, test2.lon);
+                                            if (machineId != null) {
+                                              addMachineToUser(machineId);
+                                            }
+                                            _isSnackSelected = false;
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const BottomBar()),
+                                            );
+                                          });
                                         } else if (_isSupplySelected == true) {
                                           Machine test3 = Machine(
                                             id: '',
@@ -349,14 +382,17 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             cash: _selectedValueCash,
                                             operational: _selectedValueOperational,
                                           );
-                                          FirebaseHelper().addMachine(test3);
-                                          _isSupplySelected = false;
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                const BottomBar()),
-                                          );
+                                          FirebaseHelper().addMachine(test3).then((_) async {
+                                            final machineId = await FirebaseHelper().getMachineIdByLocation(test3.lat, test3.lon);
+                                            if (machineId != null) {
+                                              addMachineToUser(machineId);
+                                            }
+                                            _isSupplySelected = false;
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const BottomBar()),
+                                            );
+                                          });
                                         }
                                       });
                                     },

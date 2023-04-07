@@ -1,15 +1,10 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:vendi_app/backend/firebase_helper.dart';
-import 'package:vendi_app/edit_profile.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'backend/flask_helper.dart';
-import 'backend/machine_class.dart';
 import 'bottom_bar.dart';
 
 late String machineImage;

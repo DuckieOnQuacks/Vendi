@@ -27,7 +27,6 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    bool isValid;
     return Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.pinkAccent),
@@ -231,8 +230,6 @@ class _EditProfileState extends State<EditProfile> {
 }
 
 createAlertDialog(BuildContext context) {
-  late final TextEditingController customController = TextEditingController();
-
   return showDialog(
       context: context,
       builder: (context) {

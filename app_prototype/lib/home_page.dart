@@ -21,6 +21,7 @@ class _HomepageState extends State<Homepage> {
   final Map<String, Marker> _markers = {};
   Position? currentPosition;
   late MapType _currentMapType = MapType.hybrid;
+  Future<void>? _getAllMachinesFuture;
 
   // Helper method to get the current position
   Future<Position?> getCurrentPosition() async {
@@ -56,6 +57,14 @@ class _HomepageState extends State<Homepage> {
         currentPosition = position;
       });
     });
+    _getAllMachinesFuture = FirebaseHelper().getAllMachines().then((machineList) async {
+      for (final machine in machineList) {
+        _markers[machine.id.toString()] = await _createMarker(machine);
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
 
@@ -86,7 +95,7 @@ class _HomepageState extends State<Homepage> {
           ? const Center(child: CircularProgressIndicator())
           : GoogleMap(
         mapType: _currentMapType,
-        mapToolbarEnabled: true,
+        mapToolbarEnabled: false,
         myLocationEnabled: true, // Add this line to enable the user's location
         buildingsEnabled: true,
         myLocationButtonEnabled: true, // Add this line to enable the location button
@@ -96,11 +105,6 @@ class _HomepageState extends State<Homepage> {
         ),
         onMapCreated: (controller) async {
           mapController = controller;
-          final machineList = await FirebaseHelper().getAllMachines();
-          for (final machine in machineList) {
-            _markers[machine.id.toString()] = await _createMarker(machine);
-          }
-          setState(() {});
         },
         markers: _markers.values.toSet(),
       ),

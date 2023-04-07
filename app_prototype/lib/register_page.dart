@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vendi_app/backend/user_helper.dart';
 import 'package:vendi_app/login_page.dart';
 import 'dart:core';
 
@@ -25,6 +24,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController firstName = TextEditingController();
   final TextEditingController lastName = TextEditingController();
   int points = 0;
+  int cap = 0;
+  List<String> machinesEntered = [];
 
   void signUserUp() async {
     showDialog(
@@ -67,6 +68,8 @@ class _RegisterPageState extends State<RegisterPage> {
       'last name': lastName.text.trim(),
       'email': emailController.text.trim(),
       'points': points,
+      'cap': cap,
+      'machinesEntered': machinesEntered,
     });
   }
 
