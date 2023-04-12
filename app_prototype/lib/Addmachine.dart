@@ -68,7 +68,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
     // Retrieve the current location if location permission is granted
     Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
-      if (mounted) { // Add this line to check if widget is mounted
+      if (mounted) {
+        // Add this line to check if widget is mounted
         setState(() {
           _currentPosition = position;
         });
@@ -112,26 +113,20 @@ class _AddMachinePageState extends State<AddMachinePage> {
                     onPressed: () {
                       openCamera();
                     },
-
-
                     icon: const Icon(Icons.camera_alt)),
-
               ),
               const SizedBox(height: 40.0),
               //input fields
               const Text('Building Name*', style: TextStyle(fontSize: 16)),
               TextField(
-                decoration: const InputDecoration(
-                    hintText: 'Ex: Davidson Building'
-                ),
+                decoration:
+                    const InputDecoration(hintText: 'Ex: Davidson Building'),
                 controller: _buildingController,
               ),
               const SizedBox(height: 16.0),
               const Text('Floor Number*', style: TextStyle(fontSize: 16)),
               TextField(
-                decoration: const InputDecoration(
-                    hintText: 'Ex: Floor 2'
-                ),
+                decoration: const InputDecoration(hintText: 'Ex: Floor 2'),
                 controller: _floorController,
               ),
               const SizedBox(height: 40.0),
@@ -252,14 +247,17 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 child: TextButton(
                     onPressed: () {
                       setState(() {
-                        if (_buildingController.text.isEmpty || _floorController.text.isEmpty || pictureTakenAdd == 0) {
+                        if (_buildingController.text.isEmpty ||
+                            _floorController.text.isEmpty ||
+                            pictureTakenAdd == 0) {
                           // Show alert dialog if any of the required fields are null
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: const Text('Missing Information'),
-                                content: const Text('Please enter all information.'),
+                                content:
+                                    const Text('Please enter all information.'),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () {
@@ -289,37 +287,54 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                   //Creating a machine class object out of the choices made by the user
                                   TextButton(
                                     onPressed: () async {
-                                      int cap = await getCap() ?? 0;
-                                      DateTime? timeAfter24HoursStored = await getTimeAfter24Hours();
+                                      int cap = await getUserCap() ?? 0;
+                                      DateTime? timeAfter24HoursStored =
+                                          await getTimeAfter24Hours();
                                       //If cap is 90, and 24 hours has passed, get the time that the last picture was taken
                                       //(which would be this if statement) and add 24 hours to it and display message with time remaining.
-                                      if (cap >= 90 && (timeAfter24HoursStored == null || DateTime.now().isAfter(timeAfter24HoursStored))) {
-                                        await updateCap(-cap);// Make the cap value zero
-                                        DateTime? timeTaken = await getImageTakenTime(imageUrl);
+                                      if (cap >= 90 &&
+                                          (timeAfter24HoursStored == null ||
+                                              DateTime.now().isAfter(
+                                                  timeAfter24HoursStored))) {
+                                        await updateUserCap(-cap); // Make the cap value zero
+                                        DateTime? timeTaken =
+                                            await getImageTakenTime(imageUrl);
                                         if (timeTaken != null) {
-                                          print('Image was taken at: $timeTaken');
-                                          DateTime timeAfter24Hours = timeTaken.add(Duration(hours: 24));// Add 24hrs
-                                          print('Time after 24 hours: $timeAfter24Hours');
+                                          print(
+                                              'Image was taken at: $timeTaken');
+                                          DateTime timeAfter24Hours =
+                                              timeTaken.add(Duration(
+                                                  hours: 24)); // Add 24hrs
+                                          print(
+                                              'Time after 24 hours: $timeAfter24Hours');
 
                                           // Calculate the time left
-                                          Duration timeLeft = timeAfter24Hours.difference(DateTime.now());
-                                          await storeTimeAfter24Hours(timeAfter24Hours);
+                                          Duration timeLeft = timeAfter24Hours
+                                              .difference(DateTime.now());
+                                          await setTimeAfter24Hours(
+                                              timeAfter24Hours);
 
                                           Navigator.push(
                                             context,
-                                            MaterialPageRoute(builder: (context) => const BottomBar()),
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const BottomBar()),
                                           );
-                                          WidgetsBinding.instance!.addPostFrameCallback((_) {
+                                          WidgetsBinding.instance!
+                                              .addPostFrameCallback((_) {
                                             showDialog(
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
-                                                  title: Text('Upload Limit Reached'),
-                                                  content: Text('Upload again in: ${timeLeft.inHours} hours, and ${timeLeft.inMinutes.remainder(60)} minutes'),
+                                                  title: Text(
+                                                      'Upload Limit Reached'),
+                                                  content: Text(
+                                                      'Upload again in: ${timeLeft.inHours} hours, and ${timeLeft.inMinutes.remainder(60)} minutes'),
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () {
-                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       },
                                                       child: Text('OK'),
                                                     ),
@@ -329,29 +344,41 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             );
                                           });
                                         } else {
-                                          print('Could not fetch image metadata.');
+                                          print(
+                                              'Could not fetch image metadata.');
                                         }
-                                      //Otherwise, add the machine like normal and give them points and increase daily cap.
+                                        //Otherwise, add the machine like normal and give them points and increase daily cap.
                                       }
                                       //If statement to check and see if the user would like to submit to see remaining time.
-                                      else if (cap >= 90 && timeAfter24HoursStored != null && DateTime.now().isBefore(timeAfter24HoursStored)) {
-                                        Duration timeLeft = timeAfter24HoursStored.difference(DateTime.now());
+                                      else if (cap >= 90 &&
+                                          timeAfter24HoursStored != null &&
+                                          DateTime.now().isBefore(
+                                              timeAfter24HoursStored)) {
+                                        Duration timeLeft =
+                                            timeAfter24HoursStored
+                                                .difference(DateTime.now());
 
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => const BottomBar()),
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const BottomBar()),
                                         );
-                                        WidgetsBinding.instance!.addPostFrameCallback((_) {
+                                        WidgetsBinding.instance!
+                                            .addPostFrameCallback((_) {
                                           showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
                                               return AlertDialog(
-                                                title: Text('Upload Limit Reached'),
-                                                content: Text('Upload again in: ${timeLeft.inHours} hours, and ${timeLeft.inMinutes.remainder(60)} minutes'),
+                                                title: Text(
+                                                    'Upload Limit Reached'),
+                                                content: Text(
+                                                    'Upload again in: ${timeLeft.inHours} hours, and ${timeLeft.inMinutes.remainder(60)} minutes'),
                                                 actions: [
                                                   TextButton(
                                                     onPressed: () {
-                                                      Navigator.of(context).pop();
+                                                      Navigator.of(context)
+                                                          .pop();
                                                     },
                                                     child: Text('OK'),
                                                   ),
@@ -360,8 +387,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             },
                                           );
                                         });
-                                      }
-                                      else {
+                                      } else {
                                         setState(() {
                                           if (_isDrinkSelected == true) {
                                             Machine test1 = Machine(
@@ -372,13 +398,20 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               lon: _currentPosition!.longitude,
                                               imagePath: imageUrl,
                                               isFavorited: 0,
-                                              icon: "assets/images/BlueMachine.png",
+                                              icon:
+                                                  "assets/images/BlueMachine.png",
                                               card: _selectedValueCard,
                                               cash: _selectedValueCash,
-                                              operational: _selectedValueOperational,
+                                              operational:
+                                                  _selectedValueOperational,
                                             );
-                                            FirebaseHelper().addMachine(test1).then((_) async {
-                                              final machineId = await FirebaseHelper().getMachineIdByLocation(test1.lat, test1.lon);
+                                            FirebaseHelper()
+                                                .addMachine(test1)
+                                                .then((_) async {
+                                              final machineId =
+                                                  await FirebaseHelper()
+                                                      .getMachineIdByLocation(
+                                                          test1.lat, test1.lon);
                                               print(machineId);
                                               if (machineId != null) {
                                                 addMachineToUser(machineId);
@@ -386,7 +419,9 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               _isDrinkSelected = false;
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => const BottomBar()),
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const BottomBar()),
                                               );
                                             });
                                           } else if (_isSnackSelected == true) {
@@ -398,23 +433,33 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               lon: _currentPosition!.longitude,
                                               imagePath: imageUrl,
                                               isFavorited: 0,
-                                              icon: "assets/images/PinkMachine.png",
+                                              icon:
+                                                  "assets/images/PinkMachine.png",
                                               card: _selectedValueCard,
                                               cash: _selectedValueCash,
-                                              operational: _selectedValueOperational,
+                                              operational:
+                                                  _selectedValueOperational,
                                             );
-                                            FirebaseHelper().addMachine(test2).then((_) async {
-                                              final machineId = await FirebaseHelper().getMachineIdByLocation(test2.lat, test2.lon);
+                                            FirebaseHelper()
+                                                .addMachine(test2)
+                                                .then((_) async {
+                                              final machineId =
+                                                  await FirebaseHelper()
+                                                      .getMachineIdByLocation(
+                                                          test2.lat, test2.lon);
                                               if (machineId != null) {
                                                 addMachineToUser(machineId);
                                               }
                                               _isSnackSelected = false;
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => const BottomBar()),
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const BottomBar()),
                                               );
                                             });
-                                          } else if (_isSupplySelected == true) {
+                                          } else if (_isSupplySelected ==
+                                              true) {
                                             Machine test3 = Machine(
                                               id: '',
                                               name: _buildingController.text,
@@ -423,33 +468,41 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               lon: _currentPosition!.longitude,
                                               imagePath: imageUrl,
                                               isFavorited: 0,
-                                              icon: "assets/images/YellowMachine.png",
+                                              icon:
+                                                  "assets/images/YellowMachine.png",
                                               card: _selectedValueCard,
                                               cash: _selectedValueCash,
-                                              operational: _selectedValueOperational,
+                                              operational:
+                                                  _selectedValueOperational,
                                             );
-                                            FirebaseHelper().addMachine(test3).then((_) async {
-                                              final machineId = await FirebaseHelper().getMachineIdByLocation(test3.lat, test3.lon);
+                                            FirebaseHelper()
+                                                .addMachine(test3)
+                                                .then((_) async {
+                                              final machineId =
+                                                  await FirebaseHelper()
+                                                      .getMachineIdByLocation(
+                                                          test3.lat, test3.lon);
                                               if (machineId != null) {
                                                 addMachineToUser(machineId);
                                               }
                                               _isSupplySelected = false;
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => const BottomBar()),
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const BottomBar()),
                                               );
                                             });
                                           }
                                         });
-
-                                        await updatePoints(30); // Call the updatePoints function to add 30 points for adding a machine
-                                        await updateCap(30); // Call the updateCap function to increase the cap value by 10
-                                        //Create dialog that says that points were added
+                                        await updateUserPoints(
+                                            30); // Call the updatePoints function to add 30 points for adding a machine
+                                        await updateUserCap(
+                                            30); // Call the updateCap function to increase the cap value by 10
                                       }
                                     },
                                     child: const Text('Submit'),
                                   ),
-
                                 ],
                               );
                             },
@@ -489,7 +542,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
 
     // Open the camera and store the resulting CameraController
     CameraController controller =
-    CameraController(camera, ResolutionPreset.high);
+        CameraController(camera, ResolutionPreset.high);
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it
@@ -512,7 +565,6 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-
   Future<void> uploadImage(String imagePath) async {
     String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
     // Get a reference to the Firebase Storage bucket
@@ -594,35 +646,38 @@ class _CameraScreenState extends State<CameraScreen> {
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                           await uploadImage(image.path);
-                        }
-                        else {
+                          pictureTakenAdd = 0;
+                        } else {
                           Navigator.of(context).pop();
                           showDialog(
-                            context: context, builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Error'),
-                              content: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Text("Image is not a vending machine. AI Confidence:"),
-                                  Text(
-                                    getJson().toString(),
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  const Text("Please try again."),
-                                ],
-                              ),
-                              actions: [
-                                ElevatedButton(
-                                  child: const Text("Ok"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Error'),
+                                content: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                        "Image is not a vending machine. AI Confidence:"),
+                                    Text(
+                                      getJson().toString(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Text("Please try again."),
+                                  ],
                                 ),
-                              ],
-                            );
-                          },
+                                actions: [
+                                  ElevatedButton(
+                                    child: const Text("Ok"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         }
                       },
@@ -642,4 +697,3 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 }
-

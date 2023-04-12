@@ -52,6 +52,7 @@ class FirebaseHelper {
     return machineData['card'];
   }
 
+  //Helper to get a machine based on its id.
   Future<Machine?> getMachineById(Machine machine) async {
     final machinesCollection = FirebaseFirestore.instance.collection(tableName);
     final querySnapshot = await machinesCollection.where('id', isEqualTo: machine.id).limit(1).get();
@@ -62,6 +63,7 @@ class FirebaseHelper {
     }
   }
 
+  //Helper to delete a machine base on its id.
   Future<void> deleteMachineById(Machine machine) async {
     final machinesCollection = FirebaseFirestore.instance.collection('Machines');
     final querySnapshot = await machinesCollection.where('id', isEqualTo: machine.id).get();
@@ -72,6 +74,7 @@ class FirebaseHelper {
     }
   }
 
+  //Updates a machine with another machine.
   Future<void> updateMachine(Machine machine) async {
     final machinesCollection = FirebaseFirestore.instance.collection('Machines');
     final querySnapshot = await machinesCollection.where('id', isEqualTo: machine.id).get();
@@ -100,9 +103,12 @@ class FirebaseHelper {
       return data['id'] as String?;
     }
   }
-
 }
 
+//Gets the image metadata and returns the time that the image was created
+//We use this to determine when the user is able to upload another machine
+//By taking the time of the last image they can upload in a day, we can add 24 hours to
+//it and then not let them upload until then
 Future<DateTime?> getImageTakenTime(String imageUrl) async {
   try {
     // Create a reference to the image in Firebase Storage
@@ -111,9 +117,8 @@ Future<DateTime?> getImageTakenTime(String imageUrl) async {
     // Get the metadata of the image
     FullMetadata metadata = await ref.getMetadata();
 
-    // Get the time the image was taken (if available in the metadata)
+    // Get the time the image was taken
     DateTime? timeCreated = metadata.timeCreated;
-
     return timeCreated;
   } catch (e) {
     print("Error fetching image metadata: $e");

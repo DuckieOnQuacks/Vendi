@@ -24,48 +24,64 @@ class userInfo {
 
   // Factory method to create a userInfo object from JSON data
   factory userInfo.fromJson(Map<String, dynamic> json) => userInfo(
-    firstname: json['firstname'],
-    lastname: json['lastname'],
-    email: json['email'],
-    points: json['points'],
-    cap: json['cap'],
-    machinesEntered: List<String>.from(json['machinesEntered']),
-    timeAfter24Hours: (json['timeAfter24Hours'] as Timestamp).toDate(), // Convert Timestamp to DateTime
-  );
+        firstname: json['firstname'],
+        lastname: json['lastname'],
+        email: json['email'],
+        points: json['points'],
+        cap: json['cap'],
+        machinesEntered: List<String>.from(json['machinesEntered']),
+        timeAfter24Hours: (json['timeAfter24Hours'] as Timestamp)
+            .toDate(), // Convert Timestamp to DateTime
+      );
 
   // Method to convert a userInfo object to JSON data
   Map<String, dynamic> toJson() => {
-    'firstname': firstname,
-    'lastname': lastname,
-    'email': email,
-    'points': points,
-    'cap': cap,
-    'machinesEntered': machinesEntered,
-    'timeAfter24Hours': timeAfter24Hours,
-  };
+        'firstname': firstname,
+        'lastname': lastname,
+        'email': email,
+        'points': points,
+        'cap': cap,
+        'machinesEntered': machinesEntered,
+        'timeAfter24Hours': timeAfter24Hours,
+      };
 }
 
-Future<void> updatePoints(int pointsToAdd) async {
+//Helper to update the current users point value in firestore.
+Future<void> updateUserPoints(int pointsToAdd) async {
   final userId = FirebaseAuth.instance.currentUser!.uid;
   final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
   final docSnapshot = await userDocRef.get();
-  int currentPoints = docSnapshot.data()!['points'] ?? 0; // If the points field doesn't exist, assume 0.
+  int currentPoints = docSnapshot.data()!['points'] ??
+      0; // If the points field doesn't exist, assume 0.
   int newPoints = currentPoints + pointsToAdd;
   await userDocRef.update({'points': newPoints});
   print('Points updated');
 }
 
-Future<void> updateCap(int capToAdd) async {
+//Helper to retrive the current users points.
+Future<int> getUserPoints() async {
   final userId = FirebaseAuth.instance.currentUser!.uid;
   final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
   final docSnapshot = await userDocRef.get();
-  int currentCap = docSnapshot.data()!['cap'] ?? 0; // If the points field doesn't exist, assume 0.
+  int currentPoints = docSnapshot.data()!['points'] ??
+      0;
+  return currentPoints;
+}
+
+//This helper function updates the cap value when the user updates or adds a machine.
+Future<void> updateUserCap(int capToAdd) async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+  final docSnapshot = await userDocRef.get();
+  int currentCap = docSnapshot.data()!['cap'] ??
+      0;
   int newCap = currentCap + capToAdd;
   await userDocRef.update({'cap': newCap});
   print('Cap updated');
 }
 
-Future<int?> getCap() async {
+//Helper to get the current value of cap in the users firestore storage.
+Future<int?> getUserCap() async {
   final userId = FirebaseAuth.instance.currentUser!.uid;
   final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
   final docSnapshot = await userDocRef.get();
@@ -73,6 +89,7 @@ Future<int?> getCap() async {
   return cap;
 }
 
+//This helps add the machine name to the machine array that is stored with the user.
 Future<void> addMachineToUser(String? machineName) async {
   final currentUser = FirebaseAuth.instance.currentUser!;
   final userRef = FirebaseFirestore.instance.collection('Users');
@@ -96,6 +113,7 @@ Future<void> addMachineToUser(String? machineName) async {
   }
 }
 
+//Used to get the users email so that we can search for there data in the firestore database.
 Future<userInfo?> getUserByEmail(String email) async {
   try {
     final db = FirebaseFirestore.instance;
@@ -110,7 +128,11 @@ Future<userInfo?> getUserByEmail(String email) async {
       final cap = userData['cap'] as int?;
       final machinesEntered = List<String>.from(userData['machinesEntered']);
 
-      if (firstName != null && lastName != null && points != null && cap != null && machinesEntered != []) {
+      if (firstName != null &&
+          lastName != null &&
+          points != null &&
+          cap != null &&
+          machinesEntered != []) {
         return userInfo(
           firstname: firstName,
           lastname: lastName,
@@ -130,9 +152,8 @@ Future<userInfo?> getUserByEmail(String email) async {
 }
 
 // This function is used to store the wait time between uploading 3 machines a day
-// Here we are taking in the 3rd images metadata data and adding 24 hours to it to get the time
-// the user can upload again.
-Future<void> storeTimeAfter24Hours(DateTime timeAfter24Hours) async {
+// Here we are taking in the 3rd images metadata data and adding 24 hours to it to get the time the user can upload again.
+Future<void> setTimeAfter24Hours(DateTime timeAfter24Hours) async {
   // Get the current user
   final user = FirebaseAuth.instance.currentUser;
 
@@ -146,13 +167,14 @@ Future<void> storeTimeAfter24Hours(DateTime timeAfter24Hours) async {
     // Update the timeAfter24Hours field for the current user
     await users
         .doc(user.uid)
-        .update({'timeAfter24Hours': timeAfter24HoursTimestamp})
-        .catchError((error) => print('Failed to update user: $error'));
+        .update({'timeAfter24Hours': timeAfter24HoursTimestamp}).catchError(
+            (error) => print('Failed to update user: $error'));
   } else {
     print('No user is currently signed in.');
   }
 }
-//Similiar to the one above this is a helper function to get the timeAfter24Hours variable
+
+//Similar to the one above this is a helper function to get the timeAfter24Hours variable
 Future<DateTime?> getTimeAfter24Hours() async {
   final user = FirebaseAuth.instance.currentUser;
   DateTime? timeAfter24Hours;
@@ -174,6 +196,3 @@ Future<DateTime?> getTimeAfter24Hours() async {
 
   return timeAfter24Hours;
 }
-
-
-

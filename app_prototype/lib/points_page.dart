@@ -3,15 +3,32 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/point_redemption_page.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
+import 'backend/user_helper.dart';
+
 // All code on this page was developed by the team using the flutter framework
 
-class PointsPage extends StatelessWidget
-{
-  const PointsPage({super.key});
+class PointsPage extends StatefulWidget {
+  const PointsPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context)
-  {
+  _PointsPageState createState() => _PointsPageState();
+}
+
+class _PointsPageState extends State<PointsPage> {
+  int currentPoints = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserPoints().then((points) {
+      setState(() {
+        currentPoints = points;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -76,7 +93,7 @@ class PointsPage extends StatelessWidget
                   },
                 ),
               ),
-              initialValue: 500,
+              initialValue: currentPoints.toDouble(),
               onChange: (double value) {
                 print(value);
               },
