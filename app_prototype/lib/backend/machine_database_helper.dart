@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'machine_class.dart';
 
 
@@ -25,7 +26,6 @@ class FirebaseHelper {
     //Create document and write data to firestore
     await docMachine.set(json);
   }
-
 
   //Makes a Firestore instance, gets a snapshot fo the data inside the Machine collection
   //Returns a list of machines and the data inside them
@@ -101,5 +101,22 @@ class FirebaseHelper {
     }
   }
 
+}
 
+Future<DateTime?> getImageTakenTime(String imageUrl) async {
+  try {
+    // Create a reference to the image in Firebase Storage
+    Reference ref = FirebaseStorage.instance.refFromURL(imageUrl);
+
+    // Get the metadata of the image
+    FullMetadata metadata = await ref.getMetadata();
+
+    // Get the time the image was taken (if available in the metadata)
+    DateTime? timeCreated = metadata.timeCreated;
+
+    return timeCreated;
+  } catch (e) {
+    print("Error fetching image metadata: $e");
+    return null;
+  }
 }

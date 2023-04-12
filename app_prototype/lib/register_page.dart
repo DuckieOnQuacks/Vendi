@@ -62,8 +62,14 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  Future addUserDetails() async {
-    await FirebaseFirestore.instance.collection('Users').add({
+  Future<void> addUserDetails() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print('No user signed in.');
+      return;
+    }
+    final userDocRef = FirebaseFirestore.instance.collection('Users').doc(user.uid);
+    await userDocRef.set({
       'first name': firstName.text.trim(),
       'last name': lastName.text.trim(),
       'email': emailController.text.trim(),

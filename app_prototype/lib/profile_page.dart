@@ -16,43 +16,9 @@ class ProfilePage extends StatelessWidget {
   }
 
   late final user = FirebaseAuth.instance.currentUser!;
-
   String firstName = '';
   String lastName = '';
   int points = 0;
-
-  Future<userInfo?> getUserByEmail(String email) async {
-    try {
-      final db = FirebaseFirestore.instance;
-      final query = db.collection('Users').where('email', isEqualTo: email);
-      final snapshot = await query.get();
-
-      if (snapshot.docs.isNotEmpty) {
-        final userData = snapshot.docs.single.data();
-        final firstName = userData['first name'] as String?;
-        final lastName = userData['last name'] as String?;
-        final points = userData['points'] as int?;
-        final cap = userData['cap'] as int?;
-        final machinesEntered = List<String>.from(userData['machinesEntered']);
-
-        if (firstName != null && lastName != null && points != null && cap != null && machinesEntered != []) {
-          return userInfo(
-            firstname: firstName,
-            lastname: lastName,
-            email: email,
-            points: points,
-            cap: cap,
-            machinesEntered: machinesEntered,
-          );
-        }
-      }
-      print('No user found with email $email');
-      return null;
-    } catch (e) {
-      print('Error getting user by email: $e');
-      return null;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

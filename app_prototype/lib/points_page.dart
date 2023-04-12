@@ -5,11 +5,13 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 // All code on this page was developed by the team using the flutter framework
 
-class PointsPage extends StatelessWidget {
+class PointsPage extends StatelessWidget
+{
   const PointsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -53,34 +55,38 @@ class PointsPage extends StatelessWidget {
                 customColors: CustomSliderColors(
                   // trackColor: Colors.red,
                   trackColor: Colors.pink,
-                  progressBarColors: [Colors.pinkAccent, Colors.yellow, Colors.lightBlueAccent],
+                  progressBarColors: [
+                    Colors.pinkAccent,
+                    Colors.yellow,
+                    Colors.lightBlueAccent
+                  ],
                   //progressBarColor: Colors.lightBlueAccent,
                   dotColor: Colors.white,
                   shadowColor: Colors.pink[900],
                 ),
                 infoProperties: InfoProperties(
-                  mainLabelStyle: GoogleFonts.chicle(fontSize: 50, fontWeight: FontWeight.bold),
+                  mainLabelStyle: GoogleFonts.chicle(
+                      fontSize: 50, fontWeight: FontWeight.bold),
                   bottomLabelText: 'Vendi Points',
-                  bottomLabelStyle: GoogleFonts.bebasNeue(fontSize: 40, fontWeight: FontWeight.bold),
+                  bottomLabelStyle: GoogleFonts.bebasNeue(
+                      fontSize: 40, fontWeight: FontWeight.bold),
                   modifier: (double value) {
-                    final roundedValue = value
-                        .toStringAsFixed(1);
+                    final roundedValue = value.toStringAsFixed(1);
                     return roundedValue;
                   },
                 ),
               ),
               initialValue: 500,
-              onChange: (double value){
+              onChange: (double value) {
                 print(value);
               },
-              onChangeStart: (double value){
+              onChangeStart: (double value) {
                 print('Start $value');
               },
-              onChangeEnd: (double value){
+              onChangeEnd: (double value) {
                 print('End $value');
               },
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 80.0),
               child: ElevatedButton(
