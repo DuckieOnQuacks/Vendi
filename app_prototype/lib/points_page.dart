@@ -54,12 +54,23 @@ class _PointsPageState extends State<PointsPage> {
               'assets/images/3MachinesStacked.png',
               scale: 2,
             ),
-            Text(
-              'Kermit, you have',
-              style: GoogleFonts.bebasNeue(
-                fontWeight: FontWeight.bold,
-                fontSize: 50,
-              ),
+            FutureBuilder<String>(
+              future: getUserName(),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Text(
+                    '${snapshot.data ?? ""}, you have',
+                    style: GoogleFonts.bebasNeue(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 50,
+                    ),
+                  );
+                }
+              },
             ),
             const SizedBox(height: 20),
             SleekCircularSlider(

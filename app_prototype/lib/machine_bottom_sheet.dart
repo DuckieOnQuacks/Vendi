@@ -222,7 +222,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => Scaffold(
-                                          body: SafeArea(
+                                          body: SingleChildScrollView(
                                             child: GestureDetector(
                                               onTap: () =>
                                                   Navigator.pop(context),
