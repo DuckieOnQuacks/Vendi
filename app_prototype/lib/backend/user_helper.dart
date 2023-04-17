@@ -68,6 +68,15 @@ Future<int> getUserPoints() async {
   return currentPoints;
 }
 
+//Helper to retrive the users first name.
+Future<String> getUserName() async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+  final docSnapshot = await userDocRef.get();
+  String username = docSnapshot.data()!['first name'] ?? 0;
+  return username;
+}
+
 //This helper function updates the cap value when the user updates or adds a machine.
 Future<void> updateUserCap(int capToAdd) async {
   final userId = FirebaseAuth.instance.currentUser!.uid;

@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// All code on this page was developed by the team using the flutter framework
+import 'backend/user_helper.dart';
 
-class PointsRedemptionPage extends StatelessWidget {
-  const PointsRedemptionPage({super.key});
+class PointsRedemptionPage extends StatefulWidget {
+  const PointsRedemptionPage({Key? key}) : super(key: key);
+
+  @override
+  _PointsRedemptionPageState createState() => _PointsRedemptionPageState();
+}
+
+class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
+  int currentPoints = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserPoints().then((points) {
+      setState(() {
+        currentPoints = points;
+      });
+    });
+  }
 
   //popup window
   createAlertDialog(BuildContext context) {
@@ -54,7 +71,7 @@ class PointsRedemptionPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 50,
                 )),
-            Text('500 Vendi Points',
+            Text('$currentPoints Vendi Points',
                 style: GoogleFonts.chicle(
                   fontWeight: FontWeight.bold,
                   fontSize: 50,
