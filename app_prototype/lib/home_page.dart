@@ -8,7 +8,6 @@ import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'Addmachine.dart';
-import 'backend/user_helper.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -22,7 +21,6 @@ class _HomepageState extends State<Homepage> {
   final Map<String, Marker> _markers = {};
   Position? currentPosition;
   late MapType _currentMapType = MapType.hybrid;
-  Future<void>? _getAllMachinesFuture;
 
   // Helper method to get the current position
   Future<Position?> getCurrentPosition() async {
@@ -50,22 +48,31 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
+  Future<void> _getAllMachines() async {
+    final machineList = await FirebaseHelper().getAllMachines();
+    for (final machine in machineList) {
+      _markers[machine.id.toString()] = await _createMarker(machine);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    getCurrentPosition().then((position) {
-      setState(() {
-        currentPosition = position;
-      });
-    });
-    _getAllMachinesFuture = FirebaseHelper().getAllMachines().then((machineList) async {
-      for (final machine in machineList) {
-        _markers[machine.id.toString()] = await _createMarker(machine);
-      }
-      if (mounted) {
-        setState(() {});
-      }
-    });
+    initHomepage();
+  }
+
+  Future<void> initHomepage() async {
+    currentPosition = await getCurrentPosition();
+    await _getAllMachines();
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    mapController.dispose();
+    super.dispose();
   }
 
   @override

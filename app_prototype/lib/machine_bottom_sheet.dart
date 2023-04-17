@@ -7,6 +7,8 @@ import 'package:vendi_app/backend/machine_class.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'update_machine.dart';
 import 'main.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 // All code on this page was developed by the team using the flutter framework
 
@@ -24,8 +26,7 @@ class MachineBottomSheet extends StatefulWidget {
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
   Future<int?> isFavorite = dbHelper.getMachineFavoriteStatus(selectedMachine!);
-  Future<Machine?> selectedMachineDB =
-      FirebaseHelper().getMachineById(selectedMachine!);
+  Future<Machine?> selectedMachineDB = FirebaseHelper().getMachineById(selectedMachine!);
   FirebaseStorage storage = FirebaseStorage.instance;
 
   @override
@@ -127,7 +128,29 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                       } else if (!snapshot.hasData) {
                         return const Text('No data found');
                       } else {
-                        return Text(snapshot.data!,
+                        initializeDateFormatting();
+                        // This is the format of the metadata we receive
+                        DateFormat format = DateFormat("MM/dd/yyyy hh:mm a");
+                        DateTime lastUpdate = format.parse(snapshot.data!);
+                        // Calculate difference in time
+                        Duration diff = DateTime.now().difference(lastUpdate);
+
+                        // Calculate differences for days, hours, or minutes
+                        int days = diff.inDays;
+                        int hours = diff.inHours % 24;
+                        int minutes = diff.inMinutes % 60;
+
+                        String formattedDiff;
+                        if (days > 0) {
+                          formattedDiff =
+                              '$days days $hours hrs and $minutes mins ago';
+                        } else if (hours > 0) {
+                          formattedDiff = '$hours hrs and $minutes mins ago';
+                        } else {
+                          formattedDiff = '$minutes mins ago';
+                        }
+
+                        return Text(formattedDiff,
                             style: GoogleFonts.getFont('Bebas Neue',
                                 fontSize: 25, color: Colors.grey[600]));
                       }
@@ -135,7 +158,6 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   ),
                 ],
               ),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

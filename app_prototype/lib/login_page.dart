@@ -17,6 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   // All code on this page was developed by the team using the flutter framework
   late final TextEditingController usernameController = TextEditingController();
   late final TextEditingController passwordController = TextEditingController();
+  String? emailErrorMessage;
+  String? passwordErrorMessage;
 
   void signUserIn() async {
     showDialog(
@@ -41,6 +43,24 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pop(context);
       showErrorMessage(e.code);
     }
+  }
+
+  bool validateFields() {
+    bool valid = true;
+    setState(() {
+      emailErrorMessage = null;
+      passwordErrorMessage = null;
+
+      if (usernameController.text.isEmpty || !usernameController.text.contains('@')) {
+        emailErrorMessage = 'Please enter a valid email';
+        valid = false;
+      }
+      if (passwordController.text.isEmpty || passwordController.text.length < 6) {
+        passwordErrorMessage = 'Please enter a password with at least 6 characters';
+        valid = false;
+      }
+    });
+    return valid;
   }
 
   void showErrorMessage(String message) {

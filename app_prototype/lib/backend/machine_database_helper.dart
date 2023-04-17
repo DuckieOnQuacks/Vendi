@@ -76,7 +76,7 @@ class FirebaseHelper {
 
   //Updates a machine with another machine.
   Future<void> updateMachine(Machine machine) async {
-    final machinesCollection = FirebaseFirestore.instance.collection('Machines');
+    final machinesCollection = FirebaseFirestore.instance.collection(tableName);
     final querySnapshot = await machinesCollection.where('id', isEqualTo: machine.id).get();
     if (querySnapshot.size > 0) {
       final machineDoc = querySnapshot.docs.first.reference;

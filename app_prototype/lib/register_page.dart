@@ -28,12 +28,31 @@ class _RegisterPageState extends State<RegisterPage> {
   int cap = 0;
   List<String> machinesEntered = [];
 
+  bool _isEmailValid(String email) {
+    // Check if email is valid using regex pattern
+    final RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    return emailRegex.hasMatch(email);
+  }
+
   void createAccount() async {
+    // Check if fields are not empty
+    if (emailController.text.isEmpty || passwordController.text.isEmpty || confirmPassword.text.isEmpty || firstName.text.isEmpty || lastName.text.isEmpty) {
+      await showErrorMessage("Please fill in all fields.");
+      return;
+    }
+
+    // Check if email is valid
+    if (!_isEmailValid(emailController.text)) {
+      await showErrorMessage("Please enter a valid email.");
+      return;
+    }
+
     try {
       // Check if password is confirmed
       if (passwordController.text == confirmPassword.text) {
         // Check if length of passwords entered are greater than 6
-        if (passwordController.text.length > 6 && confirmPassword.text.length > 6) {
+        if (passwordController.text.length > 6 &&
+            confirmPassword.text.length > 6) {
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text,
             password: passwordController.text,
@@ -50,7 +69,6 @@ class _RegisterPageState extends State<RegisterPage> {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        print('here');
         await showErrorMessage('The account already exists for that email.');
       } else {
         await showErrorMessage(e.code);

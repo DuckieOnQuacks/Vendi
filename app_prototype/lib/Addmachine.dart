@@ -246,6 +246,9 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 //submit button
                 child: TextButton(
                     onPressed: () {
+                      print('Building: ${_buildingController.text}');
+                      print('Floor: ${_floorController.text}');
+                      print('Picture Taken Add: $pictureTakenAdd');
                       setState(() {
                         if (_buildingController.text.isEmpty ||
                             _floorController.text.isEmpty ||
@@ -281,6 +284,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(false);
+                                      pictureTakenAdd = 0;
                                     },
                                     child: const Text('Cancel'),
                                   ),
@@ -288,31 +292,23 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                   TextButton(
                                     onPressed: () async {
                                       int cap = await getUserCap() ?? 0;
-                                      DateTime? timeAfter24HoursStored =
-                                          await getTimeAfter24Hours();
+                                      DateTime? timeAfter24HoursStored = await getTimeAfter24Hours();
                                       //If cap is 90, and 24 hours has passed, get the time that the last picture was taken
                                       //(which would be this if statement) and add 24 hours to it and display message with time remaining.
-                                      if (cap >= 90 &&
-                                          (timeAfter24HoursStored == null ||
-                                              DateTime.now().isAfter(
-                                                  timeAfter24HoursStored))) {
+                                      //Check to see if the value is Dec 31, 1969 4pm utc because that is the default when a new user is made.
+                                      DateTime targetDate = DateTime.utc(1969, 12, 31, 16, 0);
+
+                                      if (cap < 90 && (timeAfter24HoursStored == null || DateTime.now().isAfter(timeAfter24HoursStored) || timeAfter24HoursStored.isAtSameMomentAs(targetDate))) {
                                         await updateUserCap(-cap); // Make the cap value zero
-                                        DateTime? timeTaken =
-                                            await getImageTakenTime(imageUrl);
+                                        DateTime? timeTaken = await getImageTakenTime(imageUrl);
                                         if (timeTaken != null) {
-                                          print(
-                                              'Image was taken at: $timeTaken');
-                                          DateTime timeAfter24Hours =
-                                              timeTaken.add(Duration(
-                                                  hours: 24)); // Add 24hrs
-                                          print(
-                                              'Time after 24 hours: $timeAfter24Hours');
+                                          print('Image was taken at: $timeTaken');
+                                          DateTime timeAfter24Hours = timeTaken.add(Duration(hours: 24)); // Add 24hrs
+                                          print('Time after 24 hours: $timeAfter24Hours');
 
                                           // Calculate the time left
-                                          Duration timeLeft = timeAfter24Hours
-                                              .difference(DateTime.now());
-                                          await setTimeAfter24Hours(
-                                              timeAfter24Hours);
+                                          Duration timeLeft = timeAfter24Hours.difference(DateTime.now());
+                                          await setTimeAfter24Hours(timeAfter24Hours);
 
                                           Navigator.push(
                                             context,
@@ -646,7 +642,7 @@ class _CameraScreenState extends State<CameraScreen> {
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                           await uploadImage(image.path);
-                          pictureTakenAdd = 0;
+
                         } else {
                           Navigator.of(context).pop();
                           showDialog(
