@@ -58,7 +58,7 @@ Future<void> updateUserPoints(int pointsToAdd) async {
   print('Points updated');
 }
 
-//Helper to retrive the current users points.
+//Helper to retrieve the current users points.
 Future<int> getUserPoints() async {
   final userId = FirebaseAuth.instance.currentUser!.uid;
   final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);

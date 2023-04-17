@@ -19,7 +19,7 @@ class _BottomBarState extends State<BottomBar> {
   // What pages to load depending on the bottom bar index
   final Map<int, Widget> _pages = {
     0: const Homepage(),
-    1: const FavoritesPageSetup(),
+    1: const FavoritesPage(),
     2: const PointsPage(),
     3: ProfilePage(),
   };
