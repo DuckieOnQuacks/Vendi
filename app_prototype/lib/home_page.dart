@@ -101,19 +101,37 @@ class _HomepageState extends State<Homepage> {
       body: currentPosition == null
           ? const Center(child: CircularProgressIndicator())
           : GoogleMap(
-        mapType: _currentMapType,
-        mapToolbarEnabled: false,
-        myLocationEnabled: true, // Add this line to enable the user's location
-        buildingsEnabled: true,
-        myLocationButtonEnabled: true, // Add this line to enable the location button
-        initialCameraPosition: CameraPosition(
-          target: LatLng(currentPosition!.latitude, currentPosition!.longitude),
-          zoom: 18,
-        ),
-        onMapCreated: (controller) async {
-          mapController = controller;
+              mapType: _currentMapType,
+              mapToolbarEnabled: false,
+              myLocationEnabled:
+                  true, // Add this line to enable the user's location
+              buildingsEnabled: true,
+              myLocationButtonEnabled:
+                  true, // Add this line to enable the location button
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                    currentPosition!.latitude, currentPosition!.longitude),
+                zoom: 18,
+              ),
+              onMapCreated: (controller) async {
+                mapController = controller;
+              },
+              markers: _markers.values.toSet(),
+            ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            if (_currentMapType == MapType.normal) {
+              _currentMapType = MapType.hybrid;
+            } else {
+              _currentMapType = MapType.normal;
+            }
+          });
         },
-        markers: _markers.values.toSet(),
+        child: Icon(
+          _currentMapType == MapType.normal ? Icons.satellite : Icons.map,
+        ),
       ),
     );
   }
@@ -146,5 +164,3 @@ class _HomepageState extends State<Homepage> {
         .asUint8List();
   }
 }
-
-

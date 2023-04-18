@@ -129,19 +129,43 @@ class _FavoritePageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Confirm Delete'),
-      content: const Text('Are you sure you want to delete this item?'),
+      title: Row(
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.red,
+          ),
+          SizedBox(width: 10),
+          Text(
+            'Confirm Delete',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+      content: const Text('Are you sure you want to remove this machine from your favorites?'),
       actions: <Widget>[
-        TextButton(
+        ElevatedButton(
           onPressed: () => Navigator.of(context).pop(false),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.grey[300],
+            onPrimary: Colors.black54,
+          ),
           child: const Text('Cancel'),
         ),
-        TextButton(
+        ElevatedButton(
           onPressed: () async {
             machine.isFavorited = 0;
             await dbHelper.saveMachine(machine);
             Navigator.of(context).pop(true);
           },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.pinkAccent,
+            onPrimary: Colors.white,
+          ),
           child: const Text('Delete'),
         ),
       ],
