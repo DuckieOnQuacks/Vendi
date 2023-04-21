@@ -393,13 +393,13 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               lat: _currentPosition!.latitude,
                                               lon: _currentPosition!.longitude,
                                               imagePath: imageUrl,
-                                              isFavorited: 0,
                                               icon:
                                                   "assets/images/BlueMachine.png",
                                               card: _selectedValueCard,
                                               cash: _selectedValueCash,
-                                              operational:
-                                                  _selectedValueOperational,
+                                              operational: _selectedValueOperational,
+                                              upvotes: 0,
+                                              dislikes: 0
                                             );
                                             FirebaseHelper()
                                                 .addMachine(test1)
@@ -428,13 +428,14 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               lat: _currentPosition!.latitude,
                                               lon: _currentPosition!.longitude,
                                               imagePath: imageUrl,
-                                              isFavorited: 0,
                                               icon:
                                                   "assets/images/PinkMachine.png",
                                               card: _selectedValueCard,
                                               cash: _selectedValueCash,
                                               operational:
                                                   _selectedValueOperational,
+                                              upvotes: 0,
+                                              dislikes: 0
                                             );
                                             FirebaseHelper()
                                                 .addMachine(test2)
@@ -463,13 +464,14 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               lat: _currentPosition!.latitude,
                                               lon: _currentPosition!.longitude,
                                               imagePath: imageUrl,
-                                              isFavorited: 0,
                                               icon:
                                                   "assets/images/YellowMachine.png",
                                               card: _selectedValueCard,
                                               cash: _selectedValueCash,
                                               operational:
                                                   _selectedValueOperational,
+                                              upvotes: 0,
+                                              dislikes: 0
                                             );
                                             FirebaseHelper()
                                                 .addMachine(test3)

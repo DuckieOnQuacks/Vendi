@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:vendi_app/backend/user_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'backend/machine_class.dart';
+import 'backend/machine_database_helper.dart';
 import 'main.dart';
 
 // All code on this page was developed by the team using the flutter framework
@@ -13,12 +15,12 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritesPage> {
-  Future<List<Machine>>? futureMachines;
+  Future<List<Machine>>? favMachines;
 
   @override
   void initState() {
     super.initState();
-    futureMachines = dbHelper.getAllFavorited();
+    favMachines = getMachinesFavorited();
   }
 
   void onDeleteButtonPressed(Machine machine) async {
@@ -27,11 +29,13 @@ class _FavoritePageState extends State<FavoritesPage> {
       builder: (BuildContext context) => DeleteMachineDialog(machine: machine),
     );
     if (result != null && result) {
+      await removeMachineFromFavorited(machine.id);
       setState(() {
-        futureMachines = dbHelper.getAllFavorited();
+        favMachines = getMachinesFavorited();
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +50,13 @@ class _FavoritePageState extends State<FavoritesPage> {
         automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<Machine>>(
-        future: futureMachines,
+        future: favMachines,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData) {
             final favMachines = snapshot.data!;
             if (favMachines.isEmpty) {
               return const Center(
@@ -69,7 +77,7 @@ class _FavoritePageState extends State<FavoritesPage> {
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () =>
-                          onDeleteButtonPressed(favMachines[index]),
+                          onDeleteButtonPressed(favMachines![index]),
                     ),
                     title: Text(
                       favMachines[index].name,
@@ -97,7 +105,7 @@ class _FavoritePageState extends State<FavoritesPage> {
             );
           } else {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: Text("No Favorite Machines"),
             );
           }
         },
@@ -113,7 +121,7 @@ class _FavoritePageState extends State<FavoritesPage> {
     if (result != null && result) {
       if (mounted) {
         setState(() {
-          futureMachines = dbHelper.getAllFavorited();
+          favMachines = getMachinesFavorited();
         });
       }
     }
@@ -158,8 +166,7 @@ class _FavoritePageState extends State<FavoritesPage> {
         ),
         ElevatedButton(
           onPressed: () async {
-            machine.isFavorited = 0;
-            await dbHelper.saveMachine(machine);
+            removeMachineFromFavorited(selectedMachine!.id);
             Navigator.of(context).pop(true);
           },
           style: ElevatedButton.styleFrom(

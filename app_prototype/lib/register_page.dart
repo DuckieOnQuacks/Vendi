@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vendi_app/backend/user_helper.dart';
 import 'package:vendi_app/login_page.dart';
 import 'dart:core';
 
@@ -27,6 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
   int points = 0;
   int cap = 0;
   List<String> machinesEntered = [];
+  List<String> machinesFavorited = [];
 
   bool _isEmailValid(String email) {
     // Check if email is valid using regex pattern
@@ -91,6 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
       'cap': cap,
       'machinesEntered': machinesEntered,
       'timeAfter24Hours': Timestamp.fromMillisecondsSinceEpoch(0),// create a default value for the timestamp which is December 31st, 1969, 4:00:00PM UTC because of timezones
+      'machinesFavorited': machinesFavorited,
     });
   }
 

@@ -31,22 +31,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sqflite:
-  camera:
-  path_provider:
-  path:
-  image_picker:
-  provider:
-  favorite_button:
-  sleek_circular_slider:
+  sqflite: ^2.2.6
+  camera: ^0.10.4
+  path_provider: ^2.0.14
+  path: ^1.8.2
+  image_picker: ^0.8.7+3
+  provider: ^6.0.5
+  favorite_button: ^0.0.4
+  sleek_circular_slider: ^2.0.1
 
   # Google maps sdk
-  geolocator:
+  geolocator: ^9.0.2
   google_maps_flutter:
-  location:
+  location: ^4.4.0
 
   #For datetime
-  intl:
+  intl: ^0.18.1
 
   #FireBase Imports
   firebase_core:
@@ -55,24 +55,25 @@ dependencies:
   firebase_storage:
 
   #Other imports
-  google_sign_in:
-  font_awesome_flutter:
+  google_sign_in: ^6.1.0
+  font_awesome_flutter: ^10.4.0
+  google_maps_cluster_manager:
 
   # The package adds a package for creating a splash screen for the app. Once receieved run:
   # flutter pub run flutter_native_splash:create
-  flutter_native_splash: ^2.2.16
+  flutter_native_splash: ^2.2.18
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  google_fonts:
-  line_awesome_flutter:
+  cupertino_icons: ^1.0.5
+  google_fonts: ^4.0.3
+  line_awesome_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons:
+  flutter_launcher_icons: ^0.12.0
 flutter_icons:
   android: true
   image_path: "assets/images/Icon.png"

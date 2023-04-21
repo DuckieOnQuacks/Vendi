@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,8 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'package:favorite_button/favorite_button.dart';
+import 'package:vendi_app/backend/user_helper.dart';
 import 'update_machine.dart';
-import 'main.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -25,9 +27,34 @@ class MachineBottomSheet extends StatefulWidget {
 }
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
-  Future<int?> isFavorite = dbHelper.getMachineFavoriteStatus(selectedMachine!);
+  late List<Machine> isFavorite = [];
   Future<Machine?> selectedMachineDB = FirebaseHelper().getMachineById(selectedMachine!);
   FirebaseStorage storage = FirebaseStorage.instance;
+  int upvoteCount = 0;
+  int downvoteCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCounts();
+    getMachinesFavorited().then((machines) {
+      setState(() {
+        isFavorite = machines;
+      });
+    });
+  }
+
+  //Make sure to have a callback that updates the number of dislikes and upvotes
+  Future<void> _fetchCounts() async {
+    int upvotes = await FirebaseHelper().getMachineUpvotes(selectedMachine!);
+    int downvotes = await FirebaseHelper().getMachineDislikes(selectedMachine!);
+    setState(() {
+      upvoteCount = upvotes;
+      downvoteCount = downvotes;
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,26 +95,25 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         style: GoogleFonts.bebasNeue(fontSize: 30)),
                     const SizedBox(width: 20),
                   ],
+
                   // Checkbox for favouring the machine
                   //Future builder for the favorite button so that it can query the local db
-                  FutureBuilder<int?>(
-                    future: dbHelper.getMachineFavoriteStatus(selectedMachine!),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<int?> snapshot) {
+                  FutureBuilder<bool>(
+                    future: isMachineFavorited(selectedMachine!),
+                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
-                        int isFavorite = snapshot.data ?? 0;
+                        bool isFavorite = snapshot.data ?? false;
                         return FavoriteButton(
-                          isFavorite: isFavorite == 1,
-                          valueChanged: (value) {
-                            int newFavoriteValue = value ? 1 : 0;
-                            if (newFavoriteValue != isFavorite) {
-                              selectedMachine!.isFavorited = newFavoriteValue;
-                              dbHelper.saveMachine(selectedMachine!).then((_) {
-                                setState(() {
-                                  isFavorite = newFavoriteValue;
-                                });
-                              });
+                          isFavorite: isFavorite,
+                          valueChanged: (value) async {
+                            if (value) {
+                              await addMachineToFavorited(selectedMachine!.id);
+                            } else {
+                              await removeMachineFromFavorited(selectedMachine!.id);
                             }
+                            setState(() {
+                              isFavorite = value;
+                            });
                           },
                         );
                       } else {
@@ -97,7 +123,6 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   ),
                 ],
               ),
-
               //Row that shows the machine name and description
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -110,6 +135,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                       style: GoogleFonts.bebasNeue(fontSize: 25)),
                 ],
               ),
+              //Row shows how long ago the machine was last updated at.
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -142,8 +168,13 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
 
                         String formattedDiff;
                         if (days > 0) {
-                          formattedDiff =
-                              '$days days $hours hrs and $minutes mins ago';
+                          if (days == 1) {
+                            formattedDiff =
+                                '$days day $hours hrs and $minutes mins ago';
+                          } else {
+                            formattedDiff =
+                                '$days days $hours hrs and $minutes mins ago';
+                          }
                         } else if (hours > 0) {
                           formattedDiff = '$hours hrs and $minutes mins ago';
                         } else {
@@ -158,97 +189,142 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   ),
                 ],
               ),
+              //Row that shows operational, card, or cash
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 60),
-                            const SizedBox(width: 25),
-                            if (machineSnapshot.card == 1) ...[
-                              Image.asset('assets/images/card.png', height: 30),
-                              const SizedBox(width: 20),
-                              Text('Card accepted',
-                                  style: GoogleFonts.bebasNeue(fontSize: 16)),
-                            ] else ...[
-                              Image.asset('assets/images/nocard.png',
-                                  height: 30),
-                              const SizedBox(width: 20),
-                              Text('Card Not accepted',
-                                  style: GoogleFonts.bebasNeue(fontSize: 16)),
-                            ],
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 60),
+                    child: Column(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 60),
+                          const SizedBox(width: 25),
+                          if (machineSnapshot.card == 1) ...[
+                            Image.asset('assets/images/card.png', height: 30),
                             const SizedBox(width: 20),
-                            const SizedBox(width: 5),
-                            if (machineSnapshot.cash == 1) ...[
-                              Image.asset('assets/images/cash.png', height: 30),
-                              const SizedBox(width: 20),
-                              Text('Cash accepted',
-                                  style: GoogleFonts.bebasNeue(fontSize: 16)),
-                            ] else ...[
-                              Image.asset('assets/images/cash.png', height: 30),
-                              const SizedBox(width: 20),
-                              Text('Cash Not accepted',
-                                  style: GoogleFonts.bebasNeue(fontSize: 16)),
-                            ],
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 60),
+                            Text('Card accepted',
+                                style: GoogleFonts.bebasNeue(fontSize: 16)),
+                          ] else ...[
+                            Image.asset('assets/images/nocard.png', height: 30),
                             const SizedBox(width: 20),
-                            if (machineSnapshot.operational == 1) ...[
-                              const Icon(Icons.check, color: Colors.green),
-                              const SizedBox(width: 20),
-                              Text('Operational',
-                                  style: GoogleFonts.bebasNeue(fontSize: 16)),
-                            ] else ...[
-                              const Icon(Icons.clear_rounded,
-                                  color: Colors.red),
-                              const SizedBox(width: 20),
-                              Text('Not Operational',
-                                  style: GoogleFonts.bebasNeue(fontSize: 16)),
-                            ],
+                            Text('Card Not accepted',
+                                style: GoogleFonts.bebasNeue(fontSize: 16)),
                           ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                FontAwesomeIcons.solidSquareCaretUp,
-                                size: 50,
-                                color: Colors.green,
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 60),
+                          const SizedBox(width: 20),
+                          const SizedBox(width: 5),
+                          if (machineSnapshot.cash == 1) ...[
+                            Image.asset('assets/images/cash.png', height: 30),
+                            const SizedBox(width: 20),
+                            Text('Cash accepted',
+                                style: GoogleFonts.bebasNeue(fontSize: 16)),
+                          ] else ...[
+                            Image.asset('assets/images/cash.png', height: 30),
+                            const SizedBox(width: 20),
+                            Text('Cash Not accepted',
+                                style: GoogleFonts.bebasNeue(fontSize: 16)),
+                          ],
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 60),
+                          const SizedBox(width: 20),
+                          if (machineSnapshot.operational == 1) ...[
+                            const Icon(Icons.check, color: Colors.green),
+                            const SizedBox(width: 20),
+                            Text('Operational',
+                                style: GoogleFonts.bebasNeue(fontSize: 16)),
+                          ] else ...[
+                            const Icon(Icons.clear_rounded, color: Colors.red),
+                            const SizedBox(width: 20),
+                            Text('Not Operational',
+                                style: GoogleFonts.bebasNeue(fontSize: 16)),
+                          ],
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  FontAwesomeIcons.solidSquareCaretUp,
+                                  size: 50,
+                                  color: Colors.green,
+                                ),
+                                onPressed: () async {
+                                  await FirebaseHelper()
+                                      .incrementMachineUpvotes(
+                                          selectedMachine!);
+                                  setState(() {
+                                    upvoteCount += 1;
+                                  });
+                                  print('green');
+                                },
                               ),
-                              onPressed: () {
-                                print('green');
-                              },
-                            ),
-                            const SizedBox(width: 20),
-                            IconButton(
-                              icon: Icon(
-                                FontAwesomeIcons.solidSquareCaretDown,
-                                size: 50,
-                                color: Colors.red,
+                              const SizedBox(height: 15),
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 15.0),
+                                  child: Text(
+                                    '$upvoteCount',
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
                               ),
-                              onPressed: () {
-                                print('red');
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                            ],
+                          ),
+                          const SizedBox(width: 20),
+                          Column(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  FontAwesomeIcons.solidSquareCaretDown,
+                                  size: 50,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () async {
+                                  await FirebaseHelper()
+                                      .incrementMachineDislikes(
+                                          selectedMachine!);
+                                  setState(() {
+                                    downvoteCount += 1;
+                                  });
+                                  print('red');
+                                },
+                              ),
+                              const SizedBox(height: 15),
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 15.0),
+                                  child: Text(
+                                    '$downvoteCount',
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ]),
                   ),
                   //Enlarge image when clicked
                   Expanded(

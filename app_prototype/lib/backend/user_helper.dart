@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'machine_class.dart';
 
 class userInfo {
   // Variables to store user data
@@ -10,6 +11,7 @@ class userInfo {
   final int cap;
   final List<String> machinesEntered;
   final DateTime? timeAfter24Hours; // New property for timeAfter24Hours
+  final List<String>? machinesFavorited;
 
   // Constructor for the userInfo class
   userInfo({
@@ -20,6 +22,7 @@ class userInfo {
     required this.cap,
     required this.machinesEntered,
     this.timeAfter24Hours, // Add new property to constructor
+    this.machinesFavorited,
   });
 
   // Factory method to create a userInfo object from JSON data
@@ -30,8 +33,8 @@ class userInfo {
         points: json['points'],
         cap: json['cap'],
         machinesEntered: List<String>.from(json['machinesEntered']),
-        timeAfter24Hours: (json['timeAfter24Hours'] as Timestamp)
-            .toDate(), // Convert Timestamp to DateTime
+        timeAfter24Hours: (json['timeAfter24Hours'] as Timestamp).toDate(), // Convert Timestamp to DateTime
+        machinesFavorited: List<String>.from(json['favoriteMachines']),
       );
 
   // Method to convert a userInfo object to JSON data
@@ -43,6 +46,7 @@ class userInfo {
         'cap': cap,
         'machinesEntered': machinesEntered,
         'timeAfter24Hours': timeAfter24Hours,
+        'machinesFavorited': machinesFavorited,
       };
 }
 
@@ -75,6 +79,81 @@ Future<String> getUserName() async {
   final docSnapshot = await userDocRef.get();
   String username = docSnapshot.data()!['first name'] ?? 0;
   return username;
+}
+
+//This function get the ids found in the users machinesFavorited field and returns the corrspnding machines that can
+//be found in the firestore database.
+Future<List<Machine>> getMachinesFavorited() async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+  final docSnapshot = await userDocRef.get();
+  List<String>? machineIds = List<String>.from(docSnapshot.data()!['machinesFavorited'] ?? []);
+
+  if (machineIds == null || machineIds.isEmpty) {
+    return [];
+  }
+  final machineDocs = await FirebaseFirestore.instance.collection('Machines')
+      .where(FieldPath.documentId, whereIn: machineIds)
+      .get();
+
+  final machines = machineDocs.docs.map((doc) => Machine.fromJson(doc.data())).toList();
+
+  return machines;
+}
+
+Future<bool> isMachineFavorited(Machine machine) async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+  final docSnapshot = await userDocRef.get();
+  List<String> machineIds = List<String>.from(docSnapshot.data()!['machinesFavorited'] ?? []);
+
+  return machineIds.contains(machine.id);
+}
+
+Future<void> addMachineToFavorited(String machineId) async {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  final userRef = FirebaseFirestore.instance.collection('Users');
+  final query =  userRef.where('email', isEqualTo: currentUser.email);
+
+  final snapshot = await query.get();
+  if(snapshot.docs.isNotEmpty)
+    {
+      final userDoc = snapshot.docs.single;
+      final machinesFavorited = List<String>.from(userDoc.get('machinesFavorited') ?? []);
+      if (!machinesFavorited.contains(machineId)) {
+        machinesFavorited.add(machineId);
+        await userDoc.reference.update({'machinesFavorited': machinesFavorited,
+        }).then((_) {
+          print('Machine added to favorites successfully!');
+        }).catchError((error) {
+          print('Error adding machine to favorites: $error');
+        });
+      } else {
+        print('Machine is already in favorites');
+      }
+    } else {
+    print('User not found with email ${currentUser.email}');
+  }
+}
+
+Future<void> removeMachineFromFavorited(String machineId) async {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(currentUser.uid);
+
+  try {
+    final docSnapshot = await userDocRef.get();
+    final machinesFavorited = List<String>.from(docSnapshot.get('machinesFavorited') ?? []);
+
+    if (machinesFavorited.contains(machineId)) {
+      machinesFavorited.remove(machineId);
+      await userDocRef.update({'machinesFavorited': machinesFavorited});
+      print('Machine removed from favorites successfully!');
+    } else {
+      print('Machine is not in favorites');
+    }
+  } catch (error) {
+    print('Error removing machine from favorites: $error');
+  }
 }
 
 //This helper function updates the cap value when the user updates or adds a machine.
