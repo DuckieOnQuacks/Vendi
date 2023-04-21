@@ -73,7 +73,9 @@ class _PointsPageState extends State<PointsPage> {
               },
             ),
             const SizedBox(height: 20),
-            SleekCircularSlider(
+            IgnorePointer(
+              ignoring: true,
+              child: SleekCircularSlider(
               min: 0,
               max: 500,
               appearance: CircularSliderAppearance(
@@ -114,6 +116,7 @@ class _PointsPageState extends State<PointsPage> {
               onChangeEnd: (double value) {
                 print('End $value');
               },
+            ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 80.0),
