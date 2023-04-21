@@ -298,9 +298,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                       //Check to see if the value is Dec 31, 1969 4pm utc because that is the default when a new user is made.
                                       DateTime targetDate = DateTime.utc(1969, 12, 31, 16, 0);
 
-                                      if (cap < 90 && (timeAfter24HoursStored == null || DateTime.now().isAfter(timeAfter24HoursStored) || timeAfter24HoursStored.isAtSameMomentAs(targetDate))) {
+                                      if (cap >= 90 && (timeAfter24HoursStored == null || DateTime.now().isAfter(timeAfter24HoursStored) || timeAfter24HoursStored.isAtSameMomentAs(targetDate))) {
                                         await updateUserCap(-cap); // Make the cap value zero
                                         DateTime? timeTaken = await getImageTakenTime(imageUrl);
+
                                         if (timeTaken != null) {
                                           print('Image was taken at: $timeTaken');
                                           DateTime timeAfter24Hours = timeTaken.add(Duration(hours: 24)); // Add 24hrs
@@ -339,26 +340,14 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               },
                                             );
                                           });
-                                        } else {
-                                          print(
-                                              'Could not fetch image metadata.');
                                         }
-                                        //Otherwise, add the machine like normal and give them points and increase daily cap.
-                                      }
-                                      //If statement to check and see if the user would like to submit to see remaining time.
-                                      else if (cap >= 90 &&
-                                          timeAfter24HoursStored != null &&
-                                          DateTime.now().isBefore(
-                                              timeAfter24HoursStored)) {
-                                        Duration timeLeft =
-                                            timeAfter24HoursStored
-                                                .difference(DateTime.now());
-
+                                      } else if (cap < 90 && timeAfter24HoursStored != null && DateTime.now().isBefore(timeAfter24HoursStored)) {
+                                        Duration timeLeft = timeAfter24HoursStored.difference(DateTime.now());
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const BottomBar()),
+                                              const BottomBar()),
                                         );
                                         WidgetsBinding.instance!
                                             .addPostFrameCallback((_) {
@@ -383,7 +372,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             },
                                           );
                                         });
-                                      } else {
+                                    }else {
                                         setState(() {
                                           if (_isDrinkSelected == true) {
                                             Machine test1 = Machine(
@@ -493,10 +482,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             });
                                           }
                                         });
-                                        await updateUserPoints(
-                                            30); // Call the updatePoints function to add 30 points for adding a machine
-                                        await updateUserCap(
-                                            30); // Call the updateCap function to increase the cap value by 10
+                                        await updateUserPoints(30); // Call the updatePoints function to add 30 points for adding a machine
+                                        await updateUserCap(30); // Call the updateCap function to increase the cap value by 10
                                       }
                                     },
                                     child: const Text('Submit'),

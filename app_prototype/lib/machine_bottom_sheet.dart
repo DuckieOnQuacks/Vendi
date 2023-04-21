@@ -54,7 +54,14 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
     });
   }
 
-
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -248,80 +255,6 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                             Text('Not Operational',
                                 style: GoogleFonts.bebasNeue(fontSize: 16)),
                           ],
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  FontAwesomeIcons.solidSquareCaretUp,
-                                  size: 50,
-                                  color: Colors.green,
-                                ),
-                                onPressed: () async {
-                                  await FirebaseHelper()
-                                      .incrementMachineUpvotes(
-                                          selectedMachine!);
-                                  setState(() {
-                                    upvoteCount += 1;
-                                  });
-                                  print('green');
-                                },
-                              ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 15.0),
-                                  child: Text(
-                                    '$upvoteCount',
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(width: 20),
-                          Column(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  FontAwesomeIcons.solidSquareCaretDown,
-                                  size: 50,
-                                  color: Colors.red,
-                                ),
-                                onPressed: () async {
-                                  await FirebaseHelper()
-                                      .incrementMachineDislikes(
-                                          selectedMachine!);
-                                  setState(() {
-                                    downvoteCount += 1;
-                                  });
-                                  print('red');
-                                },
-                              ),
-                              const SizedBox(height: 15),
-                              Center(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 15.0),
-                                  child: Text(
-                                    '$downvoteCount',
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ]),
