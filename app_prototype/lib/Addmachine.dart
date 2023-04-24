@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:confetti/confetti.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'backend/machine_class.dart';
+import 'backend/message_helper.dart';
 import 'backend/user_helper.dart';
 import 'bottom_bar.dart';
 import 'package:vendi_app/backend/flask_helper.dart';
@@ -126,7 +128,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
               const SizedBox(height: 16.0),
               const Text('Floor Number*', style: TextStyle(fontSize: 16)),
               TextField(
-                decoration: const InputDecoration(hintText: 'Ex: Floor 2'),
+                decoration: const InputDecoration(hintText: 'Ex: 2'),
                 controller: _floorController,
               ),
               const SizedBox(height: 40.0),
@@ -299,7 +301,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                       DateTime targetDate = DateTime.utc(1969, 12, 31, 16, 0);
 
                                       if (cap >= 90 && (timeAfter24HoursStored == null || DateTime.now().isAfter(timeAfter24HoursStored) || timeAfter24HoursStored.isAtSameMomentAs(targetDate))) {
-                                        await updateUserCap(-cap); // Make the cap value zero
+                                        await setUserCap(-cap); // Make the cap value zero
                                         DateTime? timeTaken = await getImageTakenTime(imageUrl);
 
                                         if (timeTaken != null) {
@@ -482,8 +484,9 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             });
                                           }
                                         });
-                                        await updateUserPoints(30); // Call the updatePoints function to add 30 points for adding a machine
-                                        await updateUserCap(30); // Call the updateCap function to increase the cap value by 10
+                                        await setUserPoints(30); // Call the updatePoints function to add 30 points for adding a machine
+                                        await setUserCap(30); // Call the updateCap function to increase the cap value by 10
+                                        showConfettiDialog(context, 'Youve earned 30 vendi points');
                                       }
                                     },
                                     child: const Text('Submit'),

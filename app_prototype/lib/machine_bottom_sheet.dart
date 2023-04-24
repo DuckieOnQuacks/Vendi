@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:confetti/confetti.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -30,13 +31,10 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
   late List<Machine> isFavorite = [];
   Future<Machine?> selectedMachineDB = FirebaseHelper().getMachineById(selectedMachine!);
   FirebaseStorage storage = FirebaseStorage.instance;
-  int upvoteCount = 0;
-  int downvoteCount = 0;
 
   @override
   void initState() {
     super.initState();
-    _fetchCounts();
     getMachinesFavorited().then((machines) {
       setState(() {
         isFavorite = machines;
@@ -44,24 +42,8 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
     });
   }
 
-  //Make sure to have a callback that updates the number of dislikes and upvotes
-  Future<void> _fetchCounts() async {
-    int upvotes = await FirebaseHelper().getMachineUpvotes(selectedMachine!);
-    int downvotes = await FirebaseHelper().getMachineDislikes(selectedMachine!);
-    setState(() {
-      upvoteCount = upvotes;
-      downvoteCount = downvotes;
-    });
-  }
 
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +96,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                           isFavorite: isFavorite,
                           valueChanged: (value) async {
                             if (value) {
-                              await addMachineToFavorited(selectedMachine!.id);
+                              await setMachineToFavorited(selectedMachine!.id);
                             } else {
                               await removeMachineFromFavorited(selectedMachine!.id);
                             }
@@ -138,7 +120,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   Text(machineSnapshot.name,
                       style: GoogleFonts.bebasNeue(fontSize: 25)),
                   const SizedBox(width: 10),
-                  Text(machineSnapshot.desc,
+                Text('Floor ${machineSnapshot.desc}',
                       style: GoogleFonts.bebasNeue(fontSize: 25)),
                 ],
               ),

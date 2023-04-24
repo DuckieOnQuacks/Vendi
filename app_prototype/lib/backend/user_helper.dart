@@ -50,26 +50,14 @@ class userInfo {
       };
 }
 
-//Helper to update the current users point value in firestore.
-Future<void> updateUserPoints(int pointsToAdd) async {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
-  final docSnapshot = await userDocRef.get();
-  int currentPoints = docSnapshot.data()!['points'] ??
-      0; // If the points field doesn't exist, assume 0.
-  int newPoints = currentPoints + pointsToAdd;
-  await userDocRef.update({'points': newPoints});
-  print('Points updated');
-}
-
 //Helper to retrieve the current users points.
-Future<int> getUserPoints() async {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
-  final docSnapshot = await userDocRef.get();
-  int currentPoints = docSnapshot.data()!['points'] ??
-      0;
-  return currentPoints;
+//Instead of reading from Firestore every time, cache the value in memory.
+Future<int?> getUserPoints() async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+    final docSnapshot = await userDocRef.get();
+    int? points = docSnapshot.data()!['points'] ?? 0;
+  return points;
 }
 
 //Helper to retrive the users first name.
@@ -99,106 +87,6 @@ Future<List<Machine>> getMachinesFavorited() async {
   final machines = machineDocs.docs.map((doc) => Machine.fromJson(doc.data())).toList();
 
   return machines;
-}
-
-Future<bool> isMachineFavorited(Machine machine) async {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
-  final docSnapshot = await userDocRef.get();
-  List<String> machineIds = List<String>.from(docSnapshot.data()!['machinesFavorited'] ?? []);
-
-  return machineIds.contains(machine.id);
-}
-
-Future<void> addMachineToFavorited(String machineId) async {
-  final currentUser = FirebaseAuth.instance.currentUser!;
-  final userRef = FirebaseFirestore.instance.collection('Users');
-  final query =  userRef.where('email', isEqualTo: currentUser.email);
-
-  final snapshot = await query.get();
-  if(snapshot.docs.isNotEmpty)
-    {
-      final userDoc = snapshot.docs.single;
-      final machinesFavorited = List<String>.from(userDoc.get('machinesFavorited') ?? []);
-      if (!machinesFavorited.contains(machineId)) {
-        machinesFavorited.add(machineId);
-        await userDoc.reference.update({'machinesFavorited': machinesFavorited,
-        }).then((_) {
-          print('Machine added to favorites successfully!');
-        }).catchError((error) {
-          print('Error adding machine to favorites: $error');
-        });
-      } else {
-        print('Machine is already in favorites');
-      }
-    } else {
-    print('User not found with email ${currentUser.email}');
-  }
-}
-
-Future<void> removeMachineFromFavorited(String machineId) async {
-  final currentUser = FirebaseAuth.instance.currentUser!;
-  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(currentUser.uid);
-
-  try {
-    final docSnapshot = await userDocRef.get();
-    final machinesFavorited = List<String>.from(docSnapshot.get('machinesFavorited') ?? []);
-
-    if (machinesFavorited.contains(machineId)) {
-      machinesFavorited.remove(machineId);
-      await userDocRef.update({'machinesFavorited': machinesFavorited});
-      print('Machine removed from favorites successfully!');
-    } else {
-      print('Machine is not in favorites');
-    }
-  } catch (error) {
-    print('Error removing machine from favorites: $error');
-  }
-}
-
-//This helper function updates the cap value when the user updates or adds a machine.
-Future<void> updateUserCap(int capToAdd) async {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
-  final docSnapshot = await userDocRef.get();
-  int currentCap = docSnapshot.data()!['cap'] ??
-      0;
-  int newCap = currentCap + capToAdd;
-  await userDocRef.update({'cap': newCap});
-  print('Cap updated');
-}
-
-//Helper to get the current value of cap in the users firestore storage.
-Future<int?> getUserCap() async {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
-  final docSnapshot = await userDocRef.get();
-  int? cap = docSnapshot.data()?['cap'];
-  return cap;
-}
-
-//This helps add the machine name to the machine array that is stored with the user.
-Future<void> addMachineToUser(String? machineName) async {
-  final currentUser = FirebaseAuth.instance.currentUser!;
-  final userRef = FirebaseFirestore.instance.collection('Users');
-  final query = userRef.where('email', isEqualTo: currentUser.email);
-
-  final snapshot = await query.get();
-  if (snapshot.docs.isNotEmpty) {
-    final userDoc = snapshot.docs.single;
-    final machinesEntered = List<String>.from(userDoc.get('machinesEntered'));
-    machinesEntered.add(machineName!);
-
-    await userDoc.reference.update({
-      'machinesEntered': machinesEntered,
-    }).then((_) {
-      print('Machine added successfully!');
-    }).catchError((error) {
-      print('Error adding machine: $error');
-    });
-  } else {
-    print('User not found with email ${currentUser.email}');
-  }
 }
 
 //Used to get the users email so that we can search for there data in the firestore database.
@@ -239,27 +127,13 @@ Future<userInfo?> getUserByEmail(String email) async {
   }
 }
 
-// This function is used to store the wait time between uploading 3 machines a day
-// Here we are taking in the 3rd images metadata data and adding 24 hours to it to get the time the user can upload again.
-Future<void> setTimeAfter24Hours(DateTime timeAfter24Hours) async {
-  // Get the current user
-  final user = FirebaseAuth.instance.currentUser;
-
-  if (user != null) {
-    // Get a reference to the Users collection in the firestore user storage
-    CollectionReference users = FirebaseFirestore.instance.collection('Users');
-
-    // Convert the DateTime to a Timestamp
-    Timestamp timeAfter24HoursTimestamp = Timestamp.fromDate(timeAfter24Hours);
-
-    // Update the timeAfter24Hours field for the current user
-    await users
-        .doc(user.uid)
-        .update({'timeAfter24Hours': timeAfter24HoursTimestamp}).catchError(
-            (error) => print('Failed to update user: $error'));
-  } else {
-    print('No user is currently signed in.');
-  }
+//Helper to get the current value of cap in the users firestore storage.
+Future<int?> getUserCap() async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+  final docSnapshot = await userDocRef.get();
+  int? cap = docSnapshot.data()?['cap'];
+  return cap;
 }
 
 //Similar to the one above this is a helper function to get the timeAfter24Hours variable
@@ -283,4 +157,130 @@ Future<DateTime?> getTimeAfter24Hours() async {
   }
 
   return timeAfter24Hours;
+}
+
+//This helper function updates the cap value when the user updates or adds a machine.
+Future<void> setUserCap(int capToAdd) async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+  final docSnapshot = await userDocRef.get();
+  int currentCap = docSnapshot.data()!['cap'] ??
+      0;
+  int newCap = currentCap + capToAdd;
+  await userDocRef.update({'cap': newCap});
+  print('Cap updated');
+}
+
+Future<void> setMachineToFavorited(String machineId) async {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  final userRef = FirebaseFirestore.instance.collection('Users');
+  final query =  userRef.where('email', isEqualTo: currentUser.email);
+
+  final snapshot = await query.get();
+  if(snapshot.docs.isNotEmpty)
+  {
+    final userDoc = snapshot.docs.single;
+    final machinesFavorited = List<String>.from(userDoc.get('machinesFavorited') ?? []);
+    if (!machinesFavorited.contains(machineId)) {
+      machinesFavorited.add(machineId);
+      await userDoc.reference.update({'machinesFavorited': machinesFavorited,
+      }).then((_) {
+        print('Machine added to favorites successfully!');
+      }).catchError((error) {
+        print('Error adding machine to favorites: $error');
+      });
+    } else {
+      print('Machine is already in favorites');
+    }
+  } else {
+    print('User not found with email ${currentUser.email}');
+  }
+}
+
+// This function is used to store the wait time between uploading 3 machines a day
+// Here we are taking in the 3rd images metadata data and adding 24 hours to it to get the time the user can upload again.
+Future<void> setTimeAfter24Hours(DateTime timeAfter24Hours) async {
+  // Get the current user
+  final user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    // Get a reference to the Users collection in the firestore user storage
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+
+    // Convert the DateTime to a Timestamp
+    Timestamp timeAfter24HoursTimestamp = Timestamp.fromDate(timeAfter24Hours);
+
+    // Update the timeAfter24Hours field for the current user
+    await users
+        .doc(user.uid)
+        .update({'timeAfter24Hours': timeAfter24HoursTimestamp}).catchError(
+            (error) => print('Failed to update user: $error'));
+  } else {
+    print('No user is currently signed in.');
+  }
+}
+
+Future<bool> isMachineFavorited(Machine machine) async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+  final docSnapshot = await userDocRef.get();
+  List<String> machineIds = List<String>.from(docSnapshot.data()!['machinesFavorited'] ?? []);
+
+  return machineIds.contains(machine.id);
+}
+
+Future<void> removeMachineFromFavorited(String machineId) async {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(currentUser.uid);
+
+  try {
+    final docSnapshot = await userDocRef.get();
+    final machinesFavorited = List<String>.from(docSnapshot.get('machinesFavorited') ?? []);
+
+    if (machinesFavorited.contains(machineId)) {
+      machinesFavorited.remove(machineId);
+      await userDocRef.update({'machinesFavorited': machinesFavorited});
+      print('Machine removed from favorites successfully!');
+    } else {
+      print('Machine is not in favorites');
+    }
+  } catch (error) {
+    print('Error removing machine from favorites: $error');
+  }
+}
+
+//This helps add the machine name to the machine array that is stored with the user.
+Future<void> addMachineToUser(String? machineName) async {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  final userRef = FirebaseFirestore.instance.collection('Users');
+  final query = userRef.where('email', isEqualTo: currentUser.email);
+
+  final snapshot = await query.get();
+  if (snapshot.docs.isNotEmpty) {
+    final userDoc = snapshot.docs.single;
+    final machinesEntered = List<String>.from(userDoc.get('machinesEntered'));
+    machinesEntered.add(machineName!);
+
+    await userDoc.reference.update({
+      'machinesEntered': machinesEntered,
+    }).then((_) {
+      print('Machine added successfully!');
+    }).catchError((error) {
+      print('Error adding machine: $error');
+    });
+  } else {
+    print('User not found with email ${currentUser.email}');
+  }
+}
+
+//Helper to update the current users point value in firestore.
+Future<void> setUserPoints(int pointsToAdd) async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+  final docSnapshot = await userDocRef.get();
+  int currentPoints = docSnapshot.data()!['points'] ??
+      0; // If the points field doesn't exist, assume 0.
+  int newPoints = currentPoints + pointsToAdd;
+  await userDocRef.update({'points': newPoints});
+  print('Points updated');
 }

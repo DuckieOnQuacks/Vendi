@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/point_redemption_page.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
-
 import 'backend/user_helper.dart';
 
 // All code on this page was developed by the team using the flutter framework
@@ -22,7 +21,7 @@ class _PointsPageState extends State<PointsPage> {
     super.initState();
     getUserPoints().then((points) {
       setState(() {
-        currentPoints = points;
+        currentPoints = points!;
       });
     });
   }
