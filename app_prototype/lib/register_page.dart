@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vendi_app/backend/user_helper.dart';
 import 'package:vendi_app/login_page.dart';
 import 'dart:core';
 
@@ -25,84 +24,106 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController firstName = TextEditingController();
   final TextEditingController lastName = TextEditingController();
   int points = 0;
+  int cap = 0;
+  List<String> machinesEntered = [];
+  List<String> machinesFavorited = [];
 
-  void signUserUp() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
+  bool _isEmailValid(String email) {
+    // Check if email is valid using regex pattern
+    final RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    return emailRegex.hasMatch(email);
+  }
+
+  void createAccount() async {
+    // Check if fields are not empty
+    if (emailController.text.isEmpty || passwordController.text.isEmpty || confirmPassword.text.isEmpty || firstName.text.isEmpty || lastName.text.isEmpty) {
+      await showErrorMessage("Please fill in all fields.");
+      return;
+    }
+
+    // Check if email is valid
+    if (!_isEmailValid(emailController.text)) {
+      await showErrorMessage("Please enter a valid email.");
+      return;
+    }
+
     try {
-      //Check if password is confirmed
+      // Check if password is confirmed
       if (passwordController.text == confirmPassword.text) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: emailController.text, password: passwordController.text);
+        // Check if length of passwords entered are greater than 6
+        if (passwordController.text.length > 6 &&
+            confirmPassword.text.length > 6) {
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailController.text,
+            password: passwordController.text,
+          );
+          addUserDetails();
+          Navigator.pop(context);
+        } else {
+          // Show error message if password length is not greater than 6
+          await showErrorMessage("Length must be greater than 6!");
+        }
       } else {
-        //show error message if they arent the same
-        showErrorMessage("Passwords don't match!"); //calls box and displays message
+        // Show error message if passwords don't match
+        await showErrorMessage("Passwords don't match!");
       }
-
-      //Checks if length of passwords entered are greater than 6
-      if (passwordController.text.length > 6 && confirmPassword.text.length > 6) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: emailController.text, password: passwordController.text);
-      } else {
-        //show error message if they arent the same
-        showErrorMessage("Length must be greater than 6!"); //calls box and displays message
-      }
-      addUserDetails();
-      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-      showErrorMessage(e.code);
+      if (e.code == 'email-already-in-use') {
+        await showErrorMessage('The account already exists for that email.');
+      } else {
+        await showErrorMessage(e.code);
+      }
     }
   }
 
-  Future addUserDetails() async {
-    await FirebaseFirestore.instance.collection('Users').add({
+  Future<void> addUserDetails() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print('No user signed in.');
+      return;
+    }
+    final userDocRef = FirebaseFirestore.instance.collection('Users').doc(user.uid);
+    await userDocRef.set({
       'first name': firstName.text.trim(),
       'last name': lastName.text.trim(),
       'email': emailController.text.trim(),
       'points': points,
+      'cap': cap,
+      'machinesEntered': machinesEntered,
+      'timeAfter24Hours': Timestamp.fromMillisecondsSinceEpoch(0),// create a default value for the timestamp which is December 31st, 1969, 4:00:00PM UTC because of timezones
+      'machinesFavorited': machinesFavorited,
     });
   }
 
   //error message box
   //Show error message if password or email is invalid
-  void showErrorMessage(String message) {
-    showDialog(
+  Future<void> showErrorMessage(String message) async {
+    await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.pinkAccent,
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
           title: Center(
             child: Text(
               message,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.black),
             ),
           ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the AlertDialog
+              },
+              child: const Text('Close'),
+            ),
+          ],
         );
       },
     );
   }
-
-  //signs the user up and syncs data into database
-  Future createAccount()async{
-    //checks to see if passwords are correct
-  if (passwordController.text == confirmPassword.text) {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword
-      (email: emailController.text, password: passwordController.text);
-  }
-  addUserDetails();
-  Navigator.of(context).push(
-      MaterialPageRoute(builder: (
-          BuildContext context) {
-        return const LoginPage();
-      }));
-}
 
   @override
   void dispose() {

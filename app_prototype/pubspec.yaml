@@ -50,20 +50,23 @@ dependencies:
 
   #FireBase Imports
   firebase_core:
-  google_sign_in:
   firebase_auth:
   cloud_firestore:
-  font_awesome_flutter:
   firebase_storage:
+
+  #Other imports
+  google_sign_in:
+  font_awesome_flutter:
+  google_maps_cluster_manager:
 
   # The package adds a package for creating a splash screen for the app. Once receieved run:
   # flutter pub run flutter_native_splash:create
-  flutter_native_splash: ^2.2.16
+  flutter_native_splash:
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons:
   google_fonts:
   line_awesome_flutter:
 

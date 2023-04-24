@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:path/path.dart';
 import 'package:vendi_app/point_redemption_page.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
+import 'backend/user_helper.dart';
+
 // All code on this page was developed by the team using the flutter framework
 
-class PointsPage extends StatelessWidget {
-  const PointsPage({super.key});
+class PointsPage extends StatefulWidget {
+  const PointsPage({Key? key}) : super(key: key);
+
+  @override
+  _PointsPageState createState() => _PointsPageState();
+}
+
+class _PointsPageState extends State<PointsPage> {
+  int currentPoints = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserPoints().then((points) {
+      setState(() {
+        currentPoints = points;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +54,28 @@ class PointsPage extends StatelessWidget {
               'assets/images/3MachinesStacked.png',
               scale: 2,
             ),
-            Text(
-              'Kermit, you have',
-              style: GoogleFonts.bebasNeue(
-                fontWeight: FontWeight.bold,
-                fontSize: 50,
-              ),
+            FutureBuilder<String>(
+              future: getUserName(),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Text(
+                    '${snapshot.data ?? ""}, you have',
+                    style: GoogleFonts.bebasNeue(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 50,
+                    ),
+                  );
+                }
+              },
             ),
             const SizedBox(height: 20),
-            SleekCircularSlider(
+            IgnorePointer(
+              ignoring: true,
+              child: SleekCircularSlider(
               min: 0,
               max: 500,
               appearance: CircularSliderAppearance(
@@ -54,34 +85,39 @@ class PointsPage extends StatelessWidget {
                 customColors: CustomSliderColors(
                   // trackColor: Colors.red,
                   trackColor: Colors.pink,
-                  progressBarColors: [Colors.pinkAccent, Colors.yellow, Colors.lightBlueAccent],
+                  progressBarColors: [
+                    Colors.pinkAccent,
+                    Colors.yellow,
+                    Colors.lightBlueAccent
+                  ],
                   //progressBarColor: Colors.lightBlueAccent,
                   dotColor: Colors.white,
                   shadowColor: Colors.pink[900],
                 ),
                 infoProperties: InfoProperties(
-                  mainLabelStyle: GoogleFonts.chicle(fontSize: 50, fontWeight: FontWeight.bold),
+                  mainLabelStyle: GoogleFonts.chicle(
+                      fontSize: 50, fontWeight: FontWeight.bold),
                   bottomLabelText: 'Vendi Points',
-                  bottomLabelStyle: GoogleFonts.bebasNeue(fontSize: 40, fontWeight: FontWeight.bold),
+                  bottomLabelStyle: GoogleFonts.bebasNeue(
+                      fontSize: 40, fontWeight: FontWeight.bold),
                   modifier: (double value) {
-                    final roundedValue = value
-                        .toStringAsFixed(1);
+                    final roundedValue = value.toStringAsFixed(1);
                     return roundedValue;
                   },
                 ),
               ),
-              initialValue: 500,
-              onChange: (double value){
+              initialValue: currentPoints.toDouble(),
+              onChange: (double value) {
                 print(value);
               },
-              onChangeStart: (double value){
+              onChangeStart: (double value) {
                 print('Start $value');
               },
-              onChangeEnd: (double value){
+              onChangeEnd: (double value) {
                 print('End $value');
               },
             ),
-
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 80.0),
               child: ElevatedButton(

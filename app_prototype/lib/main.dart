@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:vendi_app/backend/auth_page.dart';
-import 'backend/database_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-// Creating an instance of the DatabaseHelper class
-final dbHelper = DatabaseHelper();
 
 // Main function that runs when the app is launched
 Future<void> main() async {
   // Ensuring that the widgets are initialized
   WidgetsFlutterBinding.ensureInitialized();
-  // Initializing the database helper
-  await dbHelper.init();
   // Initializing Firebase
   await Firebase.initializeApp();
   // Running the MyApp widget

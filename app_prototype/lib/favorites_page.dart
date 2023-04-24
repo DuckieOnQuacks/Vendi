@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:vendi_app/backend/user_helper.dart';
+import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'backend/machine_class.dart';
+import 'backend/machine_database_helper.dart';
 import 'main.dart';
 
 // All code on this page was developed by the team using the flutter framework
@@ -12,12 +15,12 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritesPage> {
-  Future<List<Machine>>? futureMachines;
+  Future<List<Machine>>? favMachines;
 
   @override
   void initState() {
     super.initState();
-    futureMachines = dbHelper.getAllFavorited();
+    favMachines = getMachinesFavorited();
   }
 
   void onDeleteButtonPressed(Machine machine) async {
@@ -26,69 +29,106 @@ class _FavoritePageState extends State<FavoritesPage> {
       builder: (BuildContext context) => DeleteMachineDialog(machine: machine),
     );
     if (result != null && result) {
+      await removeMachineFromFavorited(machine.id);
       setState(() {
-        futureMachines = dbHelper.getAllFavorited();
+        favMachines = getMachinesFavorited();
       });
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Machine>>(
-      future: futureMachines,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final favMachines = snapshot.data!;
-          //Check to see if the favorite machine list is empty
-          if(favMachines.isEmpty)
-            {
+    return Scaffold(
+      appBar: AppBar(
+        title: Image.asset(
+          'assets/images/logo.png',
+          fit: BoxFit.contain,
+          height: 32,
+        ),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+      ),
+      body: FutureBuilder<List<Machine>>(
+        future: favMachines,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData) {
+            final favMachines = snapshot.data!;
+            if (favMachines.isEmpty) {
               return const Center(
                 child: Text("No Favorite Machines"),
               );
             }
-          //If not display the machines
-          return ListView.builder(
-            padding: const EdgeInsets.only(top: 10),
-            itemCount: favMachines.length,
-            itemBuilder: (context, index) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.grey[200],
-              ),
-              child: Card(
-                child: ListTile(
-                  leading: Image.asset(favMachines[index].icon),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => onDeleteButtonPressed(favMachines[index]),
+            return ListView.builder(
+              padding: const EdgeInsets.all(10),
+              itemCount: favMachines.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  title: Text(
-                    favMachines[index].name,
+                  elevation: 4,
+                  child: ListTile(
+                    leading: Image.asset(favMachines[index].icon),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () =>
+                          onDeleteButtonPressed(favMachines![index]),
+                    ),
+                    title: Text(
+                      favMachines[index].name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      favMachines[index].desc,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    onTap: () =>
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) =>
+                              MachineBottomSheet(favMachines[index]),
+                        ),
                   ),
-                  subtitle: Text(
-                    favMachines[index].desc,
-                  ),
-                  onTap: () {
-                    if (kDebugMode) {
-                      print('onTap pressed');
-                    }
-                  },
-                  tileColor: Colors.grey[200],
-                ),
-              ),
-            ),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
+                );
+              },
+            );
+          } else {
+            return const Center(
+              child: Text("No Favorite Machines"),
+            );
+          }
+        },
+      ),
     );
+  }
+
+  void onDeletePressed(Machine machine) async {
+    bool? result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => DeleteMachineDialog(machine: machine),
+    );
+    if (result != null && result) {
+      if (mounted) {
+        setState(() {
+          favMachines = getMachinesFavorited();
+        });
+      }
+    }
   }
 }
 
-class DeleteMachineDialog extends StatelessWidget {
+  class DeleteMachineDialog extends StatelessWidget {
   final Machine machine;
 
   const DeleteMachineDialog({Key? key, required this.machine})
@@ -97,58 +137,45 @@ class DeleteMachineDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Confirm Delete'),
-      content: const Text('Are you sure you want to delete this item?'),
+      title: Row(
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.red,
+          ),
+          SizedBox(width: 10),
+          Text(
+            'Confirm Delete',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+      content: const Text('Are you sure you want to remove this machine from your favorites?'),
       actions: <Widget>[
-        TextButton(
+        ElevatedButton(
           onPressed: () => Navigator.of(context).pop(false),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.grey[300],
+            onPrimary: Colors.black54,
+          ),
           child: const Text('Cancel'),
         ),
-        TextButton(
+        ElevatedButton(
           onPressed: () async {
-            machine.isFavorited = 0;
-            await dbHelper.saveMachine(machine);
+            removeMachineFromFavorited(selectedMachine!.id);
             Navigator.of(context).pop(true);
           },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.pinkAccent,
+            onPrimary: Colors.white,
+          ),
           child: const Text('Delete'),
         ),
       ],
-    );
-  }
-}
-
-class FavoritesPageSetup extends StatelessWidget {
-  const FavoritesPageSetup({super.key});
-  @override
-  Widget build(BuildContext context) {
-    // Sets up a favorites page using a scaffold object
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.contain,
-              height: 32,
-            )
-          ],
-        ),
-        backgroundColor: Colors.white,
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          children: const [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: FavoritesPage(),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

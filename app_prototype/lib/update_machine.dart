@@ -1,15 +1,11 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:vendi_app/backend/firebase_helper.dart';
-import 'package:vendi_app/edit_profile.dart';
+import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'backend/flask_helper.dart';
-import 'backend/machine_class.dart';
+import 'backend/user_helper.dart';
 import 'bottom_bar.dart';
 
 late String machineImage;
@@ -139,16 +135,102 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                                     'Are you sure you want to submit a form for a new vending machine?'),
                                 actions: <Widget>[
                                   TextButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       Navigator.of(context).pop(false);
                                     },
                                     child: const Text('Cancel'),
                                   ),
                                   //Creating a machine class object out of the choices made by the user
                                   TextButton(
-                                    onPressed: () {
-                                      selectedMachine?.imagePath = imageUrl;
-                                      FirebaseHelper().updateMachine(selectedMachine!);
+                                    onPressed: () async {
+                                      int cap = await getUserCap() ?? 0;
+                                      DateTime? timeAfter24HoursStored = await getTimeAfter24Hours();
+                                      //If cap is 90, and 24 hours has passed, get the time that the last picture was taken
+                                      //(which would be this if statement) and add 24 hours to it and display message with time remaining.
+                                      //Check to see if the value is Dec 31, 1969 4pm utc because that is the default when a new user is made.
+                                      DateTime targetDate = DateTime.utc(1969, 12, 31, 16, 0);
+
+                                      if (cap >= 90 && (timeAfter24HoursStored == null || DateTime.now().isAfter(timeAfter24HoursStored) || timeAfter24HoursStored.isAtSameMomentAs(targetDate))) {
+                                        await updateUserCap(-cap); // Make the cap value zero
+                                        DateTime? timeTaken = await getImageTakenTime(imageUrl);
+
+                                        if (timeTaken != null) {
+                                          print('Image was taken at: $timeTaken');
+                                          DateTime timeAfter24Hours = timeTaken.add(Duration(hours: 24)); // Add 24hrs
+                                          print('Time after 24 hours: $timeAfter24Hours');
+
+                                          // Calculate the time left
+                                          Duration timeLeft = timeAfter24Hours.difference(DateTime.now());
+                                          await setTimeAfter24Hours(timeAfter24Hours);
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                const BottomBar()),
+                                          );
+                                          WidgetsBinding.instance!
+                                              .addPostFrameCallback((_) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                      'Upload Limit Reached'),
+                                                  content: Text(
+                                                      'Upload again in: ${timeLeft.inHours} hours, and ${timeLeft.inMinutes.remainder(60)} minutes'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: Text('OK'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          });
+                                        }
+                                      } else if (cap < 90 && timeAfter24HoursStored != null && DateTime.now().isBefore(timeAfter24HoursStored)) {
+                                        Duration timeLeft = timeAfter24HoursStored.difference(DateTime.now());
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                              const BottomBar()),
+                                        );
+                                        WidgetsBinding.instance!
+                                            .addPostFrameCallback((_) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                    'Upload Limit Reached'),
+                                                content: Text(
+                                                    'Upload again in: ${timeLeft.inHours} hours, and ${timeLeft.inMinutes.remainder(60)} minutes'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: Text('OK'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        });
+                                      }else {
+                                        selectedMachine?.imagePath = imageUrl;
+                                        FirebaseHelper().updateMachine(selectedMachine!);
+                                        await updateUserPoints(15); // Call the updatePoints function to add 30 points for adding a machine
+                                        //await updateUserCap(-cap);
+                                        await updateUserCap(15);
+                                      }
                                       Navigator.push(context, MaterialPageRoute(
                                           builder: (context) =>
                                           const BottomBar()),
@@ -159,6 +241,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                                 ],
                               );
                             },
+
                           ).then((value) {
                             if (value != null && value == true) {
                               // Perform deletion logic here
@@ -182,7 +265,6 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
     );
   }
 ////////////////////////////////////////////////////////////////////
-
   void openCamera() async {
     // Ensure that there is a camera available on the device
     if (cameras.isEmpty) {

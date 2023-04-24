@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:vendi_app/backend/firebase_helper.dart';
+import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'Addmachine.dart';
@@ -48,16 +48,32 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
+  Future<void> _getAllMachines() async {
+    final machineList = await FirebaseHelper().getAllMachines();
+    for (final machine in machineList) {
+      _markers[machine.id.toString()] = await _createMarker(machine);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    getCurrentPosition().then((position) {
-      setState(() {
-        currentPosition = position;
-      });
-    });
+    initHomepage();
   }
 
+  Future<void> initHomepage() async {
+    currentPosition = await getCurrentPosition();
+    await _getAllMachines();
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    mapController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +102,7 @@ class _HomepageState extends State<Homepage> {
           ? const Center(child: CircularProgressIndicator())
           : GoogleMap(
         mapType: _currentMapType,
-        mapToolbarEnabled: true,
+        mapToolbarEnabled: false,
         myLocationEnabled: true, // Add this line to enable the user's location
         buildingsEnabled: true,
         myLocationButtonEnabled: true, // Add this line to enable the location button
@@ -96,11 +112,6 @@ class _HomepageState extends State<Homepage> {
         ),
         onMapCreated: (controller) async {
           mapController = controller;
-          final machineList = await FirebaseHelper().getAllMachines();
-          for (final machine in machineList) {
-            _markers[machine.id.toString()] = await _createMarker(machine);
-          }
-          setState(() {});
         },
         markers: _markers.values.toSet(),
       ),
@@ -135,5 +146,3 @@ class _HomepageState extends State<Homepage> {
         .asUint8List();
   }
 }
-
-
