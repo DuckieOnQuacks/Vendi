@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:vendi_app/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class ResetPasswordPage extends StatefulWidget{
+class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({Key? key}) : super(key: key);
 
   @override
@@ -8,12 +11,189 @@ class ResetPasswordPage extends StatefulWidget{
 }
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
+  final usernameController = TextEditingController();
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    super.dispose();
+  }
+
+  //Checks username in database
+  Future<void> passReset() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+          email: usernameController.text.trim());
+      showDialog(context: context,
+          builder: (context) {
+            return AlertDialog(
+//Display Password Reset sent to email message
+                content: Text(
+                    'Email was found with this account! Password reset '
+                        'link has been sent to email.')
+            );
+          }
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      showDialog(context: context,
+          builder: (context) {
+            return AlertDialog(
+//Displays error message and converts it to string
+                content: Text(e.message.toString())
+            );
+          }
+      );
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: Text('Enter Your Email and we will send you a password reset link'),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              fit: BoxFit.contain,
+              height: 32,
+            )
+          ],
+        ),
+        backgroundColor: Colors.white,
       ),
+      backgroundColor: Colors.grey[300],
+
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Display message
+            SizedBox(height: 40),
+
+            //Text
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Text(
+                'Enter your email and we will send you a password reset link',
+                textAlign: TextAlign.center,
+                //style: TextStyle(fontSize: 11),
+                style: GoogleFonts.bebasNeue(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 31,
+                ),
+              ),
+            ),
+            SizedBox(height: 30),
+
+            //Enter Email Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: usernameController,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Email',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+
+            //Reset Password Button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    passReset();
+                  });
+                },
+                style: ButtonStyle(
+                    padding: MaterialStateProperty.all<
+                        EdgeInsetsGeometry>(
+                        const EdgeInsets.all(25)),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.yellow),
+                    shape: MaterialStateProperty.all<
+                        RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: const BorderSide(
+                                color: Colors.yellow)
+                        )
+                    )
+                ),
+                child: const Center(
+                  child: Text(
+                    'Reset Password',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+
+            //Login Navigation Section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Remember Your Account?',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return const LoginPage();
+                        },
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    ' Login Now!',
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 180),
+
+            Image.asset(
+              'assets/images/BlueMachine.png',
+              scale: 5,
+            ),
+          ],
+        ),
+      ),
+
     );
   }
 }
