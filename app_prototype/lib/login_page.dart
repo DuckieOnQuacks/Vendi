@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/home_page.dart';
 import 'package:vendi_app/register_page.dart';
-
+import 'package:vendi_app/reset_password_page.dart';
 import 'bottom_bar.dart';
 
 
@@ -199,9 +199,48 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                    ],
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Forgot password?',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                          return const ResetPasswordPage();
+                        }),
+                      );
+                    },
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return ResetPasswordPage();
+                        }));
+                      },
+                      child: const Text(
+                        'Reset Here!',
+                        style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
-                ))));
+                ]
+            )
+        ]
+    )
+    )
+    )
+        )
+    );
   }
 }
 
