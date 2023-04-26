@@ -77,11 +77,12 @@ Future<List<Machine>> getMachinesFavorited() async {
   final docSnapshot = await userDocRef.get();
   List<String>? machineIds = List<String>.from(docSnapshot.data()!['machinesFavorited'] ?? []);
 
-  if (machineIds == null || machineIds.isEmpty) {
+  if (machineIds.isEmpty) {
     return [];
   }
   final machineDocs = await FirebaseFirestore.instance.collection('Machines')
       .where(FieldPath.documentId, whereIn: machineIds)
+      .limit(10)
       .get();
 
   final machines = machineDocs.docs.map((doc) => Machine.fromJson(doc.data())).toList();

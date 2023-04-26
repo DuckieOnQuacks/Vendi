@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ void showConfettiDialog(BuildContext context, String message) {
                 confettiController: _confettiController,
                 blastDirectionality: BlastDirectionality.explosive,
                 shouldLoop: false,
-                blastDirection: 3.14 * 2, // Set blast direction to half-circle
+                blastDirection: 3.14 * 2,
                 emissionFrequency: 0.02,
                 numberOfParticles: 10,
                 maxBlastForce: 60,
@@ -55,3 +56,49 @@ void showConfettiDialog(BuildContext context, String message) {
   );
   _confettiController.play();
 }
+
+//Message widget that can be used to show pop up messages throughout the app
+//Pass in context and the message you want on the pop up
+void showMessage(BuildContext context, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      // Dismiss the dialog box after 3 seconds
+      Timer(Duration(seconds: 2), () {
+        Navigator.of(dialogContext).pop();
+      });
+
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        elevation: 6,
+        backgroundColor: Colors.transparent,
+        child: _buildDialogContent(context, message),
+      );
+    },
+  );
+}
+
+Widget _buildDialogContent(BuildContext context, String message) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+    ),
+    padding: EdgeInsets.all(16),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          message,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        ),
+      ],
+    ),
+  );
+}
+
+
+

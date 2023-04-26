@@ -35,6 +35,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
   late int _selectedValueCash = 0;
   late int _selectedValueCard = 0;
   int? _selectedOption;
+  late BuildContext parentContext;
 
   @override
   void initState() {
@@ -116,6 +117,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                       openCamera();
                     },
                     icon: const Icon(Icons.camera_alt)),
+
               ),
               const SizedBox(height: 40.0),
               //input fields
@@ -553,6 +555,7 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
+
   Future<void> uploadImage(String imagePath) async {
     String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
     // Get a reference to the Firebase Storage bucket
@@ -633,8 +636,8 @@ class _CameraScreenState extends State<CameraScreen> {
                           pictureTakenAdd = 1;
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
+                          showMessage(context, 'Image Uploaded Successfully');
                           await uploadImage(image.path);
-
                         } else {
                           Navigator.of(context).pop();
                           showDialog(
@@ -646,13 +649,7 @@ class _CameraScreenState extends State<CameraScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text(
-                                        "Image is not a vending machine. AI Confidence:"),
-                                    Text(
-                                      getJson().toString(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                    const Text("Image is not a vending machine."),
                                     const Text("Please try again."),
                                   ],
                                 ),
