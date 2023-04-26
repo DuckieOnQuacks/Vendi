@@ -18,7 +18,7 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
     super.initState();
     getUserPoints().then((points) {
       setState(() {
-        currentPoints = points;
+        currentPoints = points!;
       });
     });
   }

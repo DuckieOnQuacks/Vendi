@@ -87,7 +87,7 @@ class _FavoritePageState extends State<FavoritesPage> {
                       ),
                     ),
                     subtitle: Text(
-                      favMachines[index].desc,
+                      'Floor: ${favMachines[index].desc}',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.normal,

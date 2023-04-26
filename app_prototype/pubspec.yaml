@@ -32,6 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   sqflite:
+  confetti:
   camera:
   path_provider:
   path:

@@ -55,34 +55,6 @@ class FirebaseHelper {
     return machineData['card'];
   }
 
-  Future<void> incrementMachineDislikes(Machine machine) async {
-    final machinesCollection = FirebaseFirestore.instance.collection(tableName);
-    await machinesCollection.doc(machine.id).update({
-      'dislikes': FieldValue.increment(1),
-    });
-  }
-
-  Future<void> incrementMachineUpvotes(Machine machine) async {
-    final machinesCollection = FirebaseFirestore.instance.collection(tableName);
-    await machinesCollection.doc(machine.id).update({
-      'upvotes': FieldValue.increment(1),
-    });
-  }
-
-  Future<int> getMachineDislikes(Machine machine) async {
-    final machinesCollection = FirebaseFirestore.instance.collection(tableName);
-    final querySnapshot = await machinesCollection.where('id', isEqualTo: machine.id).get();
-    final machineData = querySnapshot.docs.first.data();
-    return machineData['dislikes'];
-  }
-
-  Future<int> getMachineUpvotes(Machine machine) async {
-    final machinesCollection = FirebaseFirestore.instance.collection(tableName);
-    final querySnapshot = await machinesCollection.where('id', isEqualTo: machine.id).get();
-    final machineData = querySnapshot.docs.first.data();
-    return machineData['upvotes'];
-  }
-
   //Helper to get a machine based on its id.
   Future<Machine?> getMachineById(Machine machine) async {
     final machinesCollection = FirebaseFirestore.instance.collection(tableName);

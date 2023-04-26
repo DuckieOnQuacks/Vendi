@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:confetti/confetti.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'backend/flask_helper.dart';
+import 'backend/message_helper.dart';
 import 'backend/user_helper.dart';
 import 'bottom_bar.dart';
 
@@ -151,7 +153,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                                       DateTime targetDate = DateTime.utc(1969, 12, 31, 16, 0);
 
                                       if (cap >= 90 && (timeAfter24HoursStored == null || DateTime.now().isAfter(timeAfter24HoursStored) || timeAfter24HoursStored.isAtSameMomentAs(targetDate))) {
-                                        await updateUserCap(-cap); // Make the cap value zero
+                                        await setUserCap(-cap); // Make the cap value zero
                                         DateTime? timeTaken = await getImageTakenTime(imageUrl);
 
                                         if (timeTaken != null) {
@@ -227,9 +229,10 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                                       }else {
                                         selectedMachine?.imagePath = imageUrl;
                                         FirebaseHelper().updateMachine(selectedMachine!);
-                                        await updateUserPoints(15); // Call the updatePoints function to add 30 points for adding a machine
+                                        await setUserPoints(15); // Call the updatePoints function to add 30 points for adding a machine
+                                        showConfettiDialog(context, 'Youve earned 15 Vendi points!');
                                         //await updateUserCap(-cap);
-                                        await updateUserCap(15);
+                                        await setUserCap(15);
                                       }
                                       Navigator.push(context, MaterialPageRoute(
                                           builder: (context) =>
