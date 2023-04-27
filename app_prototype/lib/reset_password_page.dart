@@ -70,7 +70,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         child: Column(
           children: [
             // Display message
-            SizedBox(height: 40),
+            SizedBox(height: 30),
 
             //Text
             Padding(
@@ -184,11 +184,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
               ],
             ),
-            SizedBox(height: 180),
+            SizedBox(height: 95),
 
+            //machine image
             Image.asset(
               'assets/images/BlueMachine.png',
-              scale: 5,
+              scale: 4,
             ),
           ],
         ),

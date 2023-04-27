@@ -127,7 +127,7 @@ class ProfilePage extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow,
+                              backgroundColor: Colors.pinkAccent,
                               side: BorderSide.none,
                               shape: const StadiumBorder()),
                           child: const Text('Edit Profile',
