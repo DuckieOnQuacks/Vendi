@@ -26,39 +26,41 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.pinkAccent),
-          title: Row(
-            children: [
-              Image.asset(
-                'assets/images/logo.png',
-                fit: BoxFit.contain,
-                height: 32,
-              )
-            ],
-          ),
-          backgroundColor: Colors.white,
-        ),
-        backgroundColor: Colors.grey[300],
-        body: SafeArea(
-            child: Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: imagePath == ''
-                    ? Image.asset(
-                        'assets/images/KermitProfile.jpg',
-                        scale: 4,
-                      )
-                    : Image.file(File(imagePath), scale: 4),
-              ),
+        iconTheme: const IconThemeData(color: Colors.pinkAccent),
+    title: Row(
+    children: [
+    Image.asset(
+    'assets/images/logo.png',
+    fit: BoxFit.contain,
+    height: 32,
+    )
+    ],
+    ),
+    backgroundColor: Colors.white,
+    ),
+    backgroundColor: Colors.grey[300],
+    body: SafeArea(
+    child: SingleChildScrollView(
+    child: Center(
+    child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+    SizedBox(
+    height: 150,
+    width: 150,
+    child: imagePath == ''
+    ? Image.asset(
+    'assets/images/KermitProfile.jpg',
+    scale: 4,
+    )
+        : Image.file(File(imagePath), scale: 4),
+    ),
 
-              const SizedBox(height: 50),
+              const SizedBox(height: 40),
 
               //Uploading New Profile Field
               Padding(
@@ -175,7 +177,7 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
 
               //Update Profile Button
               Padding(
@@ -201,7 +203,12 @@ class _EditProfileState extends State<EditProfile> {
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 20))))
-            ]))));
+              ]
+            )
+          )
+        )
+      )
+    );
   }
 
   void openCamera() async {
@@ -302,7 +309,9 @@ class _CameraScreenState extends State<CameraScreen> {
                     ]),
                 body: Image.file(File(image.path)),
               );
-            }));
+            }
+            )
+            );
           } catch (e) {
             // If an error occurs, log the error to the console
             debugPrint(e.toString());
