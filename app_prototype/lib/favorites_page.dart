@@ -23,20 +23,6 @@ class _FavoritePageState extends State<FavoritesPage> {
     favMachines = getMachinesFavorited();
   }
 
-  void onDeleteButtonPressed(Machine machine) async {
-    bool? result = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) => DeleteMachineDialog(machine: machine),
-    );
-    if (result != null && result) {
-      await removeMachineFromFavorited(machine.id);
-      setState(() {
-        favMachines = getMachinesFavorited();
-      });
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +63,7 @@ class _FavoritePageState extends State<FavoritesPage> {
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () =>
-                          onDeleteButtonPressed(favMachines![index]),
+                          onDeletePressed(favMachines[index]),
                     ),
                     title: Text(
                       favMachines[index].name,
@@ -119,11 +105,11 @@ class _FavoritePageState extends State<FavoritesPage> {
       builder: (BuildContext context) => DeleteMachineDialog(machine: machine),
     );
     if (result != null && result) {
-      if (mounted) {
+      await removeMachineFromFavorited(machine.id);
         setState(() {
+          //Scan for favorites again after deletion
           favMachines = getMachinesFavorited();
         });
-      }
     }
   }
 }
@@ -166,7 +152,7 @@ class _FavoritePageState extends State<FavoritesPage> {
         ),
         ElevatedButton(
           onPressed: () async {
-            removeMachineFromFavorited(selectedMachine!.id);
+            removeMachineFromFavorited(machine.id);
             Navigator.of(context).pop(true);
           },
           style: ElevatedButton.styleFrom(

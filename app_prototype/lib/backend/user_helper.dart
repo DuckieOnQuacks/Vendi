@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vendi_app/backend/message_helper.dart';
 import 'machine_class.dart';
 
 class userInfo {
@@ -77,11 +78,17 @@ Future<List<Machine>> getMachinesFavorited() async {
   final docSnapshot = await userDocRef.get();
   List<String>? machineIds = List<String>.from(docSnapshot.data()!['machinesFavorited'] ?? []);
 
-  if (machineIds == null || machineIds.isEmpty) {
+  if (machineIds.isEmpty) {
     return [];
   }
+
+  if (machineIds.length > 10) {
+    machineIds = machineIds.sublist(0, 10);
+  }
+
   final machineDocs = await FirebaseFirestore.instance.collection('Machines')
       .where(FieldPath.documentId, whereIn: machineIds)
+      .limit(10)
       .get();
 
   final machines = machineDocs.docs.map((doc) => Machine.fromJson(doc.data())).toList();

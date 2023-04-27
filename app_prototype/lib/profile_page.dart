@@ -7,7 +7,6 @@ import 'backend/user_helper.dart';
 
 
 // All code on this page was developed by the team using the flutter framework
-
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 

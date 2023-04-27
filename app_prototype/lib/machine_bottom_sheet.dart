@@ -9,6 +9,7 @@ import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:vendi_app/backend/user_helper.dart';
+import 'backend/message_helper.dart';
 import 'update_machine.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -28,7 +29,7 @@ class MachineBottomSheet extends StatefulWidget {
 }
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
-  late List<Machine> isFavorite = [];
+  late List<Machine> isFavorited = [];
   Future<Machine?> selectedMachineDB = FirebaseHelper().getMachineById(selectedMachine!);
   FirebaseStorage storage = FirebaseStorage.instance;
 
@@ -37,13 +38,10 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
     super.initState();
     getMachinesFavorited().then((machines) {
       setState(() {
-        isFavorite = machines;
+        isFavorited = machines;
       });
     });
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +93,12 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         return FavoriteButton(
                           isFavorite: isFavorite,
                           valueChanged: (value) async {
-                            if (value) {
+                            if(value && isFavorited.length >= 10)
+                            {
+                              showMessage(context, 'You can only favorite up to 10 machines');
+                              value = 0;
+                              return;
+                            } else if (value) {
                               await setMachineToFavorited(selectedMachine!.id);
                             } else {
                               await removeMachineFromFavorited(selectedMachine!.id);
@@ -226,7 +229,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         children: [
                           const SizedBox(height: 60),
                           const SizedBox(width: 20),
-                          if (machineSnapshot.operational == 1) ...[
+                          if (machineSnapshot.operational == 2) ...[
                             const Icon(Icons.check, color: Colors.green),
                             const SizedBox(width: 20),
                             Text('Operational',

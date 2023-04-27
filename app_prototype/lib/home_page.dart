@@ -1,15 +1,14 @@
 import 'dart:ui' as ui;
-import 'package:confetti/confetti.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'Addmachine.dart';
-import 'backend/message_helper.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -105,8 +104,6 @@ class _HomepageState extends State<Homepage> {
           : GoogleMap(
         mapType: _currentMapType,
         mapToolbarEnabled: false,
-        liteModeEnabled: false,
-        indoorViewEnabled: false,
         myLocationEnabled: true, // Add this line to enable the user's location
         buildingsEnabled: true,
         myLocationButtonEnabled: true, // Add this line to enable the location button

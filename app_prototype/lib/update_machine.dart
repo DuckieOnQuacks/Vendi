@@ -96,7 +96,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                 onChanged: (value) {
                   setState(() {
                     selectedMachine?.operational = value!;
-                    FirebaseHelper().updateMachine(selectedMachine!);
+                    print(value);
                   });
                 },
               ),
@@ -138,6 +138,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () async {
+                                      await FirebaseHelper().updateMachine(selectedMachine!);
                                       Navigator.of(context).pop(false);
                                     },
                                     child: const Text('Cancel'),
@@ -195,6 +196,10 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                                             );
                                           });
                                         }
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) =>
+                                            const BottomBar()),
+                                        );
                                       } else if (cap < 90 && timeAfter24HoursStored != null && DateTime.now().isBefore(timeAfter24HoursStored)) {
                                         Duration timeLeft = timeAfter24HoursStored.difference(DateTime.now());
                                         Navigator.push(
@@ -226,18 +231,22 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                                             },
                                           );
                                         });
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) =>
+                                            const BottomBar()),
+                                        );
                                       }else {
                                         selectedMachine?.imagePath = imageUrl;
                                         FirebaseHelper().updateMachine(selectedMachine!);
                                         await setUserPoints(15); // Call the updatePoints function to add 30 points for adding a machine
-                                        showConfettiDialog(context, 'Youve earned 15 Vendi points!');
                                         //await updateUserCap(-cap);
                                         await setUserCap(15);
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) =>
+                                            const BottomBar()),
+                                        );
+                                        showConfettiDialog(context, 'You\'ve earned 15 Vendi points!');
                                       }
-                                      Navigator.push(context, MaterialPageRoute(
-                                          builder: (context) =>
-                                          const BottomBar()),
-                                      );
                                     },
                                     child: const Text('Submit'),
                                   ),
@@ -383,6 +392,7 @@ class _CameraScreenState extends State<CameraScreen> {
                           pictureTaken = 1;
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
+                          showMessage(context, 'Image Updated Successfully');
                           await uploadImage(image.path);
                         }
                         else {
