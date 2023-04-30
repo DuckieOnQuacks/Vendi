@@ -36,18 +36,21 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void createAccount() async {
     // Check if fields are not empty
+    backgroundColor: Colors.pinkAccent;
     if (emailController.text.isEmpty || passwordController.text.isEmpty || confirmPassword.text.isEmpty || firstName.text.isEmpty || lastName.text.isEmpty) {
       await showErrorMessage("Please fill in all fields.");
       return;
     }
 
     // Check if email is valid
+    backgroundColor: Colors.pinkAccent;
     if (!_isEmailValid(emailController.text)) {
       await showErrorMessage("Please enter a valid email.");
       return;
     }
 
     try {
+      backgroundColor: Colors.pinkAccent;
       // Check if password is confirmed
       if (passwordController.text == confirmPassword.text) {
         // Check if length of passwords entered are greater than 6

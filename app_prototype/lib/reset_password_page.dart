@@ -22,6 +22,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   //Checks username in database
   Future<void> passReset() async {
     try {
+      backgroundColor: Colors.pinkAccent;
       await FirebaseAuth.instance.sendPasswordResetEmail(
           email: usernameController.text.trim());
       showDialog(context: context,
@@ -36,15 +37,25 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       );
     } on FirebaseAuthException catch (e) {
       print(e);
-      showDialog(context: context,
-          builder: (context) {
-            return AlertDialog(
-//Displays error message and converts it to string
-                content: Text(e.message.toString())
-            );
-          }
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.pinkAccent,
+            title: Center(
+              child: Text(
+                //Displays error message and converts it to string
+                e.message.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        },
       );
     }
+
+
   }
 
 
