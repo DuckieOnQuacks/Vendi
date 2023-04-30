@@ -129,13 +129,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         EdgeInsetsGeometry>(
                         const EdgeInsets.all(25)),
                     backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.yellow),
+                    MaterialStateProperty.all<Color>(Colors.pink),
                     shape: MaterialStateProperty.all<
                         RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                             side: const BorderSide(
-                                color: Colors.yellow)
+                                color: Colors.pink)
                         )
                     )
                 ),

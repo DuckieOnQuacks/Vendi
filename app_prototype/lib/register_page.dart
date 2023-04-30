@@ -286,11 +286,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           const EdgeInsets.all(25)),
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.pink),
+                          MaterialStateProperty.all<Color>(
+
+                          Colors.pink,
+                          ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
-                              side: const BorderSide(color: Colors.pink)))),
+                              side: const BorderSide(color: Colors.pink)
+                          )
+                      )
+                  ),
                   child: const Center(
                     child: Text(
                       'Create Account',

@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ class ProfilePage extends StatelessWidget {
   late final user = FirebaseAuth.instance.currentUser!;
   String firstName = '';
   String lastName = '';
+  String email = '';
+  String phoneNumber = '';
   int points = 0;
 
   @override
@@ -59,7 +62,8 @@ class ProfilePage extends StatelessWidget {
                               MaterialPageRoute(builder: (
                                   BuildContext context) {
                                 return const LoginPage();
-                              }));
+                              })
+                          );
                         },
                         child: const Text('Sign Out'),
                       ),
@@ -105,12 +109,20 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(user.firstname, style: const TextStyle(fontSize: 30)),
+                          Text(user.firstname, style: const TextStyle(fontSize: 35, color: Colors.yellow)),
                           const SizedBox(width: 5),
-                          Text(user.lastname, style: const TextStyle(fontSize: 30)),
+                          Text(user.lastname, style: const TextStyle(fontSize: 35, color: Colors.yellow)),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(user.email, style: const TextStyle(fontSize: 15)),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -130,7 +142,7 @@ class ProfilePage extends StatelessWidget {
                               side: BorderSide.none,
                               shape: const StadiumBorder()),
                           child: const Text('Edit Profile',
-                              style: TextStyle(color: Colors.black)),
+                              style: TextStyle(color: Colors.white)),
                         ),
                       ),
                       const SizedBox(height: 30),

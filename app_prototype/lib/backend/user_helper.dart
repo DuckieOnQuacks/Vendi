@@ -1,6 +1,9 @@
+
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vendi_app/backend/message_helper.dart';
+import 'package:vendi_app/edit_profile.dart';
 import 'machine_class.dart';
 
 class userInfo {
@@ -13,6 +16,8 @@ class userInfo {
   final List<String> machinesEntered;
   final DateTime? timeAfter24Hours; // New property for timeAfter24Hours
   final List<String>? machinesFavorited;
+  final List<String> profilePictures;
+
 
   // Constructor for the userInfo class
   userInfo({
@@ -22,6 +27,7 @@ class userInfo {
     required this.points,
     required this.cap,
     required this.machinesEntered,
+    required this.profilePictures,
     this.timeAfter24Hours, // Add new property to constructor
     this.machinesFavorited,
   });
@@ -34,6 +40,7 @@ class userInfo {
         points: json['points'],
         cap: json['cap'],
         machinesEntered: List<String>.from(json['machinesEntered']),
+        profilePictures: List<String>.from(json['profilePictures']),
         timeAfter24Hours: (json['timeAfter24Hours'] as Timestamp).toDate(), // Convert Timestamp to DateTime
         machinesFavorited: List<String>.from(json['favoriteMachines']),
       );
@@ -46,6 +53,7 @@ class userInfo {
         'points': points,
         'cap': cap,
         'machinesEntered': machinesEntered,
+        'profilePictures': profilePictures,
         'timeAfter24Hours': timeAfter24Hours,
         'machinesFavorited': machinesFavorited,
       };
@@ -123,6 +131,7 @@ Future<userInfo?> getUserByEmail(String email) async {
           points: points,
           cap: cap,
           machinesEntered: machinesEntered,
+          profilePictures: profilePictures,
         );
       }
     }
@@ -291,3 +300,10 @@ Future<void> setUserPoints(int pointsToAdd) async {
   await userDocRef.update({'points': newPoints});
   print('Points updated');
 }
+
+/*Future<void> setProfile() async {
+  File profilePicture = File('assets/images/KermitProfile.jpg');
+  // Use the profilePicture variable to perform operations on the file, such as reading or writing data.
+}
+
+ */

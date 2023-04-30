@@ -1,10 +1,14 @@
+
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
 import 'dart:io';
 
-// All code on this page was developed by the team using the flutter framework
-
 String imagePath = '';
+List<String> profilePictures = [
+                                'assets/images/profile_pic1.png',
+                                'assets/images/profile_pic2.png',
+                                'assets/images/profile_pic3.png',
+                                'assets/images/profile_pic4.png',
+                                'assets/images/KermitProfile.jpg',];
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -14,204 +18,275 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  late List<CameraDescription> cameras;
+  //late List<CameraDescription> cameras;
 
   @override
-  void initState() {
+  /*void initState() {
     super.initState();
     // Get a list of available cameras on the device
     availableCameras().then((availableCameras) {
       cameras = availableCameras;
     });
+  }*/
+
+  void _selectProfilePicture() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 200,
+            child: ListView.builder(
+              itemCount: profilePictures.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  onTap: () {
+                    setState(() {
+                      imagePath = profilePictures[index];
+                    });
+                    Navigator.pop(context);
+                  },
+                  leading: Image.asset(
+                    profilePictures[index],
+                    height: 50,
+                    width: 50,
+                  ),
+                );
+              },
+            ),
+          );
+        });
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.pinkAccent),
-    title: Row(
-    children: [
-    Image.asset(
-    'assets/images/logo.png',
-    fit: BoxFit.contain,
-    height: 32,
-    )
-    ],
-    ),
-    backgroundColor: Colors.white,
-    ),
-    backgroundColor: Colors.grey[300],
-    body: SafeArea(
-    child: SingleChildScrollView(
-    child: Center(
-    child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-    SizedBox(
-    height: 150,
-    width: 150,
-    child: imagePath == ''
-    ? Image.asset(
-    'assets/images/KermitProfile.jpg',
-    scale: 4,
-    )
-        : Image.file(File(imagePath), scale: 4),
-    ),
-
-              const SizedBox(height: 40),
-
-              //Uploading New Profile Field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    openCamera();
-                  },
-                  style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                          const EdgeInsets.all(25)),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.pink),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: const BorderSide(color: Colors.grey)))),
-                  child: const Text('Upload New Profile Picture',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20)),
-
-                  //const SizedBox(height: 10),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Name',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              //Create Space between both boxes
-              //Password text field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Email',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              //Phone Number Field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Phone Number',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              //Password Field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        //color: Colors.white,
-                        hintText: 'Password',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-
-              //Update Profile Button
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        createAlertDialog(context);
-                        setState(() {});
-                      },
-                      style: ButtonStyle(
-                          padding:
-                              MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                  const EdgeInsets.all(25)),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.pink),
-                          shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  side: const BorderSide(color: Colors.grey)))),
-                      child: const Text('Update Profile',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20))))
-              ]
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              fit: BoxFit.contain,
+              height: 32,
             )
-          )
+          ],
+        ),
+        backgroundColor: Colors.white,
+      ),
+
+      backgroundColor: Colors.grey[300],
+      body: SafeArea(
+      child: SingleChildScrollView(
+      child: Center(
+      child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+      SizedBox(
+      height: 150,
+      width: 150,
+      child: imagePath == ''
+          ? Image.asset(
+        'assets/images/KermitProfile.jpg',
+        scale: 4,
+      )
+          : Image.asset(
+        imagePath,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      ),
+    ),
+    const SizedBox(height: 20),
+    Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+    child: ElevatedButton(
+    onPressed: () {
+    _selectProfilePicture();
+    },
+    style: ButtonStyle(
+    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+    const EdgeInsets.all(25)),
+    backgroundColor: MaterialStateProperty.all<Color>(Colors.pink),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(12),
+    side: const BorderSide(color: Colors.grey)
         )
+      )
+    ),
+    child: const Text('Select a profile picture',
+    style: TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 20)
+        ),
+      ),
+    ),
+        const SizedBox(height: 20),
+    Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+    child: Container(
+    decoration: BoxDecoration(
+    color: Colors.white,
+    border: Border.all(color: Colors.white),
+    borderRadius: BorderRadius.circular(15),
+    ),
+    child: const Padding(
+    padding: EdgeInsets.only(left: 20.0),
+    child: TextField(
+    obscureText: false,
+    decoration: InputDecoration(
+    border: InputBorder.none,
+    hintText: 'First Name',
+            ),
+          ),
+        ),
+      ),
+    ),
+    const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.only(left: 20.0),
+              child: TextField(
+                obscureText: false,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  //color: Colors.white,
+                  hintText: 'Last Name',
+                ),
+              ),
+            ),
+          ),
+        ),
+        //Password Field
+        const SizedBox(height: 10),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.only(left: 20.0),
+              child: TextField(
+                obscureText: false,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  //color: Colors.white,
+                  hintText: 'Email',
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.only(left: 20.0),
+              child: TextField(
+                obscureText: false,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  //color: Colors.white,
+                  hintText: 'Password',
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 30),
+
+
+        //Update Profile Button
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: ElevatedButton(
+                onPressed: () {
+                  createAlertDialog(context);
+                  setState(() {});
+                },
+                style: ButtonStyle(
+                    padding:
+                    MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        const EdgeInsets.all(25)),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.pink),
+                    shape:
+                    MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: Colors.grey),
+                        )
+                    )
+                ),
+                child: const Text('Update Profile',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20)
+                )
+            )
+        ),
+        const SizedBox(height: 20),
+      ],
+      ),
+      ),
+      ),
       )
     );
   }
 
   void openCamera() async {
+// final cameras = await availableCameras();
+// final camera = cameras.first;
+// final pickedImage =
+// await ImagePicker().getImage(source: ImageSource.camera);
+// setState(() {
+// imagePath = pickedImage!.path;
+// });
+  }
+
+  void createAlertDialog(BuildContext context) {
+    final alertDialog = AlertDialog(
+      title: const Text("Profile Updated!"),
+      content: const Text("Your profile has been updated successfully!"),
+      actions: [
+        ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Ok'))
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alertDialog;
+      },
+    );
+  }
+}
+
+
+/*void openCamera() async {
     // Ensure that there is a camera available on the device
     if (cameras.isEmpty) {
       return;
@@ -234,7 +309,7 @@ class _EditProfileState extends State<EditProfile> {
     );
     setState(() {});
   }
-}
+}*/
 
 createAlertDialog(BuildContext context) {
   return showDialog(
@@ -242,7 +317,7 @@ createAlertDialog(BuildContext context) {
       builder: (context) {
         return AlertDialog(
           //Will Add if statement to check if updated fields
-          //meet all requriements and not currently
+          //meet all requirements and not currently
           //equal to current fields
           title: const Text("Profile Update Successful!"),
 
@@ -259,7 +334,7 @@ createAlertDialog(BuildContext context) {
       });
 }
 
-class CameraScreen extends StatefulWidget {
+/*class CameraScreen extends StatefulWidget {
   const CameraScreen(this.controller, {super.key});
 
   final CameraController controller;
@@ -321,4 +396,4 @@ class _CameraScreenState extends State<CameraScreen> {
       ),
     );
   }
-}
+}*/
