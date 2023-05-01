@@ -315,7 +315,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
   Future<String> openCamera() async {
     // Ensure that there is a camera available on the device
     if (cameras.isEmpty) {
-      showMessage(context, 'Camera not available');
+      showMessage(context, 'Uh Oh!', 'Camera not available');
     }
     // Take the first camera in the list (usually the back camera)
     CameraDescription camera = cameras[0];

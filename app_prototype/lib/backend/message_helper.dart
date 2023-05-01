@@ -63,50 +63,65 @@ void showConfettiDialog(BuildContext context, String message) {
 
 //Message widget that can be used to show pop up messages throughout the app
 //Pass in context and the message you want on the pop up
-void showMessage(BuildContext context, String message) {
+void showMessage(BuildContext context, String title, String message) {
   showDialog(
     context: context,
     builder: (BuildContext dialogContext) {
-
       return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        elevation: 6,
+        elevation: 10,
         backgroundColor: Colors.transparent,
-        child: _buildDialogContent(dialogContext, message),
-      );
-    },
-  );
-}
-
-Widget _buildDialogContent(BuildContext context, String message) {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(20),
-    ),
-    padding: EdgeInsets.all(16),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          message,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(height: 10),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: TextButton(
-            child: Text('OK', style: TextStyle(fontSize: 16)),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: EdgeInsets.all(25),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.pinkAccent,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15),
+              Text(
+                message,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: ElevatedButton(
+                  child: Text('OK', style: TextStyle(fontSize: 16)),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.pink,
+                    onPrimary: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                ),
+              ),
+            ],
           ),
         ),
-      ],
-    ),
+      );
+    },
   );
 }
 
@@ -125,7 +140,7 @@ void showWarning(BuildContext context, String message) {
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +168,6 @@ void showWarning(BuildContext context, String message) {
                 message,
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),

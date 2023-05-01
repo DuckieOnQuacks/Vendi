@@ -84,27 +84,11 @@ class _CameraScreenState extends State<CameraScreen> {
                           Navigator.of(context).pop();
                           Navigator.of(context).pop(image.path);
                           //Show message when Ai approves
-                          showMessage(context, 'Image Updated Successfully');
+                          showMessage(context, 'Woohoo!', 'Image Updated Successfully');
                         }
                         else {
                           Navigator.of(context).pop();
-                          showDialog(
-                            context: context, builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Error'),
-                              content: const Text(
-                                  "Image not accepted. Please try again."),
-                              actions: [
-                                ElevatedButton(
-                                  child: const Text("Ok"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                )
-                              ],
-                            );
-                          },
-                          );
+                          showWarning(context, 'Image is not a vending machine.');
                         }
                       },
                     ),

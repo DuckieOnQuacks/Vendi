@@ -123,11 +123,16 @@ class _FavoritePageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      buttonPadding: EdgeInsets.all(15),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 10,
       title: Row(
         children: [
           Icon(
             Icons.warning_amber_rounded,
-            color: Colors.red,
+            color: Colors.pink,
           ),
           SizedBox(width: 10),
           Text(

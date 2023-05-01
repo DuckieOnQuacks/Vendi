@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
+import 'package:vendi_app/backend/message_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'Addmachine.dart';

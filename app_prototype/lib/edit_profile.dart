@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
+import 'backend/message_helper.dart';
+
 String imagePath = '';
 List<String> profilePictures = [
                                 'assets/images/profile_pic1.png',
@@ -220,7 +222,7 @@ class _EditProfileState extends State<EditProfile> {
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: ElevatedButton(
                 onPressed: () {
-                  createAlertDialog(context);
+                  showMessage(context, 'Hooray!', 'You have successfully updated your profile.');
                   setState(() {});
                 },
                 style: ButtonStyle(

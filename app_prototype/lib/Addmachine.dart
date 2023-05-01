@@ -281,15 +281,37 @@ class _AddMachinePageState extends State<AddMachinePage> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text('Missing Information'),
-                                content:
-                                const Text('Please enter all information.'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop(false);
-                                    },
-                                    child: const Text('OK'),
+                                  buttonPadding: EdgeInsets.all(15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  elevation: 10,
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.warning_amber_rounded,
+                                        color: Colors.pink,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'Warning',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  content: const Text('Missing Information. Please fill out all fields and try again.'),
+                                  actions: <Widget>[
+                                  ElevatedButton(
+                                  onPressed: () => Navigator.of(context).pop(false),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.pinkAccent,
+                                onPrimary: Colors.white,
+                              ),
+                              child: const Text('Ok'),
                                   ),
                                 ],
                               );
@@ -560,7 +582,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                         await setUserCap(
                                             30); // Call the updateCap function to increase the cap value by 10
                                         showConfettiDialog(context,
-                                            'Youve earned 30 vendi points');
+                                            'You\'ve earned 30 Vendi Points');
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -601,7 +623,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
   Future<String> openCamera(BuildContext context) async {
     // Ensure that there is a camera available on the device
     if (cameras.isEmpty) {
-      showMessage(context, 'Camera not available');
+      showMessage(context, 'Uh Oh!', 'Camera not available');
     }
     // Take the first camera in the list (usually the back camera)
     CameraDescription camera = cameras[0];
