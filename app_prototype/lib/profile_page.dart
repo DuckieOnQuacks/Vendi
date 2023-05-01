@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:vendi_app/edit_profile.dart';
 import 'package:vendi_app/login_page.dart';
 import 'backend/user_helper.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 // All code on this page was developed by the team using the flutter framework
@@ -19,8 +20,8 @@ class ProfilePage extends StatelessWidget {
   String firstName = '';
   String lastName = '';
   String email = '';
-  String phoneNumber = '';
   int points = 0;
+  String profilePictures = '';
 
   @override
   Widget build(BuildContext context) {
@@ -113,9 +114,11 @@ class ProfilePage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(user.firstname, style: const TextStyle(fontSize: 35, color: Colors.yellow)),
-                          const SizedBox(width: 5),
-                          Text(user.lastname, style: const TextStyle(fontSize: 35, color: Colors.yellow)),
+                          Text(user.firstname, style: GoogleFonts.bebasNeue(
+                              fontWeight: FontWeight.bold,fontSize: 40, color: Colors.yellow)),
+                          const SizedBox(width: 7),
+                          Text(user.lastname, style: GoogleFonts.bebasNeue(
+                              fontWeight: FontWeight.bold, fontSize: 40, color: Colors.yellow)),
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -159,4 +162,5 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
+
 

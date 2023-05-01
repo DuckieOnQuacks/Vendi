@@ -1,7 +1,10 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'backend/user_helper.dart';
 
+late final user = FirebaseAuth.instance.currentUser!;
 String imagePath = '';
 List<String> profilePictures = [
                                 'assets/images/profile_pic1.png',
@@ -9,6 +12,12 @@ List<String> profilePictures = [
                                 'assets/images/profile_pic3.png',
                                 'assets/images/profile_pic4.png',
                                 'assets/images/KermitProfile.jpg',];
+String firstName = '';
+String lastName = '';
+String email = '';
+String password = '';
+
+
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -16,6 +25,7 @@ class EditProfile extends StatefulWidget {
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
+
 
 class _EditProfileState extends State<EditProfile> {
   //late List<CameraDescription> cameras;
@@ -212,8 +222,30 @@ class _EditProfileState extends State<EditProfile> {
             ),
           ),
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 10),
 
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.only(left: 20.0),
+              child: TextField(
+                obscureText: false,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  //color: Colors.white,
+                  hintText: 'Confirm Password',
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
 
         //Update Profile Button
         Padding(
@@ -246,10 +278,10 @@ class _EditProfileState extends State<EditProfile> {
             )
         ),
         const SizedBox(height: 20),
-      ],
-      ),
-      ),
-      ),
+              ],
+            ),
+          ),
+        ),
       )
     );
   }

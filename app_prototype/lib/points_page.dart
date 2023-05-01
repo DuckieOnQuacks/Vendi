@@ -148,6 +148,9 @@ class _PointsPageState extends State<PointsPage> {
               ),
             ),
           ],
-        ))));
+        )
+            )
+        )
+    );
   }
 }

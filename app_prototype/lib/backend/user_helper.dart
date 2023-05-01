@@ -19,6 +19,7 @@ class userInfo {
   final List<String> profilePictures;
 
 
+
   // Constructor for the userInfo class
   userInfo({
     required this.firstname,
