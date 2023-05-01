@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:vendi_app/backend/message_helper.dart';
 import 'package:vendi_app/edit_profile.dart';
 import 'machine_class.dart';
@@ -88,10 +89,6 @@ Future<List<Machine>> getMachinesFavorited() async {
 
   if (machineIds.isEmpty) {
     return [];
-  }
-
-  if (machineIds.length > 10) {
-    machineIds = machineIds.sublist(0, 10);
   }
 
   final machineDocs = await FirebaseFirestore.instance.collection('Machines')
@@ -187,7 +184,7 @@ Future<void> setUserCap(int capToAdd) async {
   print('Cap updated');
 }
 
-Future<void> setMachineToFavorited(String machineId) async {
+Future<void> setMachineToFavorited(String machineId, BuildContext context) async {
   final currentUser = FirebaseAuth.instance.currentUser!;
   final userRef = FirebaseFirestore.instance.collection('Users');
   final query =  userRef.where('email', isEqualTo: currentUser.email);
@@ -197,16 +194,21 @@ Future<void> setMachineToFavorited(String machineId) async {
   {
     final userDoc = snapshot.docs.single;
     final machinesFavorited = List<String>.from(userDoc.get('machinesFavorited') ?? []);
-    if (!machinesFavorited.contains(machineId)) {
-      machinesFavorited.add(machineId);
-      await userDoc.reference.update({'machinesFavorited': machinesFavorited,
-      }).then((_) {
-        print('Machine added to favorites successfully!');
-      }).catchError((error) {
-        print('Error adding machine to favorites: $error');
-      });
-    } else {
-      print('Machine is already in favorites');
+    if(machinesFavorited.length < 10)
+      {
+        if (!machinesFavorited.contains(machineId)) {
+          machinesFavorited.add(machineId);
+          await userDoc.reference.update({'machinesFavorited': machinesFavorited,
+          }).then((_) {
+            print('Machine added to favorites successfully!');
+          }).catchError((error) {
+            print('Error adding machine to favorites: $error');
+          });
+          } else {
+            print('Machine is already in favorites');
+          }
+      } else {
+      showWarning(context, 'You can only favorite up to 10 machines.');
     }
   } else {
     print('User not found with email ${currentUser.email}');

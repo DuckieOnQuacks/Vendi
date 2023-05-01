@@ -29,7 +29,7 @@ class MachineBottomSheet extends StatefulWidget {
 }
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
-  late List<Machine> isFavorited = [];
+  List<Machine> isFavorited = [];
   Future<Machine?> selectedMachineDB = FirebaseHelper().getMachineById(selectedMachine!);
   FirebaseStorage storage = FirebaseStorage.instance;
 
@@ -93,13 +93,8 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         return FavoriteButton(
                           isFavorite: isFavorite,
                           valueChanged: (value) async {
-                            if(value && isFavorited.length >= 10)
-                            {
-                              showMessage(context, 'You can only favorite up to 10 machines');
-                              value = 0;
-                              return;
-                            } else if (value) {
-                              await setMachineToFavorited(selectedMachine!.id);
+                            if(value) {
+                              await setMachineToFavorited(selectedMachine!.id, context);
                             } else {
                               await removeMachineFromFavorited(selectedMachine!.id);
                             }

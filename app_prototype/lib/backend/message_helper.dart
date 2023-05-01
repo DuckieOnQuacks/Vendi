@@ -67,10 +67,6 @@ void showMessage(BuildContext context, String message) {
   showDialog(
     context: context,
     builder: (BuildContext dialogContext) {
-      // Dismiss the dialog box after 3 seconds
-      Timer(Duration(seconds: 2), () {
-        Navigator.of(dialogContext).pop();
-      });
 
       return Dialog(
         shape: RoundedRectangleBorder(
@@ -78,7 +74,7 @@ void showMessage(BuildContext context, String message) {
         ),
         elevation: 6,
         backgroundColor: Colors.transparent,
-        child: _buildDialogContent(context, message),
+        child: _buildDialogContent(dialogContext, message),
       );
     },
   );
@@ -99,10 +95,86 @@ Widget _buildDialogContent(BuildContext context, String message) {
           message,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
+        SizedBox(height: 10),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: TextButton(
+            child: Text('OK', style: TextStyle(fontSize: 16)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
       ],
     ),
   );
 }
 
-
-
+void showWarning(BuildContext context, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        elevation: 10,
+        backgroundColor: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.warning_amber_outlined,
+                    color: Colors.pink,
+                    size: 24.0,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    "Warning:",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.pinkAccent,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Text(
+                message,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: ElevatedButton(
+                  child: Text('OK', style: TextStyle(fontSize: 16)),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.pink,
+                    onPrimary: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}

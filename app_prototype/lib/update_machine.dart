@@ -1,19 +1,15 @@
 import 'dart:io';
-import 'package:confetti/confetti.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
-import 'backend/flask_helper.dart';
 import 'backend/message_helper.dart';
 import 'backend/user_helper.dart';
 import 'bottom_bar.dart';
+import 'backend/camera_helper.dart';
 
-late String machineImage;
-String imageUrl = ' ';
-String imagePath = ' ';
-int pictureTaken = 0;
+
 
 class UpdateMachinePage extends StatefulWidget {
   const UpdateMachinePage({Key? key}) : super(key: key);
@@ -24,6 +20,10 @@ class UpdateMachinePage extends StatefulWidget {
 
 class _UpdateMachinePageState extends State<UpdateMachinePage> {
   late List<CameraDescription> cameras;
+  late String machineImage;
+  String imageUrl = ' ';
+  String imagePath = ' ';
+  int pictureTaken = 0;
 
   @override
   void initState() {
@@ -36,10 +36,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
 
   Future<void> uploadImage(String imagePath) async {
     try {
-      String uniqueFileName = DateTime
-          .now()
-          .millisecondsSinceEpoch
-          .toString();
+      String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
       // Get a reference to the Firebase Storage bucket
       Reference storageRef = FirebaseStorage.instance.ref();
       // Upload the image file to Firebase Storage
@@ -67,7 +64,6 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.pinkAccent),
@@ -95,8 +91,12 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
               //camera icon
               Center(
                 child: IconButton(
-                    onPressed: () {
-                      openCamera();
+                    onPressed: () async{
+                      imagePath = await openCamera();
+                      if(imagePath.isNotEmpty)
+                      {
+                        pictureTaken = 1;
+                      }
                     },
                     icon: const Icon(Icons.camera_alt)),
               ),
@@ -312,12 +312,11 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
     );
   }
 ////////////////////////////////////////////////////////////////////
-  void openCamera() async {
+  Future<String> openCamera() async {
     // Ensure that there is a camera available on the device
     if (cameras.isEmpty) {
-      return;
+      showMessage(context, 'Camera not available');
     }
-
     // Take the first camera in the list (usually the back camera)
     CameraDescription camera = cameras[0];
 
@@ -327,135 +326,13 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it
-    await Navigator.push(
+    String imagePath = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CameraScreen(controller),
       ),
     );
+    return imagePath;
   }
 }
 
-class CameraScreen extends StatefulWidget {
-  const CameraScreen(this.controller, {super.key});
-
-  final CameraController controller;
-
-  @override
-  _CameraScreenState createState() => _CameraScreenState();
-}
-
-class _CameraScreenState extends State<CameraScreen> {
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.pinkAccent),
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.contain,
-              height: 32,
-            )
-          ],
-        ),
-        backgroundColor: Colors.white,
-      ),
-      body: Stack(
-        children: [
-          // Add the camera preview widget to the stack
-          Positioned.fill(
-            child: CameraPreview(widget.controller),
-          ),
-
-          // Add the guidelines to the stack
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
-                  width: 7,
-                ),
-              ),
-              width: 300,
-              height: 600,
-            ),
-          ),
-        ],
-      ),
-      // Add a floating action button to take pictures
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            // Take a picture and store it as a file
-            var image = await widget.controller.takePicture();
-            imagePath = image.path;
-
-            // Navigate to the confirmation screen
-            await Navigator.of(context)
-                .push(MaterialPageRoute(builder: (BuildContext context) {
-              // Checks whether or not the picture is fine for the user
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text("Is this image ok?"),
-                  automaticallyImplyLeading: false,
-                  leading: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.check),
-                      onPressed: () async {
-                        bool status = await predict(image);
-                        if (status == true) {
-                          pictureTaken = 1;
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                          //Show message when Ai approves
-                          showMessage(context, 'Image Updated Successfully');
-                        }
-                        else {
-                          Navigator.of(context).pop();
-                          showDialog(
-                            context: context, builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Error'),
-                              content: const Text(
-                                  "Image not accepted. Please try again."),
-                              actions: [
-                                ElevatedButton(
-                                  child: const Text("Ok"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                )
-                              ],
-                            );
-                          },
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                body: Image.file(File(image.path)),
-              );
-            }));
-          } catch (e) {
-            // If an error occurs, log the error to the console
-            debugPrint(e.toString());
-          }
-        },
-        child: const Icon(Icons.camera),
-      ),
-    );
-  }
-}

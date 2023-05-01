@@ -5,8 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/login_page.dart';
 import 'dart:core';
 
-
-
 //Object Cleanup, removes from tree permanently
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
