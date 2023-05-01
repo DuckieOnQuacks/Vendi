@@ -12,6 +12,7 @@ import 'bottom_bar.dart';
 
 late String machineImage;
 String imageUrl = ' ';
+String imagePath = ' ';
 int pictureTaken = 0;
 
 class UpdateMachinePage extends StatefulWidget {
@@ -31,6 +32,37 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
     availableCameras().then((availableCameras) {
       cameras = availableCameras;
     });
+  }
+
+  Future<void> uploadImage(String imagePath) async {
+    try {
+      String uniqueFileName = DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString();
+      // Get a reference to the Firebase Storage bucket
+      Reference storageRef = FirebaseStorage.instance.ref();
+      // Upload the image file to Firebase Storage
+      Reference uploadTask = storageRef.child('images');
+      Reference referenceImage = uploadTask.child(uniqueFileName);
+      await referenceImage.putFile(File(imagePath));
+      imageUrl = await referenceImage.getDownloadURL();
+      print('Image uploaded successfully');
+    } catch (e) {
+      print('Error uploading image.');
+    }
+  }
+
+  Future<void> deleteImage(String imageUrl) async {
+    try {
+      // Get a reference to the image file in Firebase Storage
+      Reference imageRef = FirebaseStorage.instance.refFromURL(imageUrl);
+      // Delete the image file
+      await imageRef.delete();
+      print('Image deleted successfully');
+    } catch (e) {
+      print('Error deleting image: $e');
+    }
   }
 
   @override
@@ -236,7 +268,10 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                                             const BottomBar()),
                                         );
                                       }else {
-                                        selectedMachine?.imagePath = imageUrl;
+                                        String imagePathBefore = selectedMachine!.imagePath;
+                                        await deleteImage(imagePathBefore);
+                                        await uploadImage(imagePath);
+                                        selectedMachine!.imagePath = imageUrl;
                                         FirebaseHelper().updateMachine(selectedMachine!);
                                         await setUserPoints(15); // Call the updatePoints function to add 30 points for adding a machine
                                         //await updateUserCap(-cap);
@@ -312,16 +347,7 @@ class CameraScreen extends StatefulWidget {
 
 class _CameraScreenState extends State<CameraScreen> {
 
-  Future<void> uploadImage(String imagePath) async {
-    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-    // Get a reference to the Firebase Storage bucket
-    Reference storageRef = FirebaseStorage.instance.ref();
-    // Upload the image file to Firebase Storage
-    Reference uploadTask = storageRef.child('images');
-    Reference referenceImage = uploadTask.child(uniqueFileName);
-    await referenceImage.putFile(File(imagePath));
-    imageUrl = await referenceImage.getDownloadURL();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -368,6 +394,7 @@ class _CameraScreenState extends State<CameraScreen> {
           try {
             // Take a picture and store it as a file
             var image = await widget.controller.takePicture();
+            imagePath = image.path;
 
             // Navigate to the confirmation screen
             await Navigator.of(context)
@@ -392,8 +419,8 @@ class _CameraScreenState extends State<CameraScreen> {
                           pictureTaken = 1;
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
+                          //Show message when Ai approves
                           showMessage(context, 'Image Updated Successfully');
-                          await uploadImage(image.path);
                         }
                         else {
                           Navigator.of(context).pop();

@@ -9,6 +9,9 @@ void showConfettiDialog(BuildContext context, String message) {
     context: context,
     barrierDismissible: true,
     builder: (context) {
+      Timer(Duration(seconds: 2), (){
+        Navigator.of(context).pop();
+      });
       return WillPopScope(
         onWillPop: () async {
           _confettiController.stop();
@@ -35,6 +38,7 @@ void showConfettiDialog(BuildContext context, String message) {
                   Colors.blue,
                   Colors.red,
                   Colors.orange,
+                  Colors.pink
                 ],
               ),
               //SizedBox(height: 16),
