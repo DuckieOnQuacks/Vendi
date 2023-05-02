@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:vendi_app/backend/user_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'backend/machine_class.dart';
-import 'backend/machine_database_helper.dart';
-import 'main.dart';
 
 // All code on this page was developed by the team using the flutter framework
 class FavoritesPage extends StatefulWidget {

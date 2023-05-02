@@ -50,11 +50,18 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
+  //This is very slow right now so im using futures to speed it up
   Future<void> _getAllMachines() async {
     final machineList = await FirebaseHelper().getAllMachines();
+
+    final markerFutures = <Future<void>>[];
     for (final machine in machineList) {
-      _markers[machine.id.toString()] = await _createMarker(machine);
+      markerFutures.add(_createMarker(machine).then((marker) {
+        _markers[machine.id.toString()] = marker;
+      }));
     }
+
+    await Future.wait(markerFutures);
   }
 
   @override
