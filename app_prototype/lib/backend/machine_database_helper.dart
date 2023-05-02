@@ -38,6 +38,29 @@ class FirebaseHelper {
     return querySnapshot.docs.map((doc) => Machine.fromJson(doc.data())).toList();
   }
 
+  //Grabs the machine instances based on the filtering
+  Future<List<Machine>> getFilteredMachines(bool snack, bool drink, bool supply) async {
+    final machinesCollection = FirebaseFirestore.instance.collection(tableName);
+
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> filterDocs = [];
+    if (snack)
+    {
+      final snackSnapshot = await machinesCollection.where('icon', isEqualTo: "assets/images/BlueMachine.png").get();
+      filterDocs.addAll(snackSnapshot.docs);
+    }
+    if (drink)
+    {
+      final drinkSnapshot = await machinesCollection.where('icon', isEqualTo: "assets/images/PinkMachine.png").get();
+      filterDocs.addAll(drinkSnapshot.docs);
+    }
+    if (supply)
+    {
+      final supplySnapshot = await machinesCollection.where('icon', isEqualTo: "assets/images/YellowMachine.png").get();
+      filterDocs.addAll(supplySnapshot.docs);
+    }
+    return filterDocs.map((doc) => Machine.fromJson(doc.data())).toList();
+  }
+
   //Creates instance, gets snapshot
   //Returns size of snapshot (number of total machines)
   Future<int> getMachineCount() async {
