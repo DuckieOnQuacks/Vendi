@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'backend/user_helper.dart';
 
 
 // All code on this page was developed by the team using the flutter framework
-
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 
@@ -18,6 +18,8 @@ class ProfilePage extends StatelessWidget {
   late final user = FirebaseAuth.instance.currentUser!;
   String firstName = '';
   String lastName = '';
+  String email = '';
+  String phoneNumber = '';
   int points = 0;
 
   @override
@@ -43,25 +45,53 @@ class ProfilePage extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: const Text('Confirm Log Out'),
+                    buttonPadding: EdgeInsets.all(15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 10,
+                    title: Row(
+                      children:[
+                        Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.pink,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'Confirm Logout',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ]
+                  ),
                     content: const Text(
                         'Are you sure you want to log out of your account?'),
                     actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(false);
-                        },
+                      ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          style: ElevatedButton.styleFrom(
+                          primary: Colors.grey[300],
+                          onPrimary: Colors.black54,
+                          ),
                         child: const Text('Cancel'),
                       ),
-                      TextButton(
+                      ElevatedButton(
                         onPressed: () {
                           signUserOut();
                           Navigator.of(context).push(
                               MaterialPageRoute(builder: (
                                   BuildContext context) {
                                 return const LoginPage();
-                              }));
+                              })
+                          );
                         },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.pinkAccent,
+                          onPrimary: Colors.white,
+                        ),
                         child: const Text('Sign Out'),
                       ),
                     ],
@@ -106,12 +136,20 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(user.firstname, style: const TextStyle(fontSize: 30)),
+                          Text(user.firstname, style: const TextStyle(fontSize: 35, color: Colors.pink)),
                           const SizedBox(width: 5),
-                          Text(user.lastname, style: const TextStyle(fontSize: 30)),
+                          Text(user.lastname, style: const TextStyle(fontSize: 35, color: Colors.pink)),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(user.email, style: const TextStyle(fontSize: 15)),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -127,11 +165,11 @@ class ProfilePage extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow,
+                              backgroundColor: Colors.pinkAccent,
                               side: BorderSide.none,
                               shape: const StadiumBorder()),
                           child: const Text('Edit Profile',
-                              style: TextStyle(color: Colors.black)),
+                              style: TextStyle(color: Colors.white)),
                         ),
                       ),
                       const SizedBox(height: 30),

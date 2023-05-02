@@ -4,15 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:path/path.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
+import 'package:vendi_app/backend/camera_helper.dart';
 import 'backend/machine_class.dart';
+import 'backend/message_helper.dart';
 import 'backend/user_helper.dart';
 import 'bottom_bar.dart';
-import 'package:vendi_app/backend/flask_helper.dart';
-
-late String machineImage;
-String imageUrl = ' ';
-int pictureTakenAdd = 0;
 
 class AddMachinePage extends StatefulWidget {
   const AddMachinePage({Key? key}) : super(key: key);
@@ -33,6 +31,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
   late int _selectedValueCash = 0;
   late int _selectedValueCard = 0;
   int? _selectedOption;
+  late String machineImage;
+  String imageUrl = ' ';
+  String imagePath = ' ';
+  int pictureTaken = 0;
 
   @override
   void initState() {
@@ -49,6 +51,25 @@ class _AddMachinePageState extends State<AddMachinePage> {
     _buildingController.dispose();
     _floorController.dispose();
     super.dispose();
+  }
+
+  Future<void> uploadImage(String imagePath) async {
+    try {
+      String uniqueFileName = DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString();
+      // Get a reference to the Firebase Storage bucket
+      Reference storageRef = FirebaseStorage.instance.ref();
+      // Upload the image file to Firebase Storage
+      Reference uploadTask = storageRef.child('images');
+      Reference referenceImage = uploadTask.child(uniqueFileName);
+      await referenceImage.putFile(File(imagePath));
+      imageUrl = await referenceImage.getDownloadURL();
+      print('Image uploaded successfully');
+    } catch (e) {
+      print('Error uploading image.');
+    }
   }
 
   Future<void> getCurrentLocation() async {
@@ -110,8 +131,11 @@ class _AddMachinePageState extends State<AddMachinePage> {
               //camera icon
               Center(
                 child: IconButton(
-                    onPressed: () {
-                      openCamera();
+                    onPressed: () async {
+                      imagePath = await openCamera(context);
+                      if (imagePath.isNotEmpty) {
+                        pictureTaken = 1;
+                      }
                     },
                     icon: const Icon(Icons.camera_alt)),
               ),
@@ -120,13 +144,13 @@ class _AddMachinePageState extends State<AddMachinePage> {
               const Text('Building Name*', style: TextStyle(fontSize: 16)),
               TextField(
                 decoration:
-                    const InputDecoration(hintText: 'Ex: Davidson Building'),
+                const InputDecoration(hintText: 'Ex: Davidson Building'),
                 controller: _buildingController,
               ),
               const SizedBox(height: 16.0),
               const Text('Floor Number*', style: TextStyle(fontSize: 16)),
               TextField(
-                decoration: const InputDecoration(hintText: 'Ex: Floor 2'),
+                decoration: const InputDecoration(hintText: 'Ex: 2'),
                 controller: _floorController,
               ),
               const SizedBox(height: 40.0),
@@ -193,7 +217,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                   });
                 },
               ),
-
               const SizedBox(height: 20.0),
               const Text('Does the machine take cash?*',
                   style: TextStyle(fontSize: 16)),
@@ -248,25 +271,47 @@ class _AddMachinePageState extends State<AddMachinePage> {
                     onPressed: () {
                       print('Building: ${_buildingController.text}');
                       print('Floor: ${_floorController.text}');
-                      print('Picture Taken Add: $pictureTakenAdd');
+                      print('Picture Taken Add: $pictureTaken');
                       setState(() {
                         if (_buildingController.text.isEmpty ||
                             _floorController.text.isEmpty ||
-                            pictureTakenAdd == 0) {
+                            pictureTaken == 0) {
                           // Show alert dialog if any of the required fields are null
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text('Missing Information'),
-                                content:
-                                    const Text('Please enter all information.'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop(false);
-                                    },
-                                    child: const Text('OK'),
+                                  buttonPadding: EdgeInsets.all(15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  elevation: 10,
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.warning_amber_rounded,
+                                        color: Colors.pink,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'Warning',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  content: const Text('Missing Information. Please fill out all fields and try again.'),
+                                  actions: <Widget>[
+                                  ElevatedButton(
+                                  onPressed: () => Navigator.of(context).pop(false),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.pinkAccent,
+                                onPrimary: Colors.white,
+                              ),
+                              child: const Text('Ok'),
                                   ),
                                 ],
                               );
@@ -277,45 +322,82 @@ class _AddMachinePageState extends State<AddMachinePage> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text('Confirm Submission'),
+                                buttonPadding: EdgeInsets.all(15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                title: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.warning_amber_rounded,
+                                      color: Colors.pink,
+                                    ),
+                                    Text(
+                                      'Confirm Submission',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 content: const Text(
                                     'Are you sure you want to submit a form for a new vending machine?'),
                                 actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop(false);
-                                      pictureTakenAdd = 0;
-                                    },
+                                  ElevatedButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.grey[300],
+                                      onPrimary: Colors.black54,
+                                    ),
                                     child: const Text('Cancel'),
                                   ),
                                   //Creating a machine class object out of the choices made by the user
-                                  TextButton(
+                                  ElevatedButton(
                                     onPressed: () async {
                                       int cap = await getUserCap() ?? 0;
-                                      DateTime? timeAfter24HoursStored = await getTimeAfter24Hours();
+                                      DateTime? timeAfter24HoursStored =
+                                      await getTimeAfter24Hours();
                                       //If cap is 90, and 24 hours has passed, get the time that the last picture was taken
                                       //(which would be this if statement) and add 24 hours to it and display message with time remaining.
                                       //Check to see if the value is Dec 31, 1969 4pm utc because that is the default when a new user is made.
-                                      DateTime targetDate = DateTime.utc(1969, 12, 31, 16, 0);
+                                      DateTime targetDate =
+                                      DateTime.utc(1969, 12, 31, 16, 0);
 
-                                      if (cap >= 90 && (timeAfter24HoursStored == null || DateTime.now().isAfter(timeAfter24HoursStored) || timeAfter24HoursStored.isAtSameMomentAs(targetDate))) {
-                                        await updateUserCap(-cap); // Make the cap value zero
-                                        DateTime? timeTaken = await getImageTakenTime(imageUrl);
+                                      if (cap >= 90 &&
+                                          (timeAfter24HoursStored == null ||
+                                              DateTime.now().isAfter(
+                                                  timeAfter24HoursStored) ||
+                                              timeAfter24HoursStored
+                                                  .isAtSameMomentAs(
+                                                  targetDate))) {
+                                        await setUserCap(
+                                            -cap); // Make the cap value zero
+                                        DateTime? timeTaken =
+                                        await getImageTakenTime(imageUrl);
 
                                         if (timeTaken != null) {
-                                          print('Image was taken at: $timeTaken');
-                                          DateTime timeAfter24Hours = timeTaken.add(Duration(hours: 24)); // Add 24hrs
-                                          print('Time after 24 hours: $timeAfter24Hours');
+                                          print(
+                                              'Image was taken at: $timeTaken');
+                                          DateTime timeAfter24Hours =
+                                          timeTaken.add(Duration(
+                                              hours: 24)); // Add 24hrs
+                                          print(
+                                              'Time after 24 hours: $timeAfter24Hours');
 
                                           // Calculate the time left
-                                          Duration timeLeft = timeAfter24Hours.difference(DateTime.now());
-                                          await setTimeAfter24Hours(timeAfter24Hours);
+                                          Duration timeLeft = timeAfter24Hours
+                                              .difference(DateTime.now());
+                                          await setTimeAfter24Hours(
+                                              timeAfter24Hours);
 
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const BottomBar()),
+                                                const BottomBar()),
                                           );
                                           WidgetsBinding.instance!
                                               .addPostFrameCallback((_) {
@@ -326,7 +408,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                   title: Text(
                                                       'Upload Limit Reached'),
                                                   content: Text(
-                                                      'Upload again in: ${timeLeft.inHours} hours, and ${timeLeft.inMinutes.remainder(60)} minutes'),
+                                                      'Upload again in: ${timeLeft
+                                                          .inHours} hours, and ${timeLeft
+                                                          .inMinutes.remainder(
+                                                          60)} minutes'),
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () {
@@ -341,8 +426,13 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             );
                                           });
                                         }
-                                      } else if (cap < 90 && timeAfter24HoursStored != null && DateTime.now().isBefore(timeAfter24HoursStored)) {
-                                        Duration timeLeft = timeAfter24HoursStored.difference(DateTime.now());
+                                      } else if (cap < 90 &&
+                                          timeAfter24HoursStored != null &&
+                                          DateTime.now().isBefore(
+                                              timeAfter24HoursStored)) {
+                                        Duration timeLeft =
+                                        timeAfter24HoursStored
+                                            .difference(DateTime.now());
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -358,7 +448,10 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 title: Text(
                                                     'Upload Limit Reached'),
                                                 content: Text(
-                                                    'Upload again in: ${timeLeft.inHours} hours, and ${timeLeft.inMinutes.remainder(60)} minutes'),
+                                                    'Upload again in: ${timeLeft
+                                                        .inHours} hours, and ${timeLeft
+                                                        .inMinutes.remainder(
+                                                        60)} minutes'),
                                                 actions: [
                                                   TextButton(
                                                     onPressed: () {
@@ -372,31 +465,33 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                             },
                                           );
                                         });
-                                    }else {
+                                      } else {
+                                        await uploadImage(imagePath);
                                         setState(() {
                                           if (_isDrinkSelected == true) {
                                             Machine test1 = Machine(
-                                              id: '',
-                                              name: _buildingController.text,
-                                              desc: _floorController.text,
-                                              lat: _currentPosition!.latitude,
-                                              lon: _currentPosition!.longitude,
-                                              imagePath: imageUrl,
-                                              icon:
-                                                  "assets/images/BlueMachine.png",
-                                              card: _selectedValueCard,
-                                              cash: _selectedValueCash,
-                                              operational: _selectedValueOperational,
-                                              upvotes: 0,
-                                              dislikes: 0
-                                            );
+                                                id: '',
+                                                name: _buildingController.text,
+                                                desc: _floorController.text,
+                                                lat: _currentPosition!.latitude,
+                                                lon:
+                                                _currentPosition!.longitude,
+                                                imagePath: imageUrl,
+                                                icon:
+                                                "assets/images/BlueMachine.png",
+                                                card: _selectedValueCard,
+                                                cash: _selectedValueCash,
+                                                operational:
+                                                _selectedValueOperational,
+                                                upvotes: 0,
+                                                dislikes: 0);
                                             FirebaseHelper()
                                                 .addMachine(test1)
                                                 .then((_) async {
                                               final machineId =
-                                                  await FirebaseHelper()
-                                                      .getMachineIdByLocation(
-                                                          test1.lat, test1.lon);
+                                              await FirebaseHelper()
+                                                  .getMachineIdByLocation(
+                                                  test1.lat, test1.lon);
                                               print(machineId);
                                               if (machineId != null) {
                                                 addMachineToUser(machineId);
@@ -406,33 +501,33 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const BottomBar()),
+                                                    const BottomBar()),
                                               );
                                             });
                                           } else if (_isSnackSelected == true) {
                                             Machine test2 = Machine(
-                                              id: '',
-                                              name: _buildingController.text,
-                                              desc: _floorController.text,
-                                              lat: _currentPosition!.latitude,
-                                              lon: _currentPosition!.longitude,
-                                              imagePath: imageUrl,
-                                              icon:
-                                                  "assets/images/PinkMachine.png",
-                                              card: _selectedValueCard,
-                                              cash: _selectedValueCash,
-                                              operational:
-                                                  _selectedValueOperational,
-                                              upvotes: 0,
-                                              dislikes: 0
-                                            );
+                                                id: '',
+                                                name: _buildingController.text,
+                                                desc: _floorController.text,
+                                                lat: _currentPosition!.latitude,
+                                                lon:
+                                                _currentPosition!.longitude,
+                                                imagePath: imageUrl,
+                                                icon:
+                                                "assets/images/PinkMachine.png",
+                                                card: _selectedValueCard,
+                                                cash: _selectedValueCash,
+                                                operational:
+                                                _selectedValueOperational,
+                                                upvotes: 0,
+                                                dislikes: 0);
                                             FirebaseHelper()
                                                 .addMachine(test2)
                                                 .then((_) async {
                                               final machineId =
-                                                  await FirebaseHelper()
-                                                      .getMachineIdByLocation(
-                                                          test2.lat, test2.lon);
+                                              await FirebaseHelper()
+                                                  .getMachineIdByLocation(
+                                                  test2.lat, test2.lon);
                                               if (machineId != null) {
                                                 addMachineToUser(machineId);
                                               }
@@ -441,34 +536,34 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const BottomBar()),
+                                                    const BottomBar()),
                                               );
                                             });
                                           } else if (_isSupplySelected ==
                                               true) {
                                             Machine test3 = Machine(
-                                              id: '',
-                                              name: _buildingController.text,
-                                              desc: _floorController.text,
-                                              lat: _currentPosition!.latitude,
-                                              lon: _currentPosition!.longitude,
-                                              imagePath: imageUrl,
-                                              icon:
-                                                  "assets/images/YellowMachine.png",
-                                              card: _selectedValueCard,
-                                              cash: _selectedValueCash,
-                                              operational:
-                                                  _selectedValueOperational,
-                                              upvotes: 0,
-                                              dislikes: 0
-                                            );
+                                                id: '',
+                                                name: _buildingController.text,
+                                                desc: _floorController.text,
+                                                lat: _currentPosition!.latitude,
+                                                lon:
+                                                _currentPosition!.longitude,
+                                                imagePath: imageUrl,
+                                                icon:
+                                                "assets/images/YellowMachine.png",
+                                                card: _selectedValueCard,
+                                                cash: _selectedValueCash,
+                                                operational:
+                                                _selectedValueOperational,
+                                                upvotes: 0,
+                                                dislikes: 0);
                                             FirebaseHelper()
                                                 .addMachine(test3)
                                                 .then((_) async {
                                               final machineId =
-                                                  await FirebaseHelper()
-                                                      .getMachineIdByLocation(
-                                                          test3.lat, test3.lon);
+                                              await FirebaseHelper()
+                                                  .getMachineIdByLocation(
+                                                  test3.lat, test3.lon);
                                               if (machineId != null) {
                                                 addMachineToUser(machineId);
                                               }
@@ -477,15 +572,23 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const BottomBar()),
+                                                    const BottomBar()),
                                               );
                                             });
                                           }
                                         });
-                                        await updateUserPoints(30); // Call the updatePoints function to add 30 points for adding a machine
-                                        await updateUserCap(30); // Call the updateCap function to increase the cap value by 10
+                                        await setUserPoints(
+                                            30); // Call the updatePoints function to add 30 points for adding a machine
+                                        await setUserCap(
+                                            30); // Call the updateCap function to increase the cap value by 10
+                                        showConfettiDialog(context,
+                                            'You\'ve earned 30 Vendi Points');
                                       }
                                     },
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.pinkAccent,
+                                      onPrimary: Colors.white,
+                                    ),
                                     child: const Text('Submit'),
                                   ),
                                 ],
@@ -514,171 +617,31 @@ class _AddMachinePageState extends State<AddMachinePage> {
       ),
     );
   }
-////////////////////////////////////////////////////////////////////
 
-  void openCamera() async {
+
+////////////////////////////////////////////////////////////////////
+  Future<String> openCamera(BuildContext context) async {
     // Ensure that there is a camera available on the device
     if (cameras.isEmpty) {
-      return;
+      showMessage(context, 'Uh Oh!', 'Camera not available');
     }
-
     // Take the first camera in the list (usually the back camera)
     CameraDescription camera = cameras[0];
 
     // Open the camera and store the resulting CameraController
     CameraController controller =
-        CameraController(camera, ResolutionPreset.high);
+    CameraController(camera, ResolutionPreset.high);
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it
-    await Navigator.push(
+    String imagePath = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CameraScreen(controller),
       ),
     );
+    return imagePath;
   }
 }
 
-class CameraScreen extends StatefulWidget {
-  const CameraScreen(this.controller, {super.key});
 
-  final CameraController controller;
-
-  @override
-  _CameraScreenState createState() => _CameraScreenState();
-}
-
-class _CameraScreenState extends State<CameraScreen> {
-  Future<void> uploadImage(String imagePath) async {
-    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-    // Get a reference to the Firebase Storage bucket
-    Reference storageRef = FirebaseStorage.instance.ref();
-    // Upload the image file to Firebase Storage
-    Reference uploadTask = storageRef.child('images');
-    Reference referenceImage = uploadTask.child(uniqueFileName);
-    await referenceImage.putFile(File(imagePath));
-    imageUrl = await referenceImage.getDownloadURL();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.pinkAccent),
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.contain,
-              height: 32,
-            )
-          ],
-        ),
-        backgroundColor: Colors.white,
-      ),
-      body: Stack(
-        children: [
-          // Add the camera preview widget to the stack
-          Positioned.fill(
-            child: CameraPreview(widget.controller),
-          ),
-
-          // Add the guidelines to the stack
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
-                  width: 7,
-                ),
-              ),
-              width: 300,
-              height: 600,
-            ),
-          ),
-        ],
-      ),
-      // Add a floating action button to take pictures
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            // Take a picture and store it as a file
-            var image = await widget.controller.takePicture();
-
-            // Navigate to the confirmation screen
-            await Navigator.of(context)
-                .push(MaterialPageRoute(builder: (BuildContext context) {
-              // Checks whether or not the picture is fine for the user
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text("Is this image ok?"),
-                  automaticallyImplyLeading: false,
-                  leading: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.check),
-                      onPressed: () async {
-                        bool status = await predict(image);
-                        if (status == true) {
-                          pictureTakenAdd = 1;
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                          await uploadImage(image.path);
-
-                        } else {
-                          Navigator.of(context).pop();
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Error'),
-                                content: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text(
-                                        "Image is not a vending machine. AI Confidence:"),
-                                    Text(
-                                      getJson().toString(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const Text("Please try again."),
-                                  ],
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    child: const Text("Ok"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                body: Image.file(File(image.path)),
-              );
-            }));
-          } catch (e) {
-            // If an error occurs, log the error to the console
-            debugPrint(e.toString());
-          }
-        },
-        child: const Icon(Icons.camera),
-      ),
-    );
-  }
-}

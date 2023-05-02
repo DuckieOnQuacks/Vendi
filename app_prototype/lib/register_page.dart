@@ -5,8 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/login_page.dart';
 import 'dart:core';
 
-
-
 //Object Cleanup, removes from tree permanently
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -36,18 +34,21 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void createAccount() async {
     // Check if fields are not empty
+    backgroundColor: Colors.pinkAccent;
     if (emailController.text.isEmpty || passwordController.text.isEmpty || confirmPassword.text.isEmpty || firstName.text.isEmpty || lastName.text.isEmpty) {
       await showErrorMessage("Please fill in all fields.");
       return;
     }
 
     // Check if email is valid
+    backgroundColor: Colors.pinkAccent;
     if (!_isEmailValid(emailController.text)) {
       await showErrorMessage("Please enter a valid email.");
       return;
     }
 
     try {
+      backgroundColor: Colors.pinkAccent;
       // Check if password is confirmed
       if (passwordController.text == confirmPassword.text) {
         // Check if length of passwords entered are greater than 6
@@ -286,11 +287,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           const EdgeInsets.all(25)),
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.pink),
+                          MaterialStateProperty.all<Color>(
+
+                          Colors.pink,
+                          ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
-                              side: const BorderSide(color: Colors.pink)))),
+                              side: const BorderSide(color: Colors.pink)
+                          )
+                      )
+                  ),
                   child: const Center(
                     child: Text(
                       'Create Account',

@@ -31,7 +31,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sqflite: 
+  sqflite:
+  confetti:
   camera:
   path_provider:
   path:
@@ -44,6 +45,7 @@ dependencies:
   geolocator:
   google_maps_flutter:
   location:
+  clustering_google_maps:
 
   #For datetime
   intl:

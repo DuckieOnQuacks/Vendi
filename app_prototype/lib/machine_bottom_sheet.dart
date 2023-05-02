@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:confetti/confetti.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:vendi_app/backend/user_helper.dart';
+import 'backend/message_helper.dart';
 import 'update_machine.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -27,40 +29,18 @@ class MachineBottomSheet extends StatefulWidget {
 }
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
-  late List<Machine> isFavorite = [];
+  List<Machine> isFavorited = [];
   Future<Machine?> selectedMachineDB = FirebaseHelper().getMachineById(selectedMachine!);
   FirebaseStorage storage = FirebaseStorage.instance;
-  int upvoteCount = 0;
-  int downvoteCount = 0;
 
   @override
   void initState() {
     super.initState();
-    _fetchCounts();
     getMachinesFavorited().then((machines) {
       setState(() {
-        isFavorite = machines;
+        isFavorited = machines;
       });
     });
-  }
-
-  //Make sure to have a callback that updates the number of dislikes and upvotes
-  Future<void> _fetchCounts() async {
-    int upvotes = await FirebaseHelper().getMachineUpvotes(selectedMachine!);
-    int downvotes = await FirebaseHelper().getMachineDislikes(selectedMachine!);
-    setState(() {
-      upvoteCount = upvotes;
-      downvoteCount = downvotes;
-    });
-  }
-
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-      ),
-    );
   }
 
   @override
@@ -113,8 +93,8 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         return FavoriteButton(
                           isFavorite: isFavorite,
                           valueChanged: (value) async {
-                            if (value) {
-                              await addMachineToFavorited(selectedMachine!.id);
+                            if(value) {
+                              await setMachineToFavorited(selectedMachine!.id, context);
                             } else {
                               await removeMachineFromFavorited(selectedMachine!.id);
                             }
@@ -138,7 +118,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   Text(machineSnapshot.name,
                       style: GoogleFonts.bebasNeue(fontSize: 25)),
                   const SizedBox(width: 10),
-                  Text(machineSnapshot.desc,
+                Text('Floor ${machineSnapshot.desc}',
                       style: GoogleFonts.bebasNeue(fontSize: 25)),
                 ],
               ),
@@ -244,7 +224,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         children: [
                           const SizedBox(height: 60),
                           const SizedBox(width: 20),
-                          if (machineSnapshot.operational == 1) ...[
+                          if (machineSnapshot.operational == 2) ...[
                             const Icon(Icons.check, color: Colors.green),
                             const SizedBox(width: 20),
                             Text('Operational',
