@@ -29,8 +29,9 @@ class MachineBottomSheet extends StatefulWidget {
 }
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
-  late List<Machine> isFavorited = [];
-  Future<Machine?> selectedMachineDB = FirebaseHelper().getMachineById(selectedMachine!);
+  List<Machine> isFavorited = [];
+  Future<Machine?> selectedMachineDB =
+      FirebaseHelper().getMachineById(selectedMachine!);
   FirebaseStorage storage = FirebaseStorage.instance;
 
   @override
@@ -58,7 +59,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
             return const Center(child: Text('No data found'));
           } else {
             Machine machineSnapshot = snapshot.data!;
-            return Center(
+            return SingleChildScrollView(
                 child: Column(children: [
               const SizedBox(height: 10),
               //Row for the machine Icon, name, and the favorites heart icon
@@ -87,21 +88,19 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   //Future builder for the favorite button so that it can query the local db
                   FutureBuilder<bool>(
                     future: isMachineFavorited(selectedMachine!),
-                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    builder:
+                        (BuildContext context, AsyncSnapshot<bool> snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         bool isFavorite = snapshot.data ?? false;
                         return FavoriteButton(
                           isFavorite: isFavorite,
                           valueChanged: (value) async {
-                            if(value && isFavorited.length >= 10)
-                            {
-                              showMessage(context, 'You can only favorite up to 10 machines');
-                              value = 0;
-                              return;
-                            } else if (value) {
-                              await setMachineToFavorited(selectedMachine!.id);
+                            if (value) {
+                              await setMachineToFavorited(
+                                  selectedMachine!.id, context);
                             } else {
-                              await removeMachineFromFavorited(selectedMachine!.id);
+                              await removeMachineFromFavorited(
+                                  selectedMachine!.id);
                             }
                             setState(() {
                               isFavorite = value;
@@ -115,16 +114,19 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   ),
                 ],
               ),
+              SizedBox(height: 10),
               //Row that shows the machine name and description
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const SizedBox(width: 15),
-                  Text(machineSnapshot.name,
+                  Text('Location: ',
                       style: GoogleFonts.bebasNeue(fontSize: 25)),
-                  const SizedBox(width: 10),
-                Text('Floor ${machineSnapshot.desc}',
-                      style: GoogleFonts.bebasNeue(fontSize: 25)),
+                  Text('${machineSnapshot.name}',
+                      style: GoogleFonts.bebasNeue(fontSize: 25, color: Colors.grey[600])),
+                  const SizedBox(width: 5),
+                  Text('Floor ${machineSnapshot.desc}',
+                      style: GoogleFonts.bebasNeue(fontSize: 25, color: Colors.grey[600])),
                 ],
               ),
               //Row shows how long ago the machine was last updated at.
@@ -251,59 +253,75 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         selectedMachine?.imagePath == ''
                             ? const SizedBox.shrink()
                             : GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Scaffold(
-                                        body: SafeArea(
-                                          child: GestureDetector(
-                                            onTap: () => Navigator.pop(context),
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                  .size
-                                                  .height,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: Image.network(
-                                                selectedMachine!.imagePath,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                  appBar: AppBar(
+                                    automaticallyImplyLeading: false,
+                                    title: Image.asset(
+                                      'assets/images/logo.png',
+                                      fit: BoxFit.contain,
+                                      height: 32,
+                                    ),
+                                    backgroundColor: Colors.white,
+                                    leading: IconButton(
+                                      icon: Icon(Icons.arrow_back),
+                                      color: Colors.pink,
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ),
+
+                                  body: SafeArea(
+                                    child: GestureDetector(
+                                      onTap: () => Navigator.pop(context),
+                                      child: Container(
+                                        height: MediaQuery.of(context).size.height,
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Image.network(
+                                          selectedMachine!.imagePath,
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                     ),
-                                  );
-                                },
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: 250,
-                                  child: Image.network(
-                                    selectedMachine!.imagePath,
-                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
+                            );
+                          },
+                          child: SizedBox(
+                            width: 200,
+                            height: 280,
+                            child: Image.network(
+                              selectedMachine!.imagePath,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 // Added SizedBox to add space above the button
                 ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.pinkAccent,
+                    onPrimary: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UpdateMachinePage()),
-                      );
-                    },
-                    child: const Text("Update Machine"))
+                            builder: (context) => const UpdateMachinePage()));
+                  },
+                  child: const Text('Update Machine'),
+                ),
               ]),
+                  const SizedBox(height: 30),
             ]));
           }
         });

@@ -30,12 +30,42 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text("Are you sure you want to redeem your points?"),
+            buttonPadding: EdgeInsets.all(15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            elevation: 10,
+            title: Row(
+              children: [
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.pink,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  'Redeem Vendi Points',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+            content: const Text('Are you sure you want to redeem your Vendi Points?'),
             actions: <Widget>[
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey[300],
+                  onPrimary: Colors.black54,
+                ),
+                child: const Text('Cancel'),
+              ),
               MaterialButton(
                 child: Image.asset(
                   'assets/images/GoogleWalletBadge.png',
-                  scale: 5,
+                  scale: 7,
                 ),
                 onPressed: () {},
               )
@@ -128,15 +158,33 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('Vendi Point Information'),
+                        buttonPadding: EdgeInsets.all(15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        elevation: 10,
+                        title: Row(
+                          children: [
+                            Text(
+                              'Vendi Point Information',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
                         content: const Text(
                             '100 Vendi points is equal to \$1. Points can be redeemed beginning at 500 points. Once 500 points is reached, the user can redeem points in \$1 incriminates. For instance, a user can redeem 800 Vendi Points for \$8. Each time a user adds a new machine they will gain 30 points. Each time a user updates an existing machine the user will gain 15 points.'),
                         actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(false);
-                            },
-                            child: const Text('OK'),
+                          ElevatedButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.pinkAccent,
+                              onPrimary: Colors.white,
+                            ),
+                            child: const Text('Ok'),
                           ),
                         ],
                       );

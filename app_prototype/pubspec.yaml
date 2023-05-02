@@ -61,24 +61,28 @@ dependencies:
   font_awesome_flutter:
   google_maps_cluster_manager:
 
-  # The package adds a package for creating a splash screen for the app. Once receieved run:
-  # flutter pub run flutter_native_splash:create
-  flutter_native_splash:
-
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons:
   google_fonts:
   line_awesome_flutter:
+  flutter_native_splash: ^2.2.18
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons:
+
 flutter_icons:
   android: true
-  image_path: "assets/images/Icon.png"
+  image_path: "assets/images/logo.png"
+
+flutter_native_splash:
+  android: true
+  background_image: "assets/images/splash_screen_background.png"
+  image: "assets/images/logo.png"
+  fullscreen: true
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -128,8 +132,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-flutter_native_splash:
-  background_image: "assets/background.png"
-  image: assets/background.png
-  android_12:
-    image: assets/background.png
+
+

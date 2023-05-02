@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'backend/user_helper.dart';
+import 'backend/message_helper.dart';
+
 
 late final user = FirebaseAuth.instance.currentUser!;
 String imagePath = '';
@@ -252,7 +254,7 @@ class _EditProfileState extends State<EditProfile> {
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: ElevatedButton(
                 onPressed: () {
-                  createAlertDialog(context);
+                  showMessage(context, 'Hooray!', 'You have successfully updated your profile.');
                   setState(() {});
                 },
                 style: ButtonStyle(

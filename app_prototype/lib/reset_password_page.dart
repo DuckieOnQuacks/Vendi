@@ -3,6 +3,8 @@ import 'package:vendi_app/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'backend/message_helper.dart';
+
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({Key? key}) : super(key: key);
 
@@ -37,22 +39,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       );
     } on FirebaseAuthException catch (e) {
       print(e);
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.pinkAccent,
-            title: Center(
-              child: Text(
-                //Displays error message and converts it to string
-                e.message.toString(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-          );
-        },
-      );
+      showMessage(context, 'Warning', e.code);
     }
 
 
@@ -75,19 +62,19 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         ),
         backgroundColor: Colors.white,
       ),
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.grey[200],
 
       body: SingleChildScrollView(
         child: Column(
           children: [
             // Display message
-            SizedBox(height: 30),
+            SizedBox(height: 70),
 
             //Text
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Text(
-                'Enter your email and we will send you a password reset link',
+                'Enter the email address associated with your account.',
                 textAlign: TextAlign.center,
                 //style: TextStyle(fontSize: 11),
                 style: GoogleFonts.bebasNeue(
@@ -96,14 +83,25 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
               ),
             ),
+            SizedBox(height: 5),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Text(
+                'We will email you a link to reset your password.',
+                textAlign: TextAlign.center,
+                //style: TextStyle(fontSize: 11),
+                style: GoogleFonts.oswald(
+                  fontSize: 15,
+                ),
+              ),
+            ),
             SizedBox(height: 30),
-
             //Enter Email Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Colors.white,
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -124,7 +122,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 30),
 
             //Reset Password Button
             Padding(
@@ -163,7 +161,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 5),
 
             //Login Navigation Section
             Row(
@@ -195,7 +193,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
               ],
             ),
-            SizedBox(height: 95),
+            SizedBox(height: 35),
 
             //machine image
             Image.asset(

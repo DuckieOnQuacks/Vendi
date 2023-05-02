@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:vendi_app/backend/user_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'backend/machine_class.dart';
-import 'backend/machine_database_helper.dart';
-import 'main.dart';
 
 // All code on this page was developed by the team using the flutter framework
 class FavoritesPage extends StatefulWidget {
@@ -123,11 +121,16 @@ class _FavoritePageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      buttonPadding: EdgeInsets.all(15),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 10,
       title: Row(
         children: [
           Icon(
             Icons.warning_amber_rounded,
-            color: Colors.red,
+            color: Colors.pink,
           ),
           SizedBox(width: 10),
           Text(
