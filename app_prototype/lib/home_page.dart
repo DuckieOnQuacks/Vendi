@@ -7,6 +7,7 @@ import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/backend/message_helper.dart';
+import 'package:vendi_app/filter_page.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'Addmachine.dart';
@@ -64,15 +65,40 @@ class _HomepageState extends State<Homepage> {
     await Future.wait(markerFutures);
   }
 
+  Future<void> _getFilteredMachines(bool snack, bool drink, bool supply) async
+  {
+    final machineList = await FirebaseHelper().getFilteredMachines(snack, drink, supply);
+
+    final markerFutures = <Future<void>>[];
+    for (final machine in machineList) {
+      markerFutures.add(_createMarker(machine).then((marker) {
+        _markers[machine.id.toString()] = marker;
+      }));
+    }
+
+    await Future.wait(markerFutures);
+  } 
+
   @override
   void initState() {
     super.initState();
-    initHomepage();
+    //initHomepage();
+    List<bool> bools = filterValues.values.toList();
+    rebuildHomepage(bools[0], bools[1], bools[2]);
   }
 
   Future<void> initHomepage() async {
     currentPosition = await getCurrentPosition();
     await _getAllMachines();
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+    Future<void> rebuildHomepage(bool snack, bool drink, bool supply) async
+  {
+    currentPosition = await getCurrentPosition();
+    await _getFilteredMachines(snack, drink, supply);
     if (mounted) {
       setState(() {});
     }
@@ -95,6 +121,14 @@ class _HomepageState extends State<Homepage> {
           height: 32,
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_alt, color: Colors.pink),
+            onPressed: () => showModalBottomSheet(
+              isDismissible: false,
+            context: context, 
+            builder: ((context) => FilterPage())
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.add, color: Colors.pink),
             onPressed: () {
