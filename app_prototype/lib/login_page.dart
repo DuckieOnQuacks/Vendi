@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/register_page.dart';
 import 'package:vendi_app/reset_password_page.dart';
+import 'backend/message_helper.dart';
 import 'bottom_bar.dart';
 
 
@@ -41,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
           }));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-      showErrorMessage(e.code);
+      showMessage(context, 'Warning', e.code);
     }
   }
 
@@ -85,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
     // The login page scaffold
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Colors.grey[200],
         body: SafeArea(
             child: Center(
                 child: SingleChildScrollView(
@@ -110,13 +111,13 @@ class _LoginPageState extends State<LoginPage> {
                           style: GoogleFonts.bebasNeue(
                             fontSize: 19,
                           )),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 30),
                       //email text field
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: Colors.white,
                             border: Border.all(color: Colors.white),
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -139,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: Colors.white,
                             border: Border.all(color: Colors.white),
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -181,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 30),
                       //sign in button
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -215,7 +216,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

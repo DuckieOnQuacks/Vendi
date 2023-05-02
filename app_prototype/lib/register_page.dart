@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/login_page.dart';
 import 'dart:core';
 
+import 'backend/message_helper.dart';
+
 //Object Cleanup, removes from tree permanently
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -36,14 +38,14 @@ class _RegisterPageState extends State<RegisterPage> {
     // Check if fields are not empty
     backgroundColor: Colors.pinkAccent;
     if (emailController.text.isEmpty || passwordController.text.isEmpty || confirmPassword.text.isEmpty || firstName.text.isEmpty || lastName.text.isEmpty) {
-      await showErrorMessage("Please fill in all fields.");
+      showMessage(context, 'Notice', 'Please complete all fields.');
       return;
     }
 
     // Check if email is valid
     backgroundColor: Colors.pinkAccent;
     if (!_isEmailValid(emailController.text)) {
-      await showErrorMessage("Please enter a valid email.");
+      showMessage(context, 'Notice', 'Please enter a valid email.');
       return;
     }
 
@@ -62,15 +64,15 @@ class _RegisterPageState extends State<RegisterPage> {
           Navigator.pop(context);
         } else {
           // Show error message if password length is not greater than 6
-          await showErrorMessage("Length must be greater than 6!");
+          showMessage(context, 'Notice', 'Password must be at least 7 characters.');
         }
       } else {
         // Show error message if passwords don't match
-        await showErrorMessage("Passwords don't match!");
+        showMessage(context, 'Notice', 'Passwords do not match!');
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        await showErrorMessage('The account already exists for that email.');
+        showMessage(context, 'Notice', 'Email already in use.');
       } else {
         await showErrorMessage(e.code);
       }
@@ -141,7 +143,7 @@ class _RegisterPageState extends State<RegisterPage> {
     // The login page scaffold
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Colors.grey[200],
         body: SafeArea(
             child: Center(
                 child: SingleChildScrollView(
@@ -155,15 +157,16 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 10), //Creates space between text
               Text('Welcome to Vendi!',
                   style: GoogleFonts.bebasNeue(
+                    fontWeight: FontWeight.bold,
                     fontSize: 50,
                   )),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               //firstname text field
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: Colors.white,
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -186,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: Colors.white,
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -210,7 +213,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: Colors.white,
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -233,7 +236,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: Colors.white,
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -257,7 +260,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: Colors.white,
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -274,7 +277,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20), //Create Space between both boxes
+              const SizedBox(height: 25), //Create Space between both boxes
               //Create account button
 
               Padding(
@@ -310,7 +313,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
