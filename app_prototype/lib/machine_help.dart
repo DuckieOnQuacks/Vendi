@@ -26,6 +26,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
       ),
       body: Column(
         children: [
+          const SizedBox(height: 25),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: ListTile(
@@ -66,7 +67,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
                 size: 40,
                 color: Colors.pinkAccent,
               ),
-              title: const Text('This allows you to sort by machine or operation time.'),
+              title: const Text('This allows you to sort by machine type, the map will reload once your selections have been made.'),
             ),
           ),
 
