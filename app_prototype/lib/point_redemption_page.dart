@@ -129,7 +129,8 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Colors.pinkAccent)))),
+                            side: BorderSide(color: Colors.pink[900]!,
+                                width: 2)))),
                 child: const Center(
                   child: Text(
                     'Swap 500 points',
@@ -200,7 +201,8 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Colors.white)))),
+                            side: BorderSide(color: Colors.pink[900]!,
+                                width: 3)))),
                 child: const Center(
                   child: Text(
                     'Click here',

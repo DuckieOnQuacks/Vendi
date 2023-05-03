@@ -152,8 +152,8 @@ class _RegisterPageState extends State<RegisterPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/YellowMachine.png',
-                scale: 5,
+                'assets/images/PinkMachine.png',
+                scale: 14,
               ),
               const SizedBox(height: 10), //Creates space between text
               Text('Welcome to Vendi!',
@@ -298,7 +298,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
-                              side: const BorderSide(color: Colors.pink)
+                              side: BorderSide(color: Colors.pink[900]!,
+                                  width: 3)
                           )
                       )
                   ),

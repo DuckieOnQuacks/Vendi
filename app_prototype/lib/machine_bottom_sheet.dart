@@ -129,12 +129,12 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                 children: <Widget>[
                   const SizedBox(width: 15),
                   Text('Location: ',
-                      style: GoogleFonts.bebasNeue(fontSize: 25)),
+                      style: GoogleFonts.bebasNeue(fontSize: 26)),
                   Text('${machineSnapshot.name}',
-                      style: GoogleFonts.bebasNeue(fontSize: 25, color: Colors.grey[600])),
+                      style: GoogleFonts.bebasNeue(fontSize: 25, color: Colors.grey[800])),
                   const SizedBox(width: 5),
                   Text('Floor ${machineSnapshot.desc}',
-                      style: GoogleFonts.bebasNeue(fontSize: 25, color: Colors.grey[600])),
+                      style: GoogleFonts.bebasNeue(fontSize: 26, color: Colors.grey[800], fontWeight: FontWeight.w600)),
                 ],
               ),
               //Row shows how long ago the machine was last updated at.
@@ -143,7 +143,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                 children: <Widget>[
                   const SizedBox(width: 15),
                   Text('Last updated:',
-                      style: GoogleFonts.bebasNeue(fontSize: 25)),
+                      style: GoogleFonts.bebasNeue(fontSize: 20)),
                   const SizedBox(width: 10),
                   FutureBuilder<String>(
                     future: machineSnapshot.getImageCreationTime(),
@@ -172,20 +172,20 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         if (days > 0) {
                           if (days == 1) {
                             formattedDiff =
-                                '$days day $hours hrs and $minutes mins ago';
+                                '$days day $hours hrs $minutes mins ago';
                           } else {
                             formattedDiff =
-                                '$days days $hours hrs and $minutes mins ago';
+                                '$days days $hours hrs $minutes mins ago';
                           }
                         } else if (hours > 0) {
-                          formattedDiff = '$hours hrs and $minutes mins ago';
+                          formattedDiff = '$hours hrs $minutes mins ago';
                         } else {
                           formattedDiff = '$minutes mins ago';
                         }
 
                         return Text(formattedDiff,
                             style: GoogleFonts.getFont('Bebas Neue',
-                                fontSize: 25, color: Colors.grey[600]));
+                                fontSize: 20, color: Colors.grey[600]));
                       }
                     },
                   ),
@@ -206,12 +206,12 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                             Image.asset('assets/images/card.png', height: 30),
                             const SizedBox(width: 20),
                             Text('Card accepted',
-                                style: GoogleFonts.bebasNeue(fontSize: 16)),
+                                style: GoogleFonts.bebasNeue(fontSize: 18)),
                           ] else ...[
                             Image.asset('assets/images/nocard.png', height: 30),
                             const SizedBox(width: 20),
                             Text('Card Not accepted',
-                                style: GoogleFonts.bebasNeue(fontSize: 16)),
+                                style: GoogleFonts.bebasNeue(fontSize: 18)),
                           ],
                         ],
                       ),
@@ -225,12 +225,12 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                             Image.asset('assets/images/cash.png', height: 30),
                             const SizedBox(width: 20),
                             Text('Cash accepted',
-                                style: GoogleFonts.bebasNeue(fontSize: 16)),
+                                style: GoogleFonts.bebasNeue(fontSize: 18)),
                           ] else ...[
                             Image.asset('assets/images/cash.png', height: 30),
                             const SizedBox(width: 20),
                             Text('Cash Not accepted',
-                                style: GoogleFonts.bebasNeue(fontSize: 16)),
+                                style: GoogleFonts.bebasNeue(fontSize: 18)),
                           ],
                         ],
                       ),
@@ -239,18 +239,40 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         children: [
                           const SizedBox(height: 60),
                           const SizedBox(width: 20),
-                          if (machineSnapshot.operational == 2) ...[
+                          if (machineSnapshot.operational == 1) ...[
                             const Icon(Icons.check, color: Colors.green),
                             const SizedBox(width: 20),
                             Text('Operational',
-                                style: GoogleFonts.bebasNeue(fontSize: 16)),
-                          ] else ...[
+                                style: GoogleFonts.bebasNeue(fontSize: 18)),
+                          ] else if(machineSnapshot.operational == 0)...[
                             const Icon(Icons.clear_rounded, color: Colors.red),
                             const SizedBox(width: 20),
                             Text('Not Operational',
-                                style: GoogleFonts.bebasNeue(fontSize: 16)),
+                                style: GoogleFonts.bebasNeue(fontSize: 18)),
+                          ] else ...[
+                            //not sure if operational
                           ],
                         ],
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                          const SizedBox(height: 60),
+                          const SizedBox(width: 20),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.pinkAccent,
+                                onPrimary: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const UpdateMachinePage()));
+                              },
+                              child: const Text('Update Machine'),
+                            ),
+                      ],
                       ),
                     ]),
                   ),
@@ -258,6 +280,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   Expanded(
                     child: Column(
                       children: [
+                        const SizedBox(height: 8),
                         selectedMachine?.imagePath == ''
                             ? const SizedBox.shrink()
                             : GestureDetector(
@@ -312,23 +335,6 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                // Added SizedBox to add space above the button
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.pinkAccent,
-                    onPrimary: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const UpdateMachinePage()));
-                  },
-                  child: const Text('Update Machine'),
-                ),
-              ]),
                   const SizedBox(height: 30),
             ]));
           }

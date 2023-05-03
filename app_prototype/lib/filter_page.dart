@@ -9,8 +9,8 @@ class FilterPage extends StatefulWidget {
 }
 
 Map<List<String>, bool> filterValues = {
-  ['Snack', 'assets/images/BlueMachine.png']: true,
-  ['Drink', 'assets/images/PinkMachine.png']: true,
+  ['Beverage', 'assets/images/BlueMachine.png']: true,
+  ['Snack', 'assets/images/PinkMachine.png']: true,
   ['Supply', 'assets/images/YellowMachine.png']: true,
 };
 

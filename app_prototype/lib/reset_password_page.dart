@@ -49,28 +49,17 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.contain,
-              height: 32,
-            )
-          ],
-        ),
-        backgroundColor: Colors.white,
-      ),
       backgroundColor: Colors.grey[200],
-
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Display message
-            SizedBox(height: 70),
-
+            SizedBox(height: 170),
+            Image.asset(
+              'assets/images/BlueMachine.png',
+              scale: 4,
+            ),
             //Text
+            SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Text(
@@ -79,7 +68,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 //style: TextStyle(fontSize: 11),
                 style: GoogleFonts.bebasNeue(
                   fontWeight: FontWeight.bold,
-                  fontSize: 31,
+                  fontSize: 35,
                 ),
               ),
             ),
@@ -91,7 +80,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 textAlign: TextAlign.center,
                 //style: TextStyle(fontSize: 11),
                 style: GoogleFonts.oswald(
-                  fontSize: 15,
+                  fontSize: 18,
                 ),
               ),
             ),
@@ -143,8 +132,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(
-                                color: Colors.pink)
+                            side: BorderSide(
+                                color: Colors.pink[900]!,
+                                width: 3)
                         )
                     )
                 ),
@@ -196,10 +186,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             SizedBox(height: 35),
 
             //machine image
-            Image.asset(
-              'assets/images/BlueMachine.png',
-              scale: 4,
-            ),
+
           ],
         ),
       ),

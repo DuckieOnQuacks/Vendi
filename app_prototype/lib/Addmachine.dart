@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
@@ -143,6 +144,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
               //input fields
               const Text('Building Name*', style: TextStyle(fontSize: 16)),
               TextField(
+                maxLength: 25,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
                 decoration:
                 const InputDecoration(hintText: 'Ex: Davidson Building'),
                 controller: _buildingController,
@@ -150,6 +153,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
               const SizedBox(height: 16.0),
               const Text('Floor Number*', style: TextStyle(fontSize: 16)),
               TextField(
+                maxLength: 3,
+                maxLengthEnforcement: MaxLengthEnforcement.enforced,
                 decoration: const InputDecoration(hintText: 'Ex: 2'),
                 controller: _floorController,
               ),
@@ -168,7 +173,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                 },
               ),
               RadioListTile<int>(
-                title: const Text('Drink'),
+                title: const Text('Beverage'),
                 value: 1,
                 groupValue: _selectedOption,
                 onChanged: (value) {
@@ -392,7 +397,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               .difference(DateTime.now());
                                           await setTimeAfter24Hours(
                                               timeAfter24Hours);
-
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -433,6 +439,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                         Duration timeLeft =
                                         timeAfter24HoursStored
                                             .difference(DateTime.now());
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -497,6 +505,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 addMachineToUser(machineId);
                                               }
                                               _isDrinkSelected = false;
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -532,6 +542,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 addMachineToUser(machineId);
                                               }
                                               _isSnackSelected = false;
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -568,6 +580,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 addMachineToUser(machineId);
                                               }
                                               _isSupplySelected = false;
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
