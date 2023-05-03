@@ -260,10 +260,16 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                           const SizedBox(height: 60),
                           const SizedBox(width: 20),
                             ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.pinkAccent,
-                                onPrimary: Colors.white,
-                              ),
+                              style: ButtonStyle(
+                                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      const EdgeInsets.all(20)),
+                                  backgroundColor:
+                                  MaterialStateProperty.all<Color>(Colors.pinkAccent),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                          side: BorderSide(color: Colors.pink[900]!,
+                                              width: 2)))),
                               onPressed: () {
                                 Navigator.push(
                                     context,

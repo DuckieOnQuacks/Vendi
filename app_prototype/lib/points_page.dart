@@ -100,8 +100,8 @@ class _PointsPageState extends State<PointsPage> {
                   bottomLabelStyle: GoogleFonts.bebasNeue(
                       fontSize: 40, fontWeight: FontWeight.bold),
                   modifier: (double value) {
-                    final roundedValue = value.toStringAsFixed(1);
-                    return roundedValue;
+                    final intValue = value.toInt();
+                    return intValue.toString();
                   },
                 ),
               ),
@@ -134,7 +134,8 @@ class _PointsPageState extends State<PointsPage> {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Colors.pinkAccent)))),
+                            side: BorderSide(color: Colors.pink[900]!,
+                            width: 3)))),
                 child: const Center(
                   child: Text(
                     'Redeem',

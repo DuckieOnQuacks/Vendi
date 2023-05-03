@@ -91,7 +91,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 textAlign: TextAlign.center,
                 //style: TextStyle(fontSize: 11),
                 style: GoogleFonts.oswald(
-                  fontSize: 15,
+                  fontSize: 18,
                 ),
               ),
             ),
@@ -143,8 +143,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(
-                                color: Colors.pink)
+                            side: BorderSide(
+                                color: Colors.pink[900]!,
+                                width: 3)
                         )
                     )
                 ),

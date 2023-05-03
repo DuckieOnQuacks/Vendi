@@ -209,8 +209,9 @@ class _LoginPageState extends State<LoginPage> {
                                   RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      side: const BorderSide(
-                                          color: Colors.pink)))),
+                                      side: BorderSide(
+                                          color: Colors.pink[900]!,
+                                          width: 3)))),
                           child: const Center(
                             child: Text(
                               'Sign In',
