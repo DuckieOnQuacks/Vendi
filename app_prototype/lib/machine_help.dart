@@ -66,7 +66,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
                 size: 40,
                 color: Colors.pinkAccent,
               ),
-              title: const Text('This allows you to sort by machine or operation time'),
+              title: const Text('This allows you to filter machines based on what they contain'),
             ),
           ),
 
