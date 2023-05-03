@@ -7,17 +7,59 @@ import 'package:vendi_app/login_page.dart';
 import 'backend/user_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
 
-// All code on this page was developed by the team using the flutter framework
-class ProfilePage extends StatelessWidget {
-  ProfilePage({super.key});
+class _ProfilePageState extends State<ProfilePage> {
+  late final user = FirebaseAuth.instance.currentUser!;
+  String imagePath = '';
+  List<String> profilePicture = [
+    'assets/images/profile_pic1.png',
+    'assets/images/profile_pic2.png',
+    'assets/images/profile_pic3.png',
+    'assets/images/profile_pic4.png',
+    'assets/images/KermitProfile.jpg',
+  ];
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
 
-  late final user = FirebaseAuth.instance.currentUser!;
+  void _selectProfilePicture(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 200,
+          child: ListView.builder(
+            itemCount: profilePicture.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                onTap: () async {
+                  setState(() {
+                    imagePath = profilePicture[index];
+                  });
+                  Navigator.pop(context);
+                  // update user's profile picture
+                  await getUserByEmail(user.email!);
+                },
+                leading: Image.asset(
+                  profilePicture[index],
+                  height: 50,
+                  width: 50,
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
 
 
   @override
@@ -138,26 +180,29 @@ class ProfilePage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-
-
                           Flexible(
-                            child: Text(
-                              user.firstname + ' ' + user.lastname,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.bebasNeue(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 40,
-                                color: Colors.yellow,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                user.firstname + ' ' + user.lastname,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.bebasNeue(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 40,
+                                  color: Colors.yellow,
+                                ),
                               ),
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              editName(context, "Enter your new first and last name");
-                            },
-                            icon: Icon(Icons.edit),
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
+                              onPressed: () {
+                                editName(context, "Enter your new first and last name");
+                              },
+                              icon: Icon(Icons.edit),
+                            ),
                           ),
-
                         ],
                       ),
 
@@ -175,23 +220,22 @@ class ProfilePage extends StatelessWidget {
                         width: 200,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                    return const EditProfile();
-                                  }),
-                            );
+                            _selectProfilePicture(context);
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.pinkAccent,
-                              side: BorderSide.none,
-                              shape: const StadiumBorder()),
-                          child: const Text('Update Profile Picture',
-                              style: TextStyle(color: Colors.white)),
+                            primary: Colors.pinkAccent,
+                            onPrimary: Colors.white,
+                            shape: const StadiumBorder(),
+                          ),
+                          child: const Text(
+                            'Update Profile Picture',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 30),
-                      const Divider(),
+                    SizedBox(height: 30),
+
+                  const Divider(),
                       const SizedBox(height: 10),
                     Column(
                       children: [
@@ -211,7 +255,7 @@ class ProfilePage extends StatelessWidget {
                               elevation: 4,
                             ),
                             child: Text(
-                              'Total Machines Added',
+                              'Total Lifetime Points',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -228,13 +272,7 @@ class ProfilePage extends StatelessWidget {
                           height: 70,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                    return const EditProfile();
-                                  },
-                                ),
-                              );
+                              DisplayPoints(context, 'Lifetime Machines', 'The total amount of machines you have added is: ', user.machinesEntered.length);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
@@ -245,7 +283,7 @@ class ProfilePage extends StatelessWidget {
                               elevation: 4,
                             ),
                             child: Text(
-                              'Total Points',
+                              'Total Machines Added',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,

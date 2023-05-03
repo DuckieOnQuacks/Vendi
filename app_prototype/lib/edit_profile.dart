@@ -40,7 +40,13 @@ class _EditProfileState extends State<EditProfile> {
       cameras = availableCameras;
     });
   }*/
-
+  String imagePath = '';
+  List<String> profilePictures = [
+    'assets/images/profile_pic1.png',
+    'assets/images/profile_pic2.png',
+    'assets/images/profile_pic3.png',
+    'assets/images/profile_pic4.png',
+    'assets/images/KermitProfile.jpg',];
   void _selectProfilePicture() {
     showModalBottomSheet(
         context: context,

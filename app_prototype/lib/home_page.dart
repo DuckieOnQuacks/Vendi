@@ -12,7 +12,7 @@ import 'package:vendi_app/filter_page.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'Addmachine.dart';
-import 'machine_help.dart';
+//import 'machine_help.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -121,7 +121,7 @@ class _HomepageState extends State<Homepage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const MachineHelpPage()),
+                    builder: (context) => const FilterPage()),
               );
 
             }),

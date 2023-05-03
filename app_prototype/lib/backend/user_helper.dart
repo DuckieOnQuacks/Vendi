@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,7 +16,7 @@ class userInfo {
   final List<String> machinesEntered;
   final DateTime? timeAfter24Hours; // New property for timeAfter24Hours
   final List<String>? machinesFavorited;
-  final List<String> profilePictures;
+  final String profilePicture;
 
 
 
@@ -29,7 +28,7 @@ class userInfo {
     required this.points,
     required this.cap,
     required this.machinesEntered,
-    required this.profilePictures,
+    required this.profilePicture,
     this.timeAfter24Hours, // Add new property to constructor
     this.machinesFavorited,
   });
@@ -42,7 +41,7 @@ class userInfo {
         points: json['points'],
         cap: json['cap'],
         machinesEntered: List<String>.from(json['machinesEntered']),
-        profilePictures: List<String>.from(json['profilePictures']),
+        profilePicture: json['profilePicture'],
         timeAfter24Hours: (json['timeAfter24Hours'] as Timestamp).toDate(), // Convert Timestamp to DateTime
         machinesFavorited: List<String>.from(json['favoriteMachines']),
       );
@@ -55,7 +54,7 @@ class userInfo {
         'points': points,
         'cap': cap,
         'machinesEntered': machinesEntered,
-        'profilePictures': profilePictures,
+        'profilePicture': profilePicture,
         'timeAfter24Hours': timeAfter24Hours,
         'machinesFavorited': machinesFavorited,
       };
@@ -116,11 +115,13 @@ Future<userInfo?> getUserByEmail(String email) async {
       final points = userData['points'] as int?;
       final cap = userData['cap'] as int?;
       final machinesEntered = List<String>.from(userData['machinesEntered']);
+      final profilePicture = userData['profile picture'] as String?;
 
       if (firstName != null &&
           lastName != null &&
           points != null &&
           cap != null &&
+          profilePicture != null &&
           machinesEntered != []) {
         return userInfo(
           firstname: firstName,
@@ -129,7 +130,8 @@ Future<userInfo?> getUserByEmail(String email) async {
           points: points,
           cap: cap,
           machinesEntered: machinesEntered,
-          profilePictures: profilePictures,
+          profilePicture: profilePicture,
+
         );
       }
     }
@@ -349,9 +351,10 @@ Future<void> updateLastName(String? newLastName) async {
 
 
 
+
 /*Future<void> setProfile() async {
   File profilePicture = File('assets/images/KermitProfile.jpg');
-  // Use the profilePicture variable to perform operations on the file, such as reading or writing data.
+
 }
 
  */
