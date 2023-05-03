@@ -30,8 +30,12 @@ class MachineBottomSheet extends StatefulWidget {
 
 class _MachineBottomSheetState extends State<MachineBottomSheet> {
   List<Machine> isFavorited = [];
-  Future<Machine?> selectedMachineDB =
-      FirebaseHelper().getMachineById(selectedMachine!);
+
+  /*Future<Machine?> selectedMachineDB =
+      FirebaseHelper().getMachineById(selectedMachine!);*/
+
+  Future<Machine?> selectedMachineDB = FirebaseHelper().getMachineById(selectedMachine!);
+
   FirebaseStorage storage = FirebaseStorage.instance;
 
   @override
@@ -98,15 +102,19 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                             if (value) {
                               await setMachineToFavorited(
                                   selectedMachine!.id, context);
-                            } else {
-                              await removeMachineFromFavorited(
-                                  selectedMachine!.id);
+
+                              if (value) {
+                                await setMachineToFavorited(
+                                    selectedMachine!.id, context);
+                              } else {
+                                await removeMachineFromFavorited(
+                                    selectedMachine!.id);
+                              }
+                              setState(() {
+                                isFavorite = value;
+                              });
                             }
-                            setState(() {
-                              isFavorite = value;
-                            });
-                          },
-                        );
+                          });
                       } else {
                         return const CircularProgressIndicator();
                       }

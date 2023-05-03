@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:vendi_app/backend/user_helper.dart';
 
 
 void showConfettiDialog(BuildContext context, String message) {
@@ -191,4 +192,165 @@ void showWarning(BuildContext context, String message) {
       );
     },
   );
+
+}
+void editName(BuildContext context, String message) {
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        elevation: 10,
+        backgroundColor: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.account_circle,
+                    color: Colors.pink,
+                    size: 24.0,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    "Name Change",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.pinkAccent,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Text(
+                message,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: _firstNameController,
+                decoration: InputDecoration(
+                  labelText: 'First Name',
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: _lastNameController,
+                decoration: InputDecoration(
+                  labelText: 'Last Name',
+                ),
+              ),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: ElevatedButton(
+                  child: Text('OK', style: TextStyle(fontSize: 16)),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.pink,
+                    onPrimary: Colors.white,
+                  ),
+                  onPressed: () {
+                    String firstName = _firstNameController.text;
+                    String lastName = _lastNameController.text;
+
+                    // Updates the first and last name and pops it off
+
+                    print('First Name: ${
+
+                    _firstNameController.text}'
+                        'Last Name: ${
+                        _lastNameController.text}');
+                    updateFirstname(_firstNameController.text);
+                    updateLastName(_lastNameController.text);
+                    Navigator.of(dialogContext).pop();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+void DisplayPoints(BuildContext context, String title, String message, int) {
+  showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 10,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(25),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.pinkAccent,
+                ),
+              ),
+            ),
+            SizedBox(height: 15),
+            Text(
+              message,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 20),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: ElevatedButton(
+                child: Text('OK', style: TextStyle(fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.pink,
+                  onPrimary: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                  Image.asset(
+                    'assets/images/PinkMachine.png',
+                    scale: 16,
+                  );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+
 }

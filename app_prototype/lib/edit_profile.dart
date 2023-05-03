@@ -9,11 +9,11 @@ import 'backend/message_helper.dart';
 late final user = FirebaseAuth.instance.currentUser!;
 String imagePath = '';
 List<String> profilePictures = [
-                                'assets/images/profile_pic1.png',
-                                'assets/images/profile_pic2.png',
-                                'assets/images/profile_pic3.png',
-                                'assets/images/profile_pic4.png',
-                                'assets/images/KermitProfile.jpg',];
+  'assets/images/profile_pic1.png',
+  'assets/images/profile_pic2.png',
+  'assets/images/profile_pic3.png',
+  'assets/images/profile_pic4.png',
+  'assets/images/KermitProfile.jpg',];
 String firstName = '';
 String lastName = '';
 String email = '';
@@ -72,219 +72,219 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.pinkAccent),
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.contain,
-              height: 32,
-            )
-          ],
-        ),
-        backgroundColor: Colors.white,
-      ),
-
-      backgroundColor: Colors.grey[300],
-      body: SafeArea(
-      child: SingleChildScrollView(
-      child: Center(
-      child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-      SizedBox(
-      height: 150,
-      width: 150,
-      child: imagePath == ''
-          ? Image.asset(
-        'assets/images/KermitProfile.jpg',
-        scale: 4,
-      )
-          : Image.asset(
-        imagePath,
-        height: 150,
-        width: 150,
-        fit: BoxFit.cover,
-      ),
-    ),
-    const SizedBox(height: 20),
-    Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-    child: ElevatedButton(
-    onPressed: () {
-    _selectProfilePicture();
-    },
-    style: ButtonStyle(
-    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-    const EdgeInsets.all(25)),
-    backgroundColor: MaterialStateProperty.all<Color>(Colors.pink),
-    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(12),
-    side: const BorderSide(color: Colors.grey)
-        )
-      )
-    ),
-    child: const Text('Select a profile picture',
-    style: TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.bold,
-    fontSize: 20)
-        ),
-      ),
-    ),
-        const SizedBox(height: 20),
-    Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-    child: Container(
-    decoration: BoxDecoration(
-    color: Colors.white,
-    border: Border.all(color: Colors.white),
-    borderRadius: BorderRadius.circular(15),
-    ),
-    child: const Padding(
-    padding: EdgeInsets.only(left: 20.0),
-    child: TextField(
-    obscureText: false,
-    decoration: InputDecoration(
-    border: InputBorder.none,
-    hintText: 'First Name',
-            ),
+        appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.pinkAccent),
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/images/logo.png',
+                fit: BoxFit.contain,
+                height: 32,
+              )
+            ],
           ),
+          backgroundColor: Colors.white,
         ),
-      ),
-    ),
-    const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(left: 20.0),
-              child: TextField(
-                obscureText: false,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  //color: Colors.white,
-                  hintText: 'Last Name',
-                ),
-              ),
-            ),
-          ),
-        ),
-        //Password Field
-        const SizedBox(height: 10),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(left: 20.0),
-              child: TextField(
-                obscureText: false,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  //color: Colors.white,
-                  hintText: 'Email',
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(left: 20.0),
-              child: TextField(
-                obscureText: false,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  //color: Colors.white,
-                  hintText: 'Password',
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(left: 20.0),
-              child: TextField(
-                obscureText: false,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  //color: Colors.white,
-                  hintText: 'Confirm Password',
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-
-        //Update Profile Button
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: ElevatedButton(
-                onPressed: () {
-                  showMessage(context, 'Hooray!', 'You have successfully updated your profile.');
-                  setState(() {});
-                },
-                style: ButtonStyle(
-                    padding:
-                    MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        const EdgeInsets.all(25)),
-                    backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.pink),
-                    shape:
-                    MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: const BorderSide(color: Colors.grey),
-                        )
+        backgroundColor: Colors.grey[300],
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: imagePath == ''
+                        ? Image.asset(
+                      'assets/images/KermitProfile.jpg',
+                      scale: 4,
                     )
-                ),
-                child: const Text('Update Profile',
-                    style: TextStyle(
+                        : Image.asset(
+                      imagePath,
+                      height: 150,
+                      width: 150,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _selectProfilePicture();
+                      },
+                      style: ButtonStyle(
+                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                              const EdgeInsets.all(25)),
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.pink),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: const BorderSide(color: Colors.grey)
+                              )
+                          )
+                      ),
+                      child: const Text('Select a profile picture',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20)
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Container(
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20)
-                )
-            )
-        ),
-        const SizedBox(height: 20),
-              ],
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: TextField(
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'First Name',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: TextField(
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            //color: Colors.white,
+                            hintText: 'Last Name',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  //Password Field
+                  const SizedBox(height: 10),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: TextField(
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            //color: Colors.white,
+                            hintText: 'Email',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: TextField(
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            //color: Colors.white,
+                            hintText: 'Password',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: TextField(
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            //color: Colors.white,
+                            hintText: 'Confirm Password',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  //Update Profile Button
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            showMessage(context, 'Hooray!', 'You have successfully updated your profile.');
+                            setState(() {});
+                          },
+                          style: ButtonStyle(
+                              padding:
+                              MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                  const EdgeInsets.all(25)),
+                              backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.pink),
+                              shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    side: const BorderSide(color: Colors.grey),
+                                  )
+                              )
+                          ),
+                          child: const Text('Update Profile',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20)
+                          )
+                      )
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
-        ),
-      )
+        )
     );
   }
 

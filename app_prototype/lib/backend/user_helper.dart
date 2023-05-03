@@ -304,6 +304,51 @@ Future<void> setUserPoints(int pointsToAdd) async {
   print('Points updated');
 }
 
+Future<void> updateFirstname(String? newFirstName) async {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  final userRef = FirebaseFirestore.instance.collection('Users');
+  final query = userRef.where('firstname', isEqualTo: currentUser.email);
+
+  final snapshot = await query.get();
+  if (snapshot.docs.isNotEmpty) {
+    final userDoc = snapshot.docs.single;
+    await userDoc.reference.update({
+      'first name': newFirstName,
+    }).then((_) {
+      print('First name updated successfully!');
+    }).catchError((error) {
+      print('Error updating first name: $error');
+    });
+  } else {
+    print('User not found with email ${currentUser.email}');
+  }
+}
+
+Future<void> updateLastName(String? newLastName) async {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  final userRef = FirebaseFirestore.instance.collection('Users');
+  final query = userRef.where('email', isEqualTo: currentUser.email);
+
+  final snapshot = await query.get();
+  if (snapshot.docs.isNotEmpty) {
+    final userDoc = snapshot.docs.single;
+    await userDoc.reference.update({
+      'last name': newLastName,
+    }).then((_) {
+      print('Last name updated successfully!');
+    }).catchError((error) {
+      print('Error updating last name: $error');
+    });
+  } else {
+    print('User not found with email ${currentUser.email}');
+  }
+}
+
+
+
+
+
+
 /*Future<void> setProfile() async {
   File profilePicture = File('assets/images/KermitProfile.jpg');
   // Use the profilePicture variable to perform operations on the file, such as reading or writing data.

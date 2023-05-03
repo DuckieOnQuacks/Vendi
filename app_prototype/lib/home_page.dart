@@ -11,6 +11,7 @@ import 'package:vendi_app/filter_page.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/machine_class.dart';
 import 'Addmachine.dart';
+import 'machine_help.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -121,6 +122,7 @@ class _HomepageState extends State<Homepage> {
           height: 32,
         ),
         actions: [
+
           IconButton(
             icon: const Icon(Icons.filter_alt, color: Colors.pink),
             onPressed: () => showModalBottomSheet(
@@ -129,14 +131,28 @@ class _HomepageState extends State<Homepage> {
             builder: ((context) => FilterPage())
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.add, color: Colors.pink),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddMachinePage()),
-              );
-            },
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.help_outline, color: Colors.pink),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder:(context) => const MachineHelpPage()),
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.add, color: Colors.pink),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AddMachinePage()),
+                  );
+                },
+              ),
+            ],
+
           ),
         ],
         backgroundColor: Colors.white,

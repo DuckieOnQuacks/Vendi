@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vendi_app/login_page.dart';
 import 'dart:core';
-
 import 'backend/message_helper.dart';
 
 //Object Cleanup, removes from tree permanently
@@ -18,11 +17,11 @@ class RegisterPage extends StatefulWidget {
 //Register
 class _RegisterPageState extends State<RegisterPage> {
   // All code on this page was developed by the team using the flutter framework
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPassword = TextEditingController();
-  final TextEditingController firstName = TextEditingController();
-  final TextEditingController lastName = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPassword = TextEditingController();
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
   int points = 0;
   int cap = 0;
   List<String> machinesEntered = [];
@@ -36,9 +35,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void createAccount() async {
     // Check if fields are not empty
-    backgroundColor: Colors.pinkAccent;
+
     if (emailController.text.isEmpty || passwordController.text.isEmpty || confirmPassword.text.isEmpty || firstName.text.isEmpty || lastName.text.isEmpty) {
       showMessage(context, 'Notice', 'Please complete all fields.');
+      backgroundColor: Colors.pinkAccent;
+      await showErrorMessage("Please fill in all fields.");
       return;
     }
 

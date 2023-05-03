@@ -1,4 +1,4 @@
-
+import 'backend/message_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +6,7 @@ import 'package:vendi_app/edit_profile.dart';
 import 'package:vendi_app/login_page.dart';
 import 'backend/user_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 
 
 // All code on this page was developed by the team using the flutter framework
@@ -17,11 +18,7 @@ class ProfilePage extends StatelessWidget {
   }
 
   late final user = FirebaseAuth.instance.currentUser!;
-  String firstName = '';
-  String lastName = '';
-  String email = '';
-  int points = 0;
-  String profilePictures = '';
+
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +138,7 @@ class ProfilePage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+
                           Text(user.firstname, style: GoogleFonts.bebasNeue(
                               fontWeight: FontWeight.bold,fontSize: 40, color: Colors.yellow)),
                           const SizedBox(width: 7),
@@ -151,8 +149,29 @@ class ProfilePage extends StatelessWidget {
                           const SizedBox(width: 5),
                           Text(user.lastname, style: const TextStyle(fontSize: 35, color: Colors.pink)),
 
+                          Flexible(
+                            child: Text(
+                              user.firstname + ' ' + user.lastname,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.bebasNeue(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 40,
+                                color: Colors.yellow,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              editName(context, "Enter your new first and last name");
+                            },
+                            icon: Icon(Icons.edit),
+                          ),
+
                         ],
                       ),
+
+
+
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -176,15 +195,81 @@ class ProfilePage extends StatelessWidget {
                               backgroundColor: Colors.pinkAccent,
                               side: BorderSide.none,
                               shape: const StadiumBorder()),
-                          child: const Text('Edit Profile',
+                          child: const Text('Update Profile Picture',
                               style: TextStyle(color: Colors.white)),
                         ),
                       ),
                       const SizedBox(height: 30),
                       const Divider(),
                       const SizedBox(height: 10),
-                    ],
-                  ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 400,
+                          height: 70,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              DisplayPoints(context, 'Lifetime Points', 'You have a total points of: ', user.points);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: BorderSide.none,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              elevation: 4,
+                            ),
+                            child: Text(
+                              'Total Machines Added',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 10),
+
+                        SizedBox(
+                          width: 400,
+                          height: 70,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return const EditProfile();
+                                  },
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: BorderSide.none,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              elevation: 4,
+                            ),
+                            child: Text(
+                              'Total Points',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+
+
+
+
+                ])
                 ),
               ),
             );
