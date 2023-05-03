@@ -337,10 +337,16 @@ void editName(BuildContext context, String message) {
                     onPrimary: Colors.white,
                   ),
                   onPressed: () {
-                    // Updates the first and last name and pops it off
-                    print('First Name: ${_firstNameController.text}''Last Name: ${_lastNameController.text}');
-                    updateFirstname(_firstNameController.text);
-                    updateLastName(_lastNameController.text);
+                    String firstName = _firstNameController.text.trim();
+                    String lastName = _lastNameController.text.trim();
+
+                    if (firstName.isNotEmpty || lastName.isNotEmpty) {
+                      // Updates the first and last name and pops it off
+                      print('First Name: $firstName, Last Name: $lastName');
+                      updateFirstname(firstName);
+                      updateLastName(lastName);
+                    }
+
                     Navigator.of(dialogContext).pop();
                   },
                 ),
@@ -352,6 +358,7 @@ void editName(BuildContext context, String message) {
     },
   );
 }
+
 
 void DisplayPoints(BuildContext context, String title, String message, int) {
   showDialog(
