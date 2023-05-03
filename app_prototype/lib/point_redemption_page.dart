@@ -52,7 +52,7 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
                 ),
               ],
             ),
-            content: const Text('Are you sure you want to redeem your Vendi Points?'),
+            content: const Text('Are you sure you want to redeem 500 Vendi Points for \$5?'),
             actions: <Widget>[
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(false),
@@ -103,18 +103,21 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
                 )),
             Text('$currentPoints Vendi Points',
                 style: GoogleFonts.chicle(
+                  color: Colors.pink,
                   fontWeight: FontWeight.bold,
                   fontSize: 50,
                 )),
             const SizedBox(height: 10),
             const SizedBox(height: 10),
-            Text('Redeem \$5 reward',
-                style: GoogleFonts.bebasNeue(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
+            Text('You need 500 Vendi Points to receive your first reward. Help us out by adding and updating machines!',
+                style: GoogleFonts.oswald(
+                  fontSize: 20,
+                  color: Colors.grey[600],
                 )),
             const SizedBox(height: 10),
             //button will go to popup window
+
+            /*
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: ElevatedButton(
@@ -129,7 +132,8 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Colors.pinkAccent)))),
+                            side: BorderSide(color: Colors.pink[900]!,
+                                width: 2)))),
                 child: const Center(
                   child: Text(
                     'Swap 500 points',
@@ -141,7 +145,7 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
                   ),
                 ),
               ),
-            ),
+            ), */
             const SizedBox(height: 40),
             Text('Want more information on how Vendi Points work?',
                 style: GoogleFonts.bebasNeue(
@@ -176,7 +180,7 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
                           ],
                         ),
                         content: const Text(
-                            '100 Vendi points is equal to \$1. Points can be redeemed beginning at 500 points. Once 500 points is reached, the user can redeem points in \$1 incriminates. For instance, a user can redeem 800 Vendi Points for \$8. Each time a user adds a new machine they will gain 30 points. Each time a user updates an existing machine the user will gain 15 points.'),
+                            '100 Vendi points is equal to \$1. Points can be redeemed in \$5 increments beginning at 500 points. Once 500 points is reached, the user can redeem \$5 to their Google Wallet. Each time a user adds a new machine they will gain 30 points. Each time a user updates an existing machine the user will gain 15 points.'),
                         actions: <Widget>[
                           ElevatedButton(
                             onPressed: () => Navigator.of(context).pop(false),
@@ -200,7 +204,8 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Colors.white)))),
+                            side: BorderSide(color: Colors.pink[900]!,
+                                width: 3)))),
                 child: const Center(
                   child: Text(
                     'Click here',

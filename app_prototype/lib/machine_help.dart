@@ -26,18 +26,19 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
       ),
       body: Column(
         children: [
+          const SizedBox(height: 25),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: ListTile(
               leading: Image.asset('assets/images/PinkMachine.png'),
-              title: const Text('This is a snack machine. Machines that appear like this will only contain snacks.'),
+              title: const Text('This is a snack machine. Machines that appear like this will mostly contain snacks.'),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: ListTile(
               leading: Image.asset('assets/images/BlueMachine.png'),
-              title: const Text('This is a beverage machine. Machines that appear like this will only contain beverages.'),
+              title: const Text('This is a beverage machine. Machines that appear like this will mostly contain beverages.'),
             ),
           ),
           Padding(
@@ -55,7 +56,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
                 size: 40,
                 color: Colors.pinkAccent,
               ),
-              title: const Text('To add a new machine, simply click the plus on the top right corner'),
+              title: const Text('To add a new machine, simply click the plus in the top right corner.'),
             ),
           ),
           Padding(
