@@ -112,6 +112,7 @@ class _HomepageState extends State<Homepage> {
           fit: BoxFit.contain,
           height: 32,
         ),
+
         actions: [
 
           IconButton(
@@ -143,7 +144,6 @@ class _HomepageState extends State<Homepage> {
                 },
               ),
             ],
-
           ),
         ],
         backgroundColor: Colors.white,
