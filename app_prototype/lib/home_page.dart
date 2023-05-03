@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,89 +26,79 @@ class _HomepageState extends State<Homepage> {
   final Map<String, Marker> _markers = {};
   Position? currentPosition;
   late MapType _currentMapType = MapType.hybrid;
+  List<bool> bools = [ ];
+  bool _isPermissionGranted = false;
 
   // Helper method to get the current position
   Future<Position?> getCurrentPosition() async {
-    try {
-      // Check if location permission is granted
+    if (!_isPermissionGranted) {
       var permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
-        // Request location permission if it is not granted
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          // User has denied location permission
-          return null;
+          await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Location permission'),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              content: const Text('This app requires location permission to function.'),
+              actions: [
+                ElevatedButton(
+                  onPressed: () async {
+                    await AppSettings.openAppSettings();
+                  },
+                  child: const Text('SETTINGS'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          _isPermissionGranted = true;
         }
+      } else {
+        _isPermissionGranted = true;
       }
-
-      // Retrieve the current location if location permission is granted
-      return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best,
-      );
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      return null;
     }
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.bestForNavigation,
+      forceAndroidLocationManager: true,
+    );
   }
 
-  //This is very slow right now so im using futures to speed it up
-  Future<void> _getAllMachines() async {
-    final machineList = await FirebaseHelper().getAllMachines();
-
-    final markerFutures = <Future<void>>[];
-    for (final machine in machineList) {
-      markerFutures.add(_createMarker(machine).then((marker) {
-        _markers[machine.id.toString()] = marker;
-      }));
-    }
-
-    await Future.wait(markerFutures);
-  }
-
-  Future<void> _getFilteredMachines(bool snack, bool drink, bool supply) async
-  {
+  Future<void> _getFilteredMachines(bool snack, bool drink, bool supply) async {
     final machineList = await FirebaseHelper().getFilteredMachines(snack, drink, supply);
-
-    final markerFutures = <Future<void>>[];
-    for (final machine in machineList) {
-      markerFutures.add(_createMarker(machine).then((marker) {
-        _markers[machine.id.toString()] = marker;
-      }));
-    }
-
+    final markerFutures = machineList.map((machine) => _createMarker(machine).then((marker) {
+      _markers[machine.id.toString()] = marker;
+    })).toList();
     await Future.wait(markerFutures);
-  } 
+  }
 
   @override
   void initState() {
     super.initState();
     //initHomepage();
-    List<bool> bools = filterValues.values.toList();
+    bools = filterValues.values.toList();
     rebuildHomepage(bools[0], bools[1], bools[2]);
   }
 
-  Future<void> initHomepage() async {
-    currentPosition = await getCurrentPosition();
-    await _getAllMachines();
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-    Future<void> rebuildHomepage(bool snack, bool drink, bool supply) async
+  Future<void> rebuildHomepage(bool snack, bool drink, bool supply) async
   {
-    currentPosition = await getCurrentPosition();
     await _getFilteredMachines(snack, drink, supply);
     if (mounted) {
       setState(() {});
     }
   }
 
-  @override
   void dispose() {
-    mapController?.dispose();
+    //mapController!.dispose();
     super.dispose();
   }
 
@@ -121,16 +112,20 @@ class _HomepageState extends State<Homepage> {
           fit: BoxFit.contain,
           height: 32,
         ),
+
         actions: [
           IconButton(
+
             icon: const Icon(Icons.help_outline, color: Colors.pink),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder:(context) => const MachineHelpPage()),
+                MaterialPageRoute(
+                    builder: (context) => const MachineHelpPage()),
               );
-            },
-          ),
+
+            }),
+
           Row(
             children: [
               IconButton(
@@ -151,27 +146,37 @@ class _HomepageState extends State<Homepage> {
                 },
               ),
             ],
-
           ),
         ],
         backgroundColor: Colors.white,
       ),
-      body: currentPosition == null
-          ? const Center(child: CircularProgressIndicator())
-          : GoogleMap(
-        mapType: _currentMapType,
-        mapToolbarEnabled: false,
-        myLocationEnabled: true, // Add this line to enable the user's location
-        buildingsEnabled: true,
-        myLocationButtonEnabled: true, // Add this line to enable the location button
-        initialCameraPosition: CameraPosition(
-          target: LatLng(currentPosition!.latitude, currentPosition!.longitude),
-          zoom: 18,
-        ),
-        onMapCreated: (controller) async {
-          mapController = controller;
+      body: FutureBuilder<Position?>(
+        future: getCurrentPosition(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            currentPosition = snapshot.data;
+            _getFilteredMachines(bools[0], bools[1], bools[2]);
+            return GoogleMap(
+              mapType: _currentMapType,
+              mapToolbarEnabled: false,
+              myLocationEnabled: true, // Add this line to enable the user's location
+              buildingsEnabled: true,
+              myLocationButtonEnabled: true, // Add this line to enable the location button
+              initialCameraPosition: CameraPosition(
+                target: LatLng(currentPosition!.latitude, currentPosition!.longitude),
+                zoom: 18,
+              ),
+              onMapCreated: (controller) async {
+                mapController = controller;
+              },
+              markers: _markers.values.toSet(),
+            );
+          } else if (snapshot.hasError) {
+            return Container(); // Return an empty container if location permission is not granted
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
         },
-        markers: _markers.values.toSet(),
       ),
     );
   }

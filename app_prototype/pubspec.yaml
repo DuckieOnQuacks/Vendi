@@ -43,18 +43,21 @@ dependencies:
 
   # Google maps sdk
   geolocator:
-  google_maps_flutter:
-  location:
-  clustering_google_maps:
+  google_maps_flutter: ^2.2.5
+
+  app_settings: ^4.2.0
+
+  #Without this the pop up to ask for location doesnt work
+  location: ^4.4.0
 
   #For datetime
   intl:
 
   #FireBase Imports
-  firebase_core:
-  firebase_auth:
-  cloud_firestore:
-  firebase_storage:
+  firebase_core: ^2.10.0
+  firebase_auth: ^4.4.2
+  cloud_firestore: ^4.5.3
+  firebase_storage: ^11.1.1
 
   #Other imports
   google_sign_in:

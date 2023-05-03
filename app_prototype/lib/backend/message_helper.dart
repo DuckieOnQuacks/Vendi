@@ -194,6 +194,7 @@ void showWarning(BuildContext context, String message) {
   );
 
 }
+
 void editName(BuildContext context, String message) {
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
@@ -290,6 +291,7 @@ void editName(BuildContext context, String message) {
     },
   );
 }
+
 void DisplayPoints(BuildContext context, String title, String message, int) {
   showDialog(
       context: context,

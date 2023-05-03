@@ -22,6 +22,9 @@ class _LoginPageState extends State<LoginPage> {
   String? passwordErrorMessage;
 
   void signUserIn() async {
+    if (!mounted) {
+      return;
+    }
     showDialog(
       context: context,
       builder: (context) {
@@ -35,14 +38,18 @@ class _LoginPageState extends State<LoginPage> {
           email: usernameController.text,
           password: passwordController.text
       );
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (
-              BuildContext context) {
-            return const BottomBar();
-          }));
+      if (mounted) {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (
+                BuildContext context) {
+              return const BottomBar();
+            }));
+      }
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-      showMessage(context, 'Warning', e.code);
+      if (mounted) {
+        Navigator.pop(context);
+        showMessage(context, 'Warning', e.code);
+      }
     }
   }
 
@@ -202,8 +209,9 @@ class _LoginPageState extends State<LoginPage> {
                                   RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      side: const BorderSide(
-                                          color: Colors.pink)))),
+                                      side: BorderSide(
+                                          color: Colors.pink[900]!,
+                                          width: 3)))),
                           child: const Center(
                             child: Text(
                               'Sign In',
