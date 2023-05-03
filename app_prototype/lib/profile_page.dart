@@ -139,15 +139,6 @@ class ProfilePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
 
-                          Text(user.firstname, style: GoogleFonts.bebasNeue(
-                              fontWeight: FontWeight.bold,fontSize: 40, color: Colors.yellow)),
-                          const SizedBox(width: 7),
-                          Text(user.lastname, style: GoogleFonts.bebasNeue(
-                              fontWeight: FontWeight.bold, fontSize: 40, color: Colors.yellow)),
-
-                          Text(user.firstname, style: const TextStyle(fontSize: 35, color: Colors.pink)),
-                          const SizedBox(width: 5),
-                          Text(user.lastname, style: const TextStyle(fontSize: 35, color: Colors.pink)),
 
                           Flexible(
                             child: Text(

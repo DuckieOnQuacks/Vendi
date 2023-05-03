@@ -44,7 +44,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
             padding: const EdgeInsets.all(15.0),
             child: ListTile(
               leading: Image.asset('assets/images/YellowMachine.png'),
-              title: const Text('This is a supply machine. Machines that appear like this will only contain non-food and drink items.'),
+              title: const Text('This is a supply machine. Machines that appear like this will mostly contain non-food and non-drink items.'),
             ),
           ),
           Padding(
@@ -55,7 +55,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
                 size: 40,
                 color: Colors.pinkAccent,
               ),
-              title: const Text('To add a new machine, simply click the plus on the top right corner'),
+              title: const Text('To add a new machine, simply click the plus icon on the top right corner on the maps page.'),
             ),
           ),
           Padding(
@@ -66,7 +66,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
                 size: 40,
                 color: Colors.pinkAccent,
               ),
-              title: const Text('This allows you to sort by machine or operation time'),
+              title: const Text('This filter will sort machines by snack, beverage, or supply.'),
             ),
           ),
 
@@ -78,7 +78,8 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
                 size: 40,
                 color: Colors.red,
               ),
-              title: const Text('This allows you to favorite any machine. You can favorite up to 10 machines at a time. All machines favorited will appear in the favorites tab at the bottom.'),
+              title: const Text('This will favorite a machine. 10 machines can be favorited at a time. '
+                  'All machines favorited will appear in the favorites tab at the bottom.'),
             ),
           ),
 

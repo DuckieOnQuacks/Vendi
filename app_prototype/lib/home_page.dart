@@ -122,25 +122,24 @@ class _HomepageState extends State<Homepage> {
           height: 32,
         ),
         actions: [
-
           IconButton(
-            icon: const Icon(Icons.filter_alt, color: Colors.pink),
-            onPressed: () => showModalBottomSheet(
-              isDismissible: false,
-            context: context, 
-            builder: ((context) => FilterPage())
-            ),
+            icon: const Icon(Icons.help_outline, color: Colors.pink),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder:(context) => const MachineHelpPage()),
+              );
+            },
           ),
           Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.help_outline, color: Colors.pink),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder:(context) => const MachineHelpPage()),
-                  );
-                },
+                icon: const Icon(Icons.filter_alt, color: Colors.pink),
+                onPressed: () => showModalBottomSheet(
+                    isDismissible: false,
+                    context: context,
+                    builder: ((context) => FilterPage())
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.add, color: Colors.pink),
