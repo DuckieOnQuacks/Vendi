@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/machine_bottom_sheet.dart';
 import 'backend/message_helper.dart';
@@ -92,7 +93,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
               Center(
                 child: IconButton(
                     onPressed: () async{
-                      imagePath = await openCamera();
+                      imagePath = (await openCamera(context))!;
                       if(imagePath.isNotEmpty)
                       {
                         pictureTaken = 1;
@@ -274,8 +275,8 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                                         selectedMachine!.imagePath = imageUrl;
                                         FirebaseHelper().updateMachine(selectedMachine!);
                                         await setUserPoints(15); // Call the updatePoints function to add 30 points for adding a machine
-                                        //await updateUserCap(-cap);
                                         await setUserCap(15);
+                                        Navigator.pop(context);
                                         Navigator.push(context, MaterialPageRoute(
                                             builder: (context) =>
                                             const BottomBar()),
@@ -312,26 +313,56 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
     );
   }
 ////////////////////////////////////////////////////////////////////
-  Future<String> openCamera() async {
+  Future<String?> openCamera(BuildContext context) async {
     // Ensure that there is a camera available on the device
     if (cameras.isEmpty) {
       showMessage(context, 'Uh Oh!', 'Camera not available');
+      return null;
     }
-    // Take the first camera in the list (usually the back camera)
+
+    // Check if the user has granted camera permission
+    PermissionStatus cameraPermission = await Permission.camera.status;
+    if (cameraPermission != PermissionStatus.granted) {
+      // Request camera permission
+      PermissionStatus permissionStatus = await Permission.camera.request();
+      if (permissionStatus == PermissionStatus.denied) {
+        // Permission denied show warning
+        showWarning2(context, "App require access to camera... Press allow camera to allow the camera.");
+        // Request camera permission again
+        PermissionStatus permissionStatus2 = await Permission.camera.request();
+        if (permissionStatus2 != PermissionStatus.granted) {
+          // Permission still not granted, return null
+          showMessage(context, 'Uh Oh!', 'Camera permission denied');
+          return null;
+        }
+      } else if (permissionStatus != PermissionStatus.granted) {
+        // Permission not granted, return null
+        showMessage(context, 'Uh Oh!', 'Camera permission denied');
+        return null;
+      }
+    }
+
+    // Take the first camera in the list
     CameraDescription camera = cameras[0];
 
     // Open the camera and store the resulting CameraController
-    CameraController controller =
-    CameraController(camera, ResolutionPreset.high);
+    CameraController controller = CameraController(
+      camera,
+      ResolutionPreset.high,
+      enableAudio: false,
+    );
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it
-    String imagePath = await Navigator.push(
+    String? imagePath = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CameraScreen(controller),
       ),
     );
+    if (imagePath == null || imagePath.isEmpty) {
+      return null;
+    }
     return imagePath;
   }
 }

@@ -40,6 +40,7 @@ dependencies:
   provider:
   favorite_button:
   sleek_circular_slider:
+  permission_handler: ^10.2.0
 
   # Google maps sdk
   geolocator:

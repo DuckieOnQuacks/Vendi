@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         Navigator.pop(context);
-        showMessage(context, 'Warning', e.code);
+        showMessage(context, 'Warning', 'Please insert log in credentials');
       }
     }
   }
@@ -236,11 +236,9 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (
-                                      BuildContext context) {
-                                    return const RegisterPage();
-                                  }));
+                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+                                return const RegisterPage();
+                              }));
                             },
                             child: const Text(
                               ' Register Now!',

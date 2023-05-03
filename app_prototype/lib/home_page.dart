@@ -98,7 +98,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   void dispose() {
-    //mapController!.dispose();
+    _isPermissionGranted = false;
     super.dispose();
   }
 

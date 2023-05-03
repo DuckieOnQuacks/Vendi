@@ -6,6 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:vendi_app/backend/machine_database_helper.dart';
 import 'package:vendi_app/backend/camera_helper.dart';
 import 'backend/machine_class.dart';
@@ -133,7 +134,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
               Center(
                 child: IconButton(
                     onPressed: () async {
-                      imagePath = await openCamera(context);
+                      imagePath = (await openCamera(context))!;
                       if (imagePath.isNotEmpty) {
                         pictureTaken = 1;
                       }
@@ -286,37 +287,39 @@ class _AddMachinePageState extends State<AddMachinePage> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                  buttonPadding: EdgeInsets.all(15),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  elevation: 10,
-                                  title: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.warning_amber_rounded,
-                                        color: Colors.pink,
+                                buttonPadding: EdgeInsets.all(15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                elevation: 10,
+                                title: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.warning_amber_rounded,
+                                      color: Colors.pink,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      'Warning',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
                                       ),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        'Warning',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  content: const Text('Missing Information. Please fill out all fields and try again.'),
-                                  actions: <Widget>[
+                                    ),
+                                  ],
+                                ),
+                                content: const Text(
+                                    'Missing Information. Please fill out all fields and try again.'),
+                                actions: <Widget>[
                                   ElevatedButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.pinkAccent,
-                                onPrimary: Colors.white,
-                              ),
-                              child: const Text('Ok'),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.pinkAccent,
+                                      onPrimary: Colors.white,
+                                    ),
+                                    child: const Text('Ok'),
                                   ),
                                 ],
                               );
@@ -397,8 +400,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               .difference(DateTime.now());
                                           await setTimeAfter24Hours(
                                               timeAfter24Hours);
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -439,8 +440,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                         Duration timeLeft =
                                         timeAfter24HoursStored
                                             .difference(DateTime.now());
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -505,14 +504,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 addMachineToUser(machineId);
                                               }
                                               _isDrinkSelected = false;
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                    const BottomBar()),
-                                              );
                                             });
                                           } else if (_isSnackSelected == true) {
                                             Machine test2 = Machine(
@@ -542,14 +533,6 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 addMachineToUser(machineId);
                                               }
                                               _isSnackSelected = false;
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                    const BottomBar()),
-                                              );
                                             });
                                           } else if (_isSupplySelected ==
                                               true) {
@@ -580,24 +563,25 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 addMachineToUser(machineId);
                                               }
                                               _isSupplySelected = false;
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                    const BottomBar()),
-                                              );
                                             });
                                           }
+
                                         });
                                         await setUserPoints(
                                             30); // Call the updatePoints function to add 30 points for adding a machine
                                         await setUserCap(
                                             30); // Call the updateCap function to increase the cap value by 10
-                                        showConfettiDialog(context,
-                                            'You\'ve earned 30 Vendi Points');
                                       }
+                                      setState(() {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                              const BottomBar()),
+                                        );
+                                      });
+                                      showConfettiDialog(context, "Congratulations you\'ve earned 30 vendi points!");
                                     },
                                     style: ElevatedButton.styleFrom(
                                       primary: Colors.pinkAccent,
@@ -634,28 +618,59 @@ class _AddMachinePageState extends State<AddMachinePage> {
 
 
 ////////////////////////////////////////////////////////////////////
-  Future<String> openCamera(BuildContext context) async {
+  Future<String?> openCamera(BuildContext context) async {
     // Ensure that there is a camera available on the device
     if (cameras.isEmpty) {
       showMessage(context, 'Uh Oh!', 'Camera not available');
+      return null;
     }
-    // Take the first camera in the list (usually the back camera)
+
+    // Check if the user has granted camera permission
+    PermissionStatus cameraPermission = await Permission.camera.status;
+    if (cameraPermission != PermissionStatus.granted) {
+      // Request camera permission
+      PermissionStatus permissionStatus = await Permission.camera.request();
+      if (permissionStatus == PermissionStatus.denied) {
+        // Permission denied show warning
+        showWarning2(context, "App require access to camera... Press allow camera to allow the camera.");
+        // Request camera permission again
+        PermissionStatus permissionStatus2 = await Permission.camera.request();
+        if (permissionStatus2 != PermissionStatus.granted) {
+          // Permission still not granted, return null
+          showMessage(context, 'Uh Oh!', 'Camera permission denied');
+          return null;
+        }
+      } else if (permissionStatus != PermissionStatus.granted) {
+        // Permission not granted, return null
+        showMessage(context, 'Uh Oh!', 'Camera permission denied');
+        return null;
+      }
+    }
+
+    // Take the first camera in the list
     CameraDescription camera = cameras[0];
 
     // Open the camera and store the resulting CameraController
-    CameraController controller =
-    CameraController(camera, ResolutionPreset.high);
+    CameraController controller = CameraController(
+      camera,
+      ResolutionPreset.high,
+      enableAudio: false,
+    );
     await controller.initialize();
 
     // Navigate to the CameraScreen and pass the CameraController to it
-    String imagePath = await Navigator.push(
+    String? imagePath = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CameraScreen(controller),
       ),
     );
+    if (imagePath == null || imagePath.isEmpty) {
+      return null;
+    }
     return imagePath;
   }
 }
+
 
 

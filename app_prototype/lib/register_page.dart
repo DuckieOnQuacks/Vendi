@@ -41,7 +41,6 @@ class _RegisterPageState extends State<RegisterPage> {
     if (emailController.text.isEmpty || passwordController.text.isEmpty || confirmPassword.text.isEmpty || firstName.text.isEmpty || lastName.text.isEmpty) {
       showMessage(context, 'Notice', 'Please complete all fields.');
       backgroundColor: Colors.pinkAccent;
-      await showErrorMessage("Please fill in all fields.");
       return;
     }
 
@@ -65,6 +64,9 @@ class _RegisterPageState extends State<RegisterPage> {
           );
           addUserDetails();
           Navigator.pop(context);
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+            return const LoginPage();
+          }));
         } else {
           // Show error message if password length is not greater than 6
           showMessage(context, 'Notice', 'Password must be at least 7 characters.');
