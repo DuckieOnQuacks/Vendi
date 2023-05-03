@@ -16,7 +16,7 @@ class userInfo {
   final List<String> machinesEntered;
   final DateTime? timeAfter24Hours; // New property for timeAfter24Hours
   final List<String>? machinesFavorited;
-  final String profilePicture;
+  final String? profilePicture;
 
 
 
@@ -28,45 +28,45 @@ class userInfo {
     required this.points,
     required this.cap,
     required this.machinesEntered,
-    required this.profilePicture,
+    this.profilePicture,
     this.timeAfter24Hours, // Add new property to constructor
     this.machinesFavorited,
   });
 
   // Factory method to create a userInfo object from JSON data
   factory userInfo.fromJson(Map<String, dynamic> json) => userInfo(
-        firstname: json['firstname'],
-        lastname: json['lastname'],
-        email: json['email'],
-        points: json['points'],
-        cap: json['cap'],
-        machinesEntered: List<String>.from(json['machinesEntered']),
-        profilePicture: json['profilePicture'],
-        timeAfter24Hours: (json['timeAfter24Hours'] as Timestamp).toDate(), // Convert Timestamp to DateTime
-        machinesFavorited: List<String>.from(json['favoriteMachines']),
-      );
+    firstname: json['firstname'],
+    lastname: json['lastname'],
+    email: json['email'],
+    points: json['points'],
+    cap: json['cap'],
+    machinesEntered: List<String>.from(json['machinesEntered']),
+    profilePicture: json['profilePicture'],
+    timeAfter24Hours: (json['timeAfter24Hours'] as Timestamp).toDate(), // Convert Timestamp to DateTime
+    machinesFavorited: List<String>.from(json['favoriteMachines']),
+  );
 
   // Method to convert a userInfo object to JSON data
   Map<String, dynamic> toJson() => {
-        'firstname': firstname,
-        'lastname': lastname,
-        'email': email,
-        'points': points,
-        'cap': cap,
-        'machinesEntered': machinesEntered,
-        'profilePicture': profilePicture,
-        'timeAfter24Hours': timeAfter24Hours,
-        'machinesFavorited': machinesFavorited,
-      };
+    'firstname': firstname,
+    'lastname': lastname,
+    'email': email,
+    'points': points,
+    'cap': cap,
+    'machinesEntered': machinesEntered,
+    'profilePicture': profilePicture,
+    'timeAfter24Hours': timeAfter24Hours,
+    'machinesFavorited': machinesFavorited,
+  };
 }
 
 //Helper to retrieve the current users points.
 //Instead of reading from Firestore every time, cache the value in memory.
 Future<int?> getUserPoints() async {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-    final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
-    final docSnapshot = await userDocRef.get();
-    int? points = docSnapshot.data()!['points'] ?? 0;
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+  final docSnapshot = await userDocRef.get();
+  int? points = docSnapshot.data()!['points'] ?? 0;
   return points;
 }
 
@@ -78,6 +78,16 @@ Future<String> getUserName() async {
   String username = docSnapshot.data()!['first name'] ?? 0;
   return username;
 }
+
+//Helper to get the current value of cap in the users firestore storage.
+Future<int> getUserMachines() async {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userDocRef = FirebaseFirestore.instance.collection('Users').doc(userId);
+  final docSnapshot = await userDocRef.get();
+  List<dynamic> machinesEntered = docSnapshot.data()?['machinesEntered'] ?? [];
+  return machinesEntered.length;
+}
+
 
 //This function get the ids found in the users machinesFavorited field and returns the corrspnding machines that can
 //be found in the firestore database.
@@ -115,7 +125,7 @@ Future<userInfo?> getUserByEmail(String email) async {
       final points = userData['points'] as int?;
       final cap = userData['cap'] as int?;
       final machinesEntered = List<String>.from(userData['machinesEntered']);
-      final profilePicture = userData['profile picture'] as String?;
+      final profilePicture = userData['profilePicture'] as String?;
 
       if (firstName != null &&
           lastName != null &&
@@ -131,7 +141,6 @@ Future<userInfo?> getUserByEmail(String email) async {
           cap: cap,
           machinesEntered: machinesEntered,
           profilePicture: profilePicture,
-
         );
       }
     }
@@ -151,6 +160,22 @@ Future<int?> getUserCap() async {
   int? cap = docSnapshot.data()?['cap'];
   return cap;
 }
+
+Future<String?> getProfilePic() async {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  final userRef = FirebaseFirestore.instance.collection('Users');
+  final query = userRef.where('email', isEqualTo: currentUser.email);
+
+  final snapshot = await query.get();
+  if (snapshot.docs.isNotEmpty) {
+    final userDoc = snapshot.docs.single;
+    return userDoc.data()?['profilePicture'];
+  } else {
+    print('User not found with email ${currentUser.email}');
+    return null;
+  }
+}
+
 
 //Similar to the one above this is a helper function to get the timeAfter24Hours variable
 Future<DateTime?> getTimeAfter24Hours() async {
@@ -198,19 +223,19 @@ Future<void> setMachineToFavorited(String machineId, BuildContext context) async
     final userDoc = snapshot.docs.single;
     final machinesFavorited = List<String>.from(userDoc.get('machinesFavorited') ?? []);
     if(machinesFavorited.length < 10)
-      {
-        if (!machinesFavorited.contains(machineId)) {
-          machinesFavorited.add(machineId);
-          await userDoc.reference.update({'machinesFavorited': machinesFavorited,
-          }).then((_) {
-            print('Machine added to favorites successfully!');
-          }).catchError((error) {
-            print('Error adding machine to favorites: $error');
-          });
-          } else {
-            print('Machine is already in favorites');
-          }
+    {
+      if (!machinesFavorited.contains(machineId)) {
+        machinesFavorited.add(machineId);
+        await userDoc.reference.update({'machinesFavorited': machinesFavorited,
+        }).then((_) {
+          print('Machine added to favorites successfully!');
+        }).catchError((error) {
+          print('Error adding machine to favorites: $error');
+        });
       } else {
+        print('Machine is already in favorites');
+      }
+    } else {
       showWarning(context, 'You can only favorite up to 10 machines.');
     }
   } else {
@@ -309,7 +334,7 @@ Future<void> setUserPoints(int pointsToAdd) async {
 Future<void> updateFirstname(String? newFirstName) async {
   final currentUser = FirebaseAuth.instance.currentUser!;
   final userRef = FirebaseFirestore.instance.collection('Users');
-  final query = userRef.where('firstname', isEqualTo: currentUser.email);
+  final query = userRef.where('email', isEqualTo: currentUser.email);
 
   final snapshot = await query.get();
   if (snapshot.docs.isNotEmpty) {
@@ -346,15 +371,22 @@ Future<void> updateLastName(String? newLastName) async {
   }
 }
 
+Future<void> updateProfilePic(String? imagePath) async {
+  final currentUser = FirebaseAuth.instance.currentUser!;
+  final userRef = FirebaseFirestore.instance.collection('Users');
+  final query = userRef.where('email', isEqualTo: currentUser.email);
 
-
-
-
-
-
-/*Future<void> setProfile() async {
-  File profilePicture = File('assets/images/KermitProfile.jpg');
-
+  final snapshot = await query.get();
+  if (snapshot.docs.isNotEmpty) {
+    final userDoc = snapshot.docs.single;
+    await userDoc.reference.update({
+      'profilePicture': imagePath,
+    }).then((_) {
+      print('Profile picture updated successfully!');
+    }).catchError((error) {
+      print('Error updating profile picture: $error');
+    });
+  } else {
+    print('User not found with email ${currentUser.email}');
+  }
 }
-
- */

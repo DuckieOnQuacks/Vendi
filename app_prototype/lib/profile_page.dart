@@ -1,8 +1,6 @@
 import 'backend/message_helper.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vendi_app/edit_profile.dart';
 import 'package:vendi_app/login_page.dart';
 import 'backend/user_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,17 +14,29 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late final user = FirebaseAuth.instance.currentUser!;
-  String imagePath = '';
+  String? imagePath = ' ';
   List<String> profilePicture = [
     'assets/images/profile_pic1.png',
     'assets/images/profile_pic2.png',
     'assets/images/profile_pic3.png',
     'assets/images/profile_pic4.png',
-    'assets/images/KermitProfile.jpg',
   ];
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+  }
+
+  void loadProfilePicture() async {
+    final imagePath = await getProfilePic();
+    setState(() {
+      this.imagePath = imagePath;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadProfilePicture();
   }
 
   void _selectProfilePicture(BuildContext context) {
@@ -35,32 +45,33 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (BuildContext context) {
         return Container(
           height: 200,
-          child: ListView.builder(
-            itemCount: profilePicture.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(profilePicture.length, (index) {
+              return GestureDetector(
                 onTap: () async {
                   setState(() {
                     imagePath = profilePicture[index];
                   });
                   Navigator.pop(context);
                   // update user's profile picture
-                  await getUserByEmail(user.email!);
+                  await updateProfilePic(imagePath);
                 },
-                leading: Image.asset(
-                  profilePicture[index],
-                  height: 50,
-                  width: 50,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    profilePicture[index],
+                    height: 50,
+                    width: 50,
+                  ),
                 ),
               );
-            },
+            }),
           ),
         );
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -91,31 +102,31 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     elevation: 10,
                     title: Row(
-                      children:[
-                        Icon(
-                          Icons.warning_amber_rounded,
-                          color: Colors.pink,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          'Confirm Logout',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                        children:[
+                          Icon(
+                            Icons.warning_amber_rounded,
+                            color: Colors.pink,
                           ),
-                        ),
-                      ]
-                  ),
+                          SizedBox(width: 10),
+                          Text(
+                            'Confirm Logout',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ]
+                    ),
                     content: const Text(
                         'Are you sure you want to log out of your account?'),
                     actions: <Widget>[
                       ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          style: ElevatedButton.styleFrom(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        style: ElevatedButton.styleFrom(
                           primary: Colors.grey[300],
                           onPrimary: Colors.black54,
-                          ),
+                        ),
                         child: const Text('Cancel'),
                       ),
                       ElevatedButton(
@@ -161,144 +172,128 @@ class _ProfilePageState extends State<ProfilePage> {
             return SingleChildScrollView(
               child: Center(
                 child: Container(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: 120,
-                        height: 120,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: const Image(
-                            image: AssetImage(
-                                'assets/images/KermitProfile.jpg'),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
                         children: [
-                          Flexible(
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                user.firstname + ' ' + user.lastname,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.bebasNeue(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 40,
-                                  color: Colors.yellow,
+                          SizedBox(
+                            width: 120,
+                            height: 120,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image(
+                                image: AssetImage(imagePath!),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    user.firstname + ' ' + user.lastname,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.bebasNeue(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 40,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              Container(
+                                alignment: Alignment.centerRight,
+                                child: IconButton(
+                                  onPressed: () {
+                                    editName(context, "Enter your new first and last name");
+                                  },
+                                  icon: Icon(Icons.edit),
+                                ),
+                              ),
+                            ],
                           ),
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: IconButton(
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(user.email, style: const TextStyle(fontSize: 15)),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: 200,
+                            child: ElevatedButton(
                               onPressed: () {
-                                editName(context, "Enter your new first and last name");
+                                _selectProfilePicture(context);
                               },
-                              icon: Icon(Icons.edit),
-                            ),
-                          ),
-                        ],
-                      ),
-
-
-
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(user.email, style: const TextStyle(fontSize: 15)),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        width: 200,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _selectProfilePicture(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.pinkAccent,
-                            onPrimary: Colors.white,
-                            shape: const StadiumBorder(),
-                          ),
-                          child: const Text(
-                            'Update Profile Picture',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    SizedBox(height: 30),
-
-                  const Divider(),
-                      const SizedBox(height: 10),
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: 400,
-                          height: 70,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              DisplayPoints(context, 'Lifetime Points', 'You have a total points of: ', user.points);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide.none,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.pinkAccent,
+                                onPrimary: Colors.white,
+                                shape: const StadiumBorder(),
                               ),
-                              elevation: 4,
-                            ),
-                            child: Text(
-                              'Total Lifetime Points',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                              child: const Text(
+                                'Update Profile Picture',
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
-                        ),
-
-                        SizedBox(height: 10),
-
-                        SizedBox(
-                          width: 400,
-                          height: 70,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              DisplayPoints(context, 'Lifetime Machines', 'The total amount of machines you have added is: ', user.machinesEntered.length);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide.none,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                          SizedBox(height: 30),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FutureBuilder<int?>(
+                                future: getUserPoints(),
+                                builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return const Text('Error fetching points data');
+                                  } else {
+                                    final points = snapshot.data!;
+                                    return Text(
+                                      'Total points gained: $points',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    );
+                                  }
+                                },
                               ),
-                              elevation: 4,
-                            ),
-                            child: Text(
-                              'Total Machines Added',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
+                            ],
                           ),
-                        ),
-                      ],
-                    )
-
-
-
-
-                ])
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FutureBuilder<int?>(
+                                future: getUserMachines(),
+                                builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return const Text('Error fetching points data');
+                                  } else {
+                                    final totalMachines = snapshot.data!;
+                                    return Text(
+                                      'Total machines entered: $totalMachines',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ])
                 ),
               ),
             );
@@ -308,5 +303,3 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
-
-
