@@ -392,7 +392,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                               .difference(DateTime.now());
                                           await setTimeAfter24Hours(
                                               timeAfter24Hours);
-
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -433,6 +434,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                         Duration timeLeft =
                                         timeAfter24HoursStored
                                             .difference(DateTime.now());
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -497,6 +500,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 addMachineToUser(machineId);
                                               }
                                               _isDrinkSelected = false;
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -532,6 +537,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 addMachineToUser(machineId);
                                               }
                                               _isSnackSelected = false;
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -568,6 +575,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 addMachineToUser(machineId);
                                               }
                                               _isSupplySelected = false;
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
