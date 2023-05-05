@@ -76,7 +76,7 @@ class _PointsPageState extends State<PointsPage> {
               ignoring: true,
               child: SleekCircularSlider(
               min: 0,
-              max: 5000,
+              max: 500,
               appearance: CircularSliderAppearance(
                 size: 250,
                 startAngle: 180,
