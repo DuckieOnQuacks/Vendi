@@ -26,6 +26,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
       ),
       body: Column(
         children: [
+          const SizedBox(height: 35),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: ListTile(

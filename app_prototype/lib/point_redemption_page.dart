@@ -176,7 +176,7 @@ class _PointsRedemptionPageState extends State<PointsRedemptionPage> {
                           ],
                         ),
                         content: const Text(
-                            '100 Vendi points is equal to \$1. Points can be redeemed beginning at 500 points. Once 500 points is reached, the user can redeem points in \$1 incriminates. For instance, a user can redeem 800 Vendi Points for \$8. Each time a user adds a new machine they will gain 30 points. Each time a user updates an existing machine the user will gain 15 points.'),
+                            '- 100 Vendi points is equal to \$1. \n\n- Points can be redeemed beginning at 500 points. \n\n- Once 500 points is reached, the user can redeem points in \$5 incriminates. For instance, a user can redeem 1500 Vendi Points for \$15. \n\n- Each time a user adds a new machine they will gain 30 points. \n\n- Each time a user updates an existing machine the user will gain 15 points.'),
                         actions: <Widget>[
                           ElevatedButton(
                             onPressed: () => Navigator.of(context).pop(false),
