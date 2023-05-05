@@ -193,28 +193,41 @@ class _ProfilePageState extends State<ProfilePage> {
                               Flexible(
                                 child: Container(
                                   alignment: Alignment.center,
-                                  child: Text(
-                                    user.firstname + ' ' + user.lastname,
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.bebasNeue(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 40,
-                                      color: Colors.black,
-                                    ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        user.firstname + ' ',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.bebasNeue(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 40,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Text(
+                                        user.lastname,
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.bebasNeue(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 40,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          editName(context, "Enter your new first and last name");
+                                        },
+                                        icon: Icon(Icons.edit),
+                                        color: Colors.yellow,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: IconButton(
-                                  onPressed: () {
-                                    editName(context, "Enter your new first and last name");
-                                  },
-                                  icon: Icon(Icons.edit),
                                 ),
                               ),
                             ],
                           ),
+
                           const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -224,24 +237,42 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: 200,
+                            width: 250,
                             child: ElevatedButton(
                               onPressed: () {
                                 _selectProfilePicture(context);
                               },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.pinkAccent,
-                                onPrimary: Colors.white,
-                                shape: const StadiumBorder(),
+                              style: ButtonStyle(
+                                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                  const EdgeInsets.all(20),
+                                ),
+                                backgroundColor: MaterialStateProperty.all<Color>(Colors.pinkAccent),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    side: BorderSide(
+                                      color: Colors.pink[900]!,
+                                      width: 3,
+                                    ),
+                                  ),
+                                ),
+                                alignment: Alignment.center,
                               ),
-                              child: const Text(
+                              child: const Center(
+                                child: Text(
                                 'Update Profile Picture',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ),
-                          SizedBox(height: 30),
+                          ),
                           const SizedBox(height: 10),
+                          const Divider(),
+                          const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -254,12 +285,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                     return const Text('Error fetching points data');
                                   } else {
                                     final points = snapshot.data!;
-                                    return Text(
-                                      'Total points gained: $points',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
+                                    return Container(
+                                      child: Text(
+                                        'Total points gained: $points',
+                                        style: GoogleFonts.bebasNeue(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 30,
+                                        ),
                                       ),
                                     );
                                   }
@@ -267,6 +300,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ],
                           ),
+
+
                           SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -282,10 +317,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                     final totalMachines = snapshot.data!;
                                     return Text(
                                       'Total machines entered: $totalMachines',
-                                      style: TextStyle(
+                                      style: GoogleFonts.bebasNeue(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20,
+                                        fontSize: 30,
+
                                       ),
                                     );
                                   }
