@@ -291,8 +291,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ],
                           ),
-
-
                           SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -359,9 +357,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                   } else if (snapshot.hasError) {
                                     return const Text('Error fetching points data');
                                   } else {
-                                    final totalPointsToday = snapshot.data!;
+                                    final globalMachineCount = snapshot.data!;
                                     return Text(
-                                      'Total Global Machines: $totalPointsToday',
+                                      'Total Global Machines: $globalMachineCount',
                                       style: GoogleFonts.bebasNeue(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold,

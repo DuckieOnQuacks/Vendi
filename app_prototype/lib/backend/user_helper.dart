@@ -28,7 +28,7 @@ class userInfo {
     required this.points,
     required this.cap,
     required this.machinesEntered,
-    this.profilePicture,
+    required this.profilePicture,
     this.timeAfter24Hours, // Add new property to constructor
     this.machinesFavorited,
   });

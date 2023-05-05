@@ -27,7 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
   int cap = 0;
   List<String> machinesEntered = [];
   List<String> machinesFavorited = [];
-  String ProfilePicture = '';
+  String ProfilePicture = 'assets/images/profile_pic4.png';
 
   bool _isEmailValid(String email) {
     // Check if email is valid using regex pattern
