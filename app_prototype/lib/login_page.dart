@@ -34,24 +34,38 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: usernameController.text,
-          password: passwordController.text
-      );
-      if (mounted) {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (
-                BuildContext context) {
-              return const BottomBar();
-            }));
+      if (validateFields()) {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: usernameController.text,
+            password: passwordController.text
+        );
+        if (mounted) {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (
+                  BuildContext context) {
+                return const BottomBar();
+              }));
+        }
+      } else {
+        Navigator.pop(context);
+        showMessage(context, 'Error', 'Please insert log in credentials');
       }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         Navigator.pop(context);
-        showMessage(context, 'Warning', 'Please insert log in credentials');
+        if (e.code == 'invalid-email') {
+          showMessage(context, 'Error', 'Please enter a valid email');
+        } else if (e.code == 'wrong-password') {
+          showMessage(context, 'Error', 'Wrong password');
+        } else if (e.code == 'user-not-found') {
+          showMessage(context, 'Error', 'This email address entered is not registered.');
+        } else {
+          showMessage(context, 'Error', 'An unexpected error occurred');
+        }
       }
     }
   }
+
 
   bool validateFields() {
     bool valid = true;

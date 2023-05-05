@@ -1,3 +1,4 @@
+import 'backend/machine_database_helper.dart';
 import 'backend/message_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -186,48 +187,38 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           const SizedBox(height: 10),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Flexible(
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        user.firstname + ' ',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.bebasNeue(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 40,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Text(
-                                        user.lastname,
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.bebasNeue(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 40,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          editName(context, "Enter your new first and last name");
-                                        },
-                                        icon: Icon(Icons.edit),
-                                        color: Colors.yellow,
-                                      ),
-                                    ],
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  user.firstname + ' ',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.bebasNeue(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 40,
+                                    color: Colors.black,
                                   ),
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  user.lastname,
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.bebasNeue(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 40,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    editName(context, "Enter your new first and last name");
+                                  },
+                                  icon: Icon(Icons.edit),
+                                  color: Colors.pink,
+                                ),
+                              ],
+                            ),
                           ),
-
                           const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -322,6 +313,59 @@ class _ProfilePageState extends State<ProfilePage> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 30,
 
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FutureBuilder<int?>(
+                                future: getUserCap(),
+                                builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return const Text('Error fetching points data');
+                                  } else {
+                                    final totalPointsToday = snapshot.data!;
+                                    return Text(
+                                      'Total points today: $totalPointsToday',
+                                      style: GoogleFonts.bebasNeue(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 30,
+
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FutureBuilder<int>(
+                                future: getMachineCount(),
+                                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return const Text('Error fetching points data');
+                                  } else {
+                                    final totalPointsToday = snapshot.data!;
+                                    return Text(
+                                      'Total Global Machines: $totalPointsToday',
+                                      style: GoogleFonts.bebasNeue(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 30,
                                       ),
                                     );
                                   }

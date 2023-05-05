@@ -38,6 +38,14 @@ class FirebaseHelper {
     return querySnapshot.docs.map((doc) => Machine.fromJson(doc.data())).toList();
   }
 
+  //Creates instance, gets snapshot
+  //Returns size of snapshot (number of total machines)
+  Future<int> getMachineCount() async {
+    final machinesCollection = FirebaseFirestore.instance.collection(tableName);
+    final querySnapshot = await machinesCollection.get();
+    return querySnapshot.size;
+  }
+
   //Grabs the machine instances based on the filtering
   Future<List<Machine>> getFilteredMachines(bool snack, bool drink, bool supply) async {
     final machinesCollection = FirebaseFirestore.instance.collection(tableName);
@@ -61,13 +69,7 @@ class FirebaseHelper {
     return filterDocs.map((doc) => Machine.fromJson(doc.data())).toList();
   }
 
-  //Creates instance, gets snapshot
-  //Returns size of snapshot (number of total machines)
-  Future<int> getMachineCount() async {
-    final machinesCollection = FirebaseFirestore.instance.collection(tableName);
-    final querySnapshot = await machinesCollection.get();
-    return querySnapshot.size;
-  }
+
 
   //Creates instance, gets snapshot, queries for machines that have card payments.
   //Returns list of machines with card payments enabled
@@ -162,3 +164,12 @@ Future<DateTime?> getImageTakenTime(String imageUrl) async {
     return null;
   }
 }
+
+//Creates instance, gets snapshot
+//Returns size of snapshot (number of total machines)
+Future<int> getMachineCount() async {
+  final machinesCollection = FirebaseFirestore.instance.collection('Machines');
+  final querySnapshot = await machinesCollection.get();
+  return querySnapshot.size;
+}
+
