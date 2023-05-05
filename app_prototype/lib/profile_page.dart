@@ -276,21 +276,26 @@ class _ProfilePageState extends State<ProfilePage> {
                                     return const Text('Error fetching points data');
                                   } else {
                                     final points = snapshot.data!;
-                                    return Container(
-                                      child: Text(
-                                        'Total points gained: $points',
-                                        style: GoogleFonts.bebasNeue(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 30,
+                                    return Row(
+                                      children: [
+                                        Icon(Icons.star_border_rounded, color: Colors.black, size: 30),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          'Total points gained: $points',
+                                          style: GoogleFonts.bebasNeue(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 30,
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     );
                                   }
                                 },
                               ),
                             ],
                           ),
+
                           SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -304,20 +309,26 @@ class _ProfilePageState extends State<ProfilePage> {
                                     return const Text('Error fetching points data');
                                   } else {
                                     final totalMachines = snapshot.data!;
-                                    return Text(
-                                      'Total machines entered: $totalMachines',
-                                      style: GoogleFonts.bebasNeue(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 30,
-
-                                      ),
+                                    return Row(
+                                      children: [
+                                        Icon(Icons.star_border_rounded, color: Colors.black, size: 30),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          'Total machines entered: $totalMachines',
+                                          style: GoogleFonts.bebasNeue(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ],
                                     );
                                   }
                                 },
                               ),
                             ],
                           ),
+
                           SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -331,21 +342,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                     return const Text('Error fetching points data');
                                   } else {
                                     final totalPointsToday = snapshot.data!;
-                                    return Text(
-                                      'Total points today: $totalPointsToday',
-                                      style: GoogleFonts.bebasNeue(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 30,
-
-                                      ),
+                                    return Row(
+                                      children: [
+                                        Icon(Icons.star_border_rounded, color: Colors.black, size: 30), // Add this Icon widget
+                                        SizedBox(width: 10), // Add some spacing between the icon and text
+                                        Text(
+                                          'Total points today: $totalPointsToday',
+                                          style: GoogleFonts.bebasNeue(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ],
                                     );
                                   }
                                 },
                               ),
                             ],
                           ),
-                          SizedBox(height: 10),
+
+                          SizedBox(height: 70),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -358,14 +375,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                     return const Text('Error fetching points data');
                                   } else {
                                     final globalMachineCount = snapshot.data!;
-                                    return Text(
-                                      'Total Global Machines: $globalMachineCount',
-                                      style: GoogleFonts.bebasNeue(
-                                        color: Colors.black,
+                                    return Flexible(
+                                      child: Text(
+                                      'Wow! Our Vendi Users have added a total of $globalMachineCount machines globally. Thank you!',
+                                      style: GoogleFonts.oswald(
+                                        color: Colors.grey[600],
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 30,
+                                        fontSize: 20,
                                       ),
-                                    );
+                                    ));
                                   }
                                 },
                               ),

@@ -53,7 +53,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 170),
+            SizedBox(height: 100),
             Image.asset(
               'assets/images/BlueMachine.png',
               scale: 4,
