@@ -20,12 +20,11 @@ class _FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Image.asset('assets/images/logo.png', fit: BoxFit.contain, height: 32),
         actions: [
           IconButton(
-            icon: const Icon(Icons.close, color: Colors.pink),
+            icon: Icon(Icons.close, color: Theme.of(context).iconTheme.color),
             onPressed: () {
               Navigator.pop(context);
               Navigator.pop(context);
@@ -38,6 +37,7 @@ class _FilterPageState extends State<FilterPage> {
             )
           ],
       ),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       body: new ListView(
         children: filterValues.keys.map((List<String> key) 
         {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:vendi_app/login_page.dart';
 import 'backend/user_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'settings.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -46,6 +47,22 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (BuildContext context) {
         return Container(
           height: 200,
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                spreadRadius: 5,
+                offset: Offset(0, -5),
+              ),
+            ],
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(profilePicture.length, (index) {
@@ -58,12 +75,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   // update user's profile picture
                   await updateProfilePic(imagePath);
                 },
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    border: Border.all(
+                      color: imagePath == profilePicture[index]
+                          ? Theme.of(context).primaryColor
+                          : Colors.transparent,
+                      width: 3,
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(8.0),
                   child: Image.asset(
                     profilePicture[index],
-                    height: 50,
-                    width: 50,
+                    height: 60,
+                    width: 60,
                   ),
                 ),
               );
@@ -73,6 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +117,17 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.logout, color: Colors.pink),
+            icon: Icon(Icons.settings, color: Theme.of(context).iconTheme.color),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsPage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.logout, color: Theme.of(context).iconTheme.color),
             onPressed: () {
               showDialog(
                 context: context,
@@ -106,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         children:[
                           Icon(
                             Icons.warning_amber_rounded,
-                            color: Colors.pink,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                           SizedBox(width: 10),
                           Text(
@@ -114,19 +150,21 @@ class _ProfilePageState extends State<ProfilePage> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: Theme.of(context).textTheme.bodyLarge?.color,
                             ),
                           ),
                         ]
                     ),
-                    content: const Text(
-                        'Are you sure you want to log out of your account?'),
+                    content: Text(
+                        'Are you sure you want to log out of your account?',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                     actions: <Widget>[
                       ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(false),
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.grey[300],
-                          onPrimary: Colors.black54,
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                          foregroundColor: Colors.white,
                         ),
                         child: const Text('Cancel'),
                       ),
@@ -141,8 +179,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.pinkAccent,
-                          onPrimary: Colors.white,
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                          foregroundColor: Theme.of(context).colorScheme.onSecondary,
                         ),
                         child: const Text('Sign Out'),
                       ),
@@ -158,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: FutureBuilder<userInfo?>(
         future: getUserByEmail(user.email!),
         builder: (BuildContext context, AsyncSnapshot<userInfo?> snapshot) {
@@ -195,36 +233,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                   user.firstname + ' ',
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.bebasNeue(
-                                    fontWeight: FontWeight.bold,
                                     fontSize: 40,
-                                    color: Colors.black,
+                                    color: Theme.of(context).textTheme.titleLarge?.color,
                                   ),
                                 ),
                                 Text(
                                   user.lastname,
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.bebasNeue(
-                                    fontWeight: FontWeight.bold,
                                     fontSize: 40,
-                                    color: Colors.black,
+                                    color: Theme.of(context).textTheme.titleLarge?.color,
                                   ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    editName(context, "Enter your new first and last name");
-                                  },
-                                  icon: Icon(Icons.edit),
-                                  color: Colors.pink,
                                 ),
                               ],
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(user.email, style: const TextStyle(fontSize: 15)),
-                            ],
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
@@ -237,165 +259,110 @@ class _ProfilePageState extends State<ProfilePage> {
                                 padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                                   const EdgeInsets.all(20),
                                 ),
-                                backgroundColor: MaterialStateProperty.all<Color>(Colors.pinkAccent),
+                                backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     side: BorderSide(
-                                      color: Colors.pink[900]!,
+                                      color: Theme.of(context).colorScheme.primary,
                                       width: 3,
                                     ),
                                   ),
                                 ),
                                 alignment: Alignment.center,
                               ),
-                              child: const Center(
+                              child: Center(
                                 child: Text(
                                 'Update Profile Picture',
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.onSecondary, // Updated
                                   fontSize: 15,
                                 ),
                               ),
                             ),
                           ),
                           ),
-                          const SizedBox(height: 10),
-                          const Divider(),
                           const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              FutureBuilder<int?>(
-                                future: getUserPoints(),
-                                builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return const Text('Error fetching points data');
-                                  } else {
-                                    final points = snapshot.data!;
-                                    return Row(
-                                      children: [
-                                        Icon(Icons.star_border_rounded, color: Colors.black, size: 30),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          'Total points gained: $points',
-                                          style: GoogleFonts.bebasNeue(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 30,
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              FutureBuilder<int?>(
-                                future: getUserMachines(),
-                                builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return const Text('Error fetching points data');
-                                  } else {
-                                    final totalMachines = snapshot.data!;
-                                    return Row(
-                                      children: [
-                                        Icon(Icons.star_border_rounded, color: Colors.black, size: 30),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          'Total machines entered: $totalMachines',
-                                          style: GoogleFonts.bebasNeue(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 30,
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              FutureBuilder<int?>(
-                                future: getUserCap(),
-                                builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return const Text('Error fetching points data');
-                                  } else {
-                                    final totalPointsToday = snapshot.data!;
-                                    return Row(
-                                      children: [
-                                        Icon(Icons.star_border_rounded, color: Colors.black, size: 30), // Add this Icon widget
-                                        SizedBox(width: 10), // Add some spacing between the icon and text
-                                        Text(
-                                          'Total points today: $totalPointsToday',
-                                          style: GoogleFonts.bebasNeue(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 30,
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 70),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              FutureBuilder<int>(
-                                future: getMachineCount(),
-                                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return const Text('Error fetching points data');
-                                  } else {
-                                    final globalMachineCount = snapshot.data!;
-                                    return Flexible(
-                                      child: Text(
-                                      'Wow! Our Vendi Users have added a total of $globalMachineCount machines globally. Thank you!',
-                                      style: GoogleFonts.oswald(
-                                        color: Colors.grey[600],
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ));
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ])
+                          _buildInfoCard(context, Icons.star, 'Total points gained', getUserPoints(), 30),
+                          const SizedBox(height: 10),
+                          _buildInfoCard(context, Icons.vpn_key, 'Total machines entered', getUserMachines(), 30),
+                          const SizedBox(height: 10),
+                          _buildInfoCard(context, Icons.update, 'Total points today', getUserCap(), 30),
+                          const SizedBox(height: 30),
+                          _buildGlobalInfoCard(context, 'Wow! Our Vendi Users have added a total of ', getMachineCount(), ' machines globally. Thank you!', 20),
+                        ],
+                    ),
                 ),
               ),
             );
           }
         },
       ),
+    );
+  }
+
+  Widget _buildInfoCard(BuildContext context, IconData icon, String title, Future<int?> future, double fontSize) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shadowColor: Colors.black45,
+      elevation: 6,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: FutureBuilder<int?>(
+          future: future,
+          builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return const Text('Error fetching data');
+            } else {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, color: Theme.of(context).iconTheme.color, size: 30),
+                  const SizedBox(width: 10),
+                  Text(
+                    '$title: ${snapshot.data!}',
+                    style: GoogleFonts.bebasNeue(
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGlobalInfoCard(BuildContext context, String prefix, Future<int> future, String suffix, double fontSize) {
+    return FutureBuilder<int>(
+      future: future,
+      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return const Text('Error fetching data');
+        } else {
+          return Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Text(
+              '$prefix ${snapshot.data!} $suffix',
+              style: GoogleFonts.oswald(
+                color: Theme.of(context).textTheme.bodySmall?.color,
+                fontSize: fontSize,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
+      },
     );
   }
 }

@@ -12,7 +12,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.pinkAccent),
+        iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         title: Row(
           children: [
             Image.asset(
@@ -22,8 +22,8 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
             )
           ],
         ),
-        backgroundColor: Colors.white,
       ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
           const SizedBox(height: 10),
@@ -54,7 +54,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
               leading: Icon(
                 Icons.add,
                 size: 40,
-                color: Colors.pinkAccent,
+                color: Theme.of(context).iconTheme.color,
               ),
 
               title: const Text('To add a new machine, simply click the plus icon on the top right corner on the maps page.'),
@@ -66,7 +66,7 @@ class _MachineHelpPageState extends State<MachineHelpPage>{
               leading: Icon(
                 Icons.filter_alt,
                 size: 40,
-                color: Colors.pinkAccent,
+                color: Theme.of(context).iconTheme.color,
               ),
 
               title: const Text('This filter will sort machines by snack, beverage, or supply.'),

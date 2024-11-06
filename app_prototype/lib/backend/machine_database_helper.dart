@@ -69,8 +69,6 @@ class FirebaseHelper {
     return filterDocs.map((doc) => Machine.fromJson(doc.data())).toList();
   }
 
-
-
   //Creates instance, gets snapshot, queries for machines that have card payments.
   //Returns list of machines with card payments enabled
   Future<int> getMachineCardValue(Machine machine) async {

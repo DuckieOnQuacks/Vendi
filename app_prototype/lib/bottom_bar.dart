@@ -1,37 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:vendi_app/home_page.dart';
-import 'package:vendi_app/points_page.dart';
-import 'package:vendi_app/profile_page.dart';
+  import 'package:vendi_app/home_page.dart';
+  import 'package:vendi_app/points_page.dart';
+  import 'package:vendi_app/profile_page.dart';
 
-import 'favorites_page.dart';
+  import 'favorites_page.dart';
 
 // All code on this page was developed by the team using the flutter framework
 
-class BottomBar extends StatefulWidget {
-  const BottomBar({super.key});
+    class BottomBar extends StatefulWidget {
+    const BottomBar({super.key});
 
-  @override
-  State<BottomBar> createState() => _BottomBarState();
-}
+    @override
+    State<BottomBar> createState() => _BottomBarState();
+    }
 
-class _BottomBarState extends State<BottomBar> {
-  int selectedIndex = 0;
-  // What pages to load depending on the bottom bar index
-  final Map<int, Widget> _pages = {
+    class _BottomBarState extends State<BottomBar> {
+    int selectedIndex = 0;
+    // What pages to load depending on the bottom bar index
+    final Map<int, Widget> _pages = {
     0: const Homepage(),
     1: const FavoritesPage(),
     2: const PointsPage(),
     3: ProfilePage(),
-  };
+    };
 
-  void _onItemTapped(int index) {
+    void _onItemTapped(int index) {
     setState(() {
-      selectedIndex = index;
+    selectedIndex = index;
     });
-  }
+    }
 
-  @override
-  Widget build(BuildContext context) {
+    @override
+    Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: _pages[selectedIndex],
@@ -57,7 +57,7 @@ class _BottomBarState extends State<BottomBar> {
         ],
         currentIndex: selectedIndex,
         unselectedItemColor: Colors.grey[700],
-        selectedItemColor: Colors.pink,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         onTap: _onItemTapped,
       ),
     );

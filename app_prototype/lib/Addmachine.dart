@@ -109,7 +109,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
     getCurrentLocation();
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.pinkAccent),
+        iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         title: Row(
           children: [
             Image.asset(
@@ -119,8 +119,8 @@ class _AddMachinePageState extends State<AddMachinePage> {
             )
           ],
         ),
-        backgroundColor: Colors.white,
       ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -296,7 +296,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                   children: [
                                     Icon(
                                       Icons.warning_amber_rounded,
-                                      color: Colors.pink,
+                                      color: Colors.orangeAccent,
                                     ),
                                     SizedBox(width: 10),
                                     Text(
@@ -304,7 +304,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
+                                        color: Theme.of(context).textTheme.bodyLarge?.color,
                                       ),
                                     ),
                                   ],
@@ -316,8 +316,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                     onPressed: () =>
                                         Navigator.of(context).pop(false),
                                     style: ElevatedButton.styleFrom(
-                                      primary: Colors.pinkAccent,
-                                      onPrimary: Colors.white,
+                                      foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.secondary,
                                     ),
                                     child: const Text('Ok'),
                                   ),
@@ -338,14 +337,14 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                   children: [
                                     Icon(
                                       Icons.warning_amber_rounded,
-                                      color: Colors.pink,
+                                      color: Colors.orangeAccent,
                                     ),
                                     Text(
                                       'Confirm Submission',
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black,
+                                        color: Theme.of(context).textTheme.bodyLarge?.color,
                                       ),
                                     ),
                                   ],
@@ -357,8 +356,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                     onPressed: () =>
                                         Navigator.of(context).pop(false),
                                     style: ElevatedButton.styleFrom(
-                                      primary: Colors.grey[300],
-                                      onPrimary: Colors.black54,
+                                      foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.secondary,
                                     ),
                                     child: const Text('Cancel'),
                                   ),
@@ -584,8 +582,7 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                       showConfettiDialog(context, "Congratulations you\'ve earned 30 vendi points!");
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      primary: Colors.pinkAccent,
-                                      onPrimary: Colors.white,
+                                      foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.secondary,
                                     ),
                                     child: const Text('Submit'),
                                   ),

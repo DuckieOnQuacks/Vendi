@@ -261,8 +261,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                           const SizedBox(width: 20),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.pinkAccent,
-                                onPrimary: Colors.white,
+                                foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.secondary,
                               ),
                               onPressed: () {
                                 Navigator.push(
@@ -299,7 +298,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                                     backgroundColor: Colors.white,
                                     leading: IconButton(
                                       icon: Icon(Icons.arrow_back),
-                                      color: Colors.pink,
+                                      color: Theme.of(context).colorScheme.primary,
                                       onPressed: () => Navigator.pop(context),
                                     ),
                                   ),

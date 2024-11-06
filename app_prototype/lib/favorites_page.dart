@@ -25,14 +25,14 @@ class _FavoritePageState extends State<FavoritesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Image.asset(
           'assets/images/logo.png',
           fit: BoxFit.contain,
           height: 32,
         ),
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
       ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: FutureBuilder<List<Machine>>(
         future: favMachines,
         builder: (context, snapshot) {
@@ -52,6 +52,7 @@ class _FavoritePageState extends State<FavoritesPage> {
               itemCount: favMachines.length,
               itemBuilder: (context, index) {
                 return Card(
+                  color: Theme.of(context).cardColor.withOpacity(0.8), // Changed background color
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -59,7 +60,8 @@ class _FavoritePageState extends State<FavoritesPage> {
                   child: ListTile(
                     leading: Image.asset(favMachines[index].icon),
                     trailing: IconButton(
-                      icon: const Icon(Icons.delete),
+                      icon: Icon(Icons.delete, color: Theme.of(context).iconTheme.color, // Adapt icon color to theme
+                      ),
                       onPressed: () =>
                           onDeletePressed(favMachines[index]),
                     ),
@@ -130,7 +132,7 @@ class _FavoritePageState extends State<FavoritesPage> {
         children: [
           Icon(
             Icons.warning_amber_rounded,
-            color: Colors.pink,
+            color: Colors.orangeAccent
           ),
           SizedBox(width: 10),
           Text(
@@ -138,7 +140,7 @@ class _FavoritePageState extends State<FavoritesPage> {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: Theme.of(context).textTheme.bodyLarge?.color, // Adapt icon color to theme
             ),
           ),
         ],
@@ -148,8 +150,7 @@ class _FavoritePageState extends State<FavoritesPage> {
         ElevatedButton(
           onPressed: () => Navigator.of(context).pop(false),
           style: ElevatedButton.styleFrom(
-            primary: Colors.grey[300],
-            onPrimary: Colors.black54,
+            foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.secondary,
           ),
           child: const Text('Cancel'),
         ),
@@ -159,8 +160,7 @@ class _FavoritePageState extends State<FavoritesPage> {
             Navigator.of(context).pop(true);
           },
           style: ElevatedButton.styleFrom(
-            primary: Colors.pinkAccent,
-            onPrimary: Colors.white,
+            foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.secondary,
           ),
           child: const Text('Delete'),
         ),

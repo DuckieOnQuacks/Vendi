@@ -200,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           const EdgeInsets.all(25)),
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.pink),
+                          MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),

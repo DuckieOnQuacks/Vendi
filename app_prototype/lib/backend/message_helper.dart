@@ -19,7 +19,7 @@ void showConfettiDialog(BuildContext context, String message){
           return true;
         },
         child: AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -46,12 +46,12 @@ void showConfettiDialog(BuildContext context, String message){
               Text(
                 'Congratulations!',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black, fontSize: 24),
+                style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 24),
               ),
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black, fontSize: 16),
+                style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 16),
               ),
             ],
           ),
@@ -91,7 +91,7 @@ void showMessage(BuildContext context, String title, String message) {
                     style: TextStyle(
                       fontSize: 23,
                       fontWeight: FontWeight.bold,
-                      color: Colors.pinkAccent,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ],
@@ -101,7 +101,7 @@ void showMessage(BuildContext context, String title, String message) {
                 message,
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               SizedBox(height: 20),
@@ -110,8 +110,7 @@ void showMessage(BuildContext context, String title, String message) {
                 child: ElevatedButton(
                   child: Text('OK', style: TextStyle(fontSize: 16)),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.pink,
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
@@ -150,7 +149,7 @@ void showWarning(BuildContext context, String message) {
                 children: [
                   Icon(
                     Icons.warning_amber_outlined,
-                    color: Colors.pink,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 24.0,
                   ),
                   SizedBox(width: 10),
@@ -159,7 +158,7 @@ void showWarning(BuildContext context, String message) {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.pinkAccent,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ],
@@ -169,7 +168,7 @@ void showWarning(BuildContext context, String message) {
                 message,
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               SizedBox(height: 20),
@@ -178,8 +177,7 @@ void showWarning(BuildContext context, String message) {
                 child: ElevatedButton(
                   child: Text('OK', style: TextStyle(fontSize: 16)),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.pink,
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
@@ -219,7 +217,7 @@ Future<void> showWarning2(BuildContext context, String message) async {
                 children: [
                   Icon(
                     Icons.warning_amber_outlined,
-                    color: Colors.pink,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 24.0,
                   ),
                   SizedBox(width: 10),
@@ -228,7 +226,7 @@ Future<void> showWarning2(BuildContext context, String message) async {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.pinkAccent,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ],
@@ -238,7 +236,7 @@ Future<void> showWarning2(BuildContext context, String message) async {
                 message,
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               SizedBox(height: 20),
@@ -247,8 +245,7 @@ Future<void> showWarning2(BuildContext context, String message) async {
                 child: ElevatedButton(
                   child: Text('OK', style: TextStyle(fontSize: 16)),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.pink,
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
@@ -291,7 +288,7 @@ void editName(BuildContext context, String message) {
                 children: [
                   Icon(
                     Icons.account_circle,
-                    color: Colors.pink,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 24.0,
                   ),
                   SizedBox(width: 10),
@@ -300,7 +297,7 @@ void editName(BuildContext context, String message) {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.pinkAccent,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ],
@@ -310,7 +307,7 @@ void editName(BuildContext context, String message) {
                 message,
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               SizedBox(height: 10),
@@ -333,8 +330,7 @@ void editName(BuildContext context, String message) {
                 child: ElevatedButton(
                   child: Text('OK', style: TextStyle(fontSize: 16)),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.pink,
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   onPressed: () {
                     String firstName = _firstNameController.text.trim();
@@ -358,7 +354,6 @@ void editName(BuildContext context, String message) {
     },
   );
 }
-
 
 void DisplayPoints(BuildContext context, String title, String message, int) {
   showDialog(
@@ -386,7 +381,7 @@ void DisplayPoints(BuildContext context, String title, String message, int) {
                   style: TextStyle(
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
-                    color: Colors.pinkAccent,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
               ),
@@ -395,7 +390,7 @@ void DisplayPoints(BuildContext context, String title, String message, int) {
                 message,
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               SizedBox(height: 20),
@@ -404,8 +399,7 @@ void DisplayPoints(BuildContext context, String title, String message, int) {
                 child: ElevatedButton(
                   child: Text('OK', style: TextStyle(fontSize: 16)),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.pink,
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   onPressed: () {
                     Navigator.of(dialogContext).pop();

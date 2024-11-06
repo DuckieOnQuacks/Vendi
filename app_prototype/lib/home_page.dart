@@ -106,6 +106,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         automaticallyImplyLeading: false,
         title: Image.asset(
           'assets/images/logo.png',
@@ -115,8 +116,7 @@ class _HomepageState extends State<Homepage> {
 
         actions: [
           IconButton(
-
-            icon: const Icon(Icons.help_outline, color: Colors.pink),
+            icon: Icon(Icons.help_outline, color: Theme.of(context).iconTheme.color),
             onPressed: () {
               Navigator.push(
                 context,
@@ -129,7 +129,7 @@ class _HomepageState extends State<Homepage> {
           Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.filter_alt, color: Colors.pink),
+                icon: Icon(Icons.filter_alt, color: Theme.of(context).iconTheme.color),
                 onPressed: () => showModalBottomSheet(
                     isDismissible: false,
                     context: context,
@@ -137,7 +137,7 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.add, color: Colors.pink),
+                icon: Icon(Icons.add, color: Theme.of(context).iconTheme.color),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -148,8 +148,8 @@ class _HomepageState extends State<Homepage> {
             ],
           ),
         ],
-        backgroundColor: Colors.white,
       ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: FutureBuilder<Position?>(
         future: getCurrentPosition(),
         builder: (context, snapshot) {

@@ -18,8 +18,6 @@ class userInfo {
   final List<String>? machinesFavorited;
   final String? profilePicture;
 
-
-
   // Constructor for the userInfo class
   userInfo({
     required this.firstname,
@@ -87,7 +85,6 @@ Future<int> getUserMachines() async {
   List<dynamic> machinesEntered = docSnapshot.data()?['machinesEntered'] ?? [];
   return machinesEntered.length;
 }
-
 
 //This function get the ids found in the users machinesFavorited field and returns the corrspnding machines that can
 //be found in the firestore database.
@@ -160,7 +157,7 @@ Future<int?> getUserCap() async {
   int? cap = docSnapshot.data()?['cap'];
   return cap;
 }
-
+//Gets the users profile pic path and uses it for profile related things
 Future<String?> getProfilePic() async {
   final currentUser = FirebaseAuth.instance.currentUser!;
   final userRef = FirebaseFirestore.instance.collection('Users');
@@ -175,7 +172,6 @@ Future<String?> getProfilePic() async {
     return null;
   }
 }
-
 
 //Similar to the one above this is a helper function to get the timeAfter24Hours variable
 Future<DateTime?> getTimeAfter24Hours() async {

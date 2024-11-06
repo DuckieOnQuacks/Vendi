@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vendi_app/point_redemption_page.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'backend/user_helper.dart';
 
-// All code on this page was developed by the team using the flutter framework
+// All code on this page was developed by the team using the Flutter framework
 
 class PointsPage extends StatefulWidget {
   const PointsPage({Key? key}) : super(key: key);
@@ -16,142 +14,142 @@ class PointsPage extends StatefulWidget {
 class _PointsPageState extends State<PointsPage> {
   int currentPoints = 0;
 
+  // Sample leaderboard data
+  List<Map<String, dynamic>> leaderboardData = [
+    {'rank': 1, 'username': 'Alice', 'points': 1500},
+    {'rank': 2, 'username': 'Bob', 'points': 1200},
+    {'rank': 3, 'username': 'Charlie', 'points': 900},
+    {'rank': 4, 'username': 'YourUsername', 'points': 800}, // Placeholder for current user
+    {'rank': 5, 'username': 'Eve', 'points': 700},
+  ];
+
   @override
   void initState() {
     super.initState();
     getUserPoints().then((points) {
       setState(() {
         currentPoints = points!;
+        // Update the user's points in the sample leaderboard
+        leaderboardData[3]['points'] = currentPoints;
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Determine if the current theme is dark
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Row(
-            children: [
-              Image.asset(
-                'assets/images/logo.png',
-                fit: BoxFit.contain,
-                height: 32,
-              )
-            ],
-          ),
-          backgroundColor: Colors.white,
-        ),
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.grey[50],
-        body: SafeArea(
-            child: Center(
-                child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      appBar: AppBar(
+        title: Row(
           children: [
             Image.asset(
-              'assets/images/3MachinesStacked.png',
-              scale: 2,
-            ),
-            FutureBuilder<String>(
-              future: getUserName(),
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return Text(
-                    '${snapshot.data ?? ""}, you have',
-                    style: GoogleFonts.bebasNeue(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 50,
-                    ),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            IgnorePointer(
-              ignoring: true,
-              child: SleekCircularSlider(
-              min: 0,
-              max: 500,
-              appearance: CircularSliderAppearance(
-                size: 250,
-                startAngle: 180,
-                angleRange: 180,
-                customColors: CustomSliderColors(
-                  // trackColor: Colors.red,
-                  trackColor: Colors.pink,
-                  progressBarColors: [
-                    Colors.pinkAccent,
-                    Colors.yellow,
-                    Colors.lightBlueAccent
-                  ],
-                  //progressBarColor: Colors.lightBlueAccent,
-                  dotColor: Colors.white,
-                  shadowColor: Colors.pink[900],
+              'assets/images/logo.png',
+              fit: BoxFit.contain,
+              height: 32,
+            )
+          ],
+        ),
+        elevation: 0,
+      ),
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        child: SingleChildScrollView( // Make the page scrollable
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Existing widgets
+                Image.asset(
+                  'assets/images/3MachinesStacked.png',
+                  scale: 2,
                 ),
-                infoProperties: InfoProperties(
-                  mainLabelStyle: GoogleFonts.chicle(
-                      fontSize: 50, fontWeight: FontWeight.bold),
-                  bottomLabelText: 'Vendi Points',
-                  bottomLabelStyle: GoogleFonts.bebasNeue(
-                      fontSize: 40, fontWeight: FontWeight.bold),
-                  modifier: (double value) {
-                    final intValue = value.toInt();
-                    return intValue.toString();
+                const SizedBox(height: 20),
+                // Smaller display for current user's points
+                FutureBuilder<String>(
+                  future: getUserName(),
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Text(
+                        '${snapshot.data ?? ""}, you have $currentPoints Vendi Points',
+                        style: GoogleFonts.bebasNeue(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: Theme.of(context).textTheme.titleLarge?.color,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    }
                   },
                 ),
-              ),
-              initialValue: currentPoints.toDouble(),
-              onChange: (double value) {
-                print(value);
-              },
-              onChangeStart: (double value) {
-                print('Start $value');
-              },
-              onChangeEnd: (double value) {
-                print('End $value');
-              },
-            ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 80.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (BuildContext context) {
-                    return const PointsRedemptionPage();
-                  }));
-                },
-                style: ButtonStyle(
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        const EdgeInsets.all(20)),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.pinkAccent),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(color: Colors.pink[900]!,
-                            width: 3)))),
-                child: const Center(
-                  child: Text(
-                    'Redeem',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
+                const SizedBox(height: 20),
+                // Leaderboard section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Leaderboard',
+                        style: GoogleFonts.bebasNeue(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: leaderboardData.length,
+                        itemBuilder: (context, index) {
+                          final user = leaderboardData[index];
+                          bool isCurrentUser = user['username'] == 'YourUsername'; // Replace with actual username check
+                          return Card(
+                            color: isCurrentUser
+                                ? Theme.of(context).colorScheme.secondary.withOpacity(0.1)
+                                : Theme.of(context).cardColor,
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
+                                child: Text(
+                                  user['rank'].toString(),
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSecondary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                user['username'],
+                                style: TextStyle(
+                                  fontWeight: isCurrentUser ? FontWeight.bold : FontWeight.normal,
+                                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                                ),
+                              ),
+                              trailing: Text(
+                                '${user['points']} pts',
+                                style: TextStyle(
+                                  fontWeight: isCurrentUser ? FontWeight.bold : FontWeight.normal,
+                                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              ),
+                const SizedBox(height: 20),
+              ],
             ),
-          ],
-        )
-            )
-        )
+          ),
+        ),
+      ),
     );
   }
 }

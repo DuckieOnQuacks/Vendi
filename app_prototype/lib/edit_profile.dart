@@ -79,7 +79,7 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.pinkAccent),
+          iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
           title: Row(
             children: [
               Image.asset(
@@ -89,10 +89,8 @@ class _EditProfileState extends State<EditProfile> {
               )
             ],
           ),
-          backgroundColor: Colors.white,
         ),
-
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Center(
@@ -124,7 +122,7 @@ class _EditProfileState extends State<EditProfile> {
                       style: ButtonStyle(
                           padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                               const EdgeInsets.all(25)),
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.pink),
+                          backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -268,7 +266,7 @@ class _EditProfileState extends State<EditProfile> {
                               MaterialStateProperty.all<EdgeInsetsGeometry>(
                                   const EdgeInsets.all(25)),
                               backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.pink),
+                              MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                               shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(

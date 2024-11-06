@@ -67,7 +67,7 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.pinkAccent),
+        iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         title: Row(
           children: [
             Image.asset(
@@ -77,8 +77,8 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
             )
           ],
         ),
-        backgroundColor: Colors.white,
       ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
