@@ -10,8 +10,6 @@ import 'backend/user_helper.dart';
 import 'bottom_bar.dart';
 import 'backend/camera_helper.dart';
 
-
-
 class UpdateMachinePage extends StatefulWidget {
   const UpdateMachinePage({Key? key}) : super(key: key);
 
@@ -85,11 +83,13 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //photo
-              const SizedBox(height: 16.0),
-              const Text('Please take a front facing picture of the machine*',
-                  style: TextStyle(fontSize: 20,  fontWeight: FontWeight.bold)),
-              //camera icon
+              // Photo section
+              _buildSectionHeader("Machine Image"),
+              const SizedBox(height: 10.0),
+              const Text(
+                'Please take a front-facing picture of the machine*',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
               Center(
                 child: IconButton(
                     onPressed: () async{
@@ -99,37 +99,17 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
                         pictureTaken = 1;
                       }
                     },
-                    icon: const Icon(Icons.camera_alt)),
+                    icon: const Icon(Icons.camera_alt, size: 35,)),
               ),
               const SizedBox(height: 40.0),
-              //operating
-              const SizedBox(height: 16.0),
-              const Text('Is the machine currently operating?',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10.0),
-              const Text('Note: If you did not attempt to buy anything from the machine, please select "Not Sure"',
-                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16)),
-              const SizedBox(height: 10.0),
-              DropdownButton(
-                value: selectedMachine?.operational,
-                items: const [
-                  DropdownMenuItem(
-                    value: 1,
-                    child: Text('Not Sure'),
-                  ),
-                  DropdownMenuItem(
-                    value: 0,
-                    child: Text('No'),
-                  ),
-                  DropdownMenuItem(
-                    value: 2,
-                    child: Text('Yes'),
-                  ),
-                ],
+              const Text('Is the machine currently operating?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              SwitchListTile(
+                title:const Text('Note: If you did not attempt to buy anything from the machine, please leave this untoggled',
+                    style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12)),
+                value: selectedMachine!.operational,
                 onChanged: (value) {
                   setState(() {
-                    selectedMachine?.operational = value!;
-                    print(value);
+                    selectedMachine!.operational = value;
                   });
                 },
               ),
@@ -309,6 +289,17 @@ class _UpdateMachinePageState extends State<UpdateMachinePage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color),
       ),
     );
   }

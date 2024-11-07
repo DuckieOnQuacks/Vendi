@@ -202,7 +202,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         children: [
                           const SizedBox(height: 60),
                           const SizedBox(width: 25),
-                          if (machineSnapshot.card == 1) ...[
+                          if (machineSnapshot.card == true) ...[
                             Image.asset('assets/images/card.png', height: 30),
                             const SizedBox(width: 20),
                             Text('Card accepted',
@@ -221,7 +221,7 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                           const SizedBox(height: 60),
                           const SizedBox(width: 20),
                           const SizedBox(width: 5),
-                          if (machineSnapshot.cash == 1) ...[
+                          if (machineSnapshot.cash == true) ...[
                             Image.asset('assets/images/cash.png', height: 30),
                             const SizedBox(width: 20),
                             Text('Cash accepted',
@@ -239,18 +239,16 @@ class _MachineBottomSheetState extends State<MachineBottomSheet> {
                         children: [
                           const SizedBox(height: 60),
                           const SizedBox(width: 20),
-                          if (machineSnapshot.operational == 1) ...[
+                          if (machineSnapshot.operational == true) ...[
                             const Icon(Icons.check, color: Colors.green),
                             const SizedBox(width: 20),
                             Text('Operational',
                                 style: GoogleFonts.bebasNeue(fontSize: 18)),
-                          ] else if(machineSnapshot.operational == 0)...[
+                          ] else ...[
                             const Icon(Icons.clear_rounded, color: Colors.red),
                             const SizedBox(width: 20),
                             Text('Not Operational',
                                 style: GoogleFonts.bebasNeue(fontSize: 18)),
-                          ] else ...[
-                            //not sure if operational
                           ],
                         ],
                       ),

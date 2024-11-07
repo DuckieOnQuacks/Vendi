@@ -29,10 +29,9 @@ class _AddMachinePageState extends State<AddMachinePage> {
   bool _isDrinkSelected = false;
   bool _isSupplySelected = false;
   Position? _currentPosition;
-  late int _selectedValueOperational = 2;
-  late int _selectedValueCash = 0;
-  late int _selectedValueCard = 0;
-  int? _selectedOption;
+  bool _isOperational = false;
+  bool _acceptsCash = false;
+  bool _acceptsCard = false;
   late String machineImage;
   String imageUrl = ' ';
   String imagePath = ' ';
@@ -127,10 +126,14 @@ class _AddMachinePageState extends State<AddMachinePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16.0),
-              const Text('Please take a front facing picture of the machine*',
-                  style: TextStyle(fontSize: 16)),
-              //camera icon
+              // Photo Section
+              _buildSectionHeader("Machine Image"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Please take a front-facing picture of the machine*', style: TextStyle(fontSize: 14)),
+                ],
+              ),
               Center(
                 child: IconButton(
                     onPressed: () async {
@@ -141,134 +144,83 @@ class _AddMachinePageState extends State<AddMachinePage> {
                     },
                     icon: const Icon(Icons.camera_alt)),
               ),
-              const SizedBox(height: 40.0),
-              //input fields
-              const Text('Building Name*', style: TextStyle(fontSize: 16)),
-              TextField(
-                maxLength: 25,
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                decoration:
-                const InputDecoration(hintText: 'Ex: Davidson Building'),
-                controller: _buildingController,
+              const SizedBox(height: 20.0),
+
+              // Machine Location Section
+              _buildSectionHeader("Machine Location"),
+              const SizedBox(height: 16.0),
+              _buildTextInput('Building Name*', _buildingController, 'Ex: Davidson Building', maxLength: 25),
+              const SizedBox(height: 16.0),
+              _buildTextInput('Floor Number*', _floorController, 'Ex: 2', maxLength: 3),
+              const SizedBox(height: 20.0),
+
+              // Machine Type Section
+              _buildSectionHeader("Select Machine Type*"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildMachineTypeCard(Icons.fastfood, 'Snack', _isSnackSelected, () {
+                    setState(() {
+                      _isSnackSelected = true;
+                      _isDrinkSelected = false;
+                      _isSupplySelected = false;
+                    });
+                  }),
+                  _buildMachineTypeCard(Icons.local_drink, 'Beverage', _isDrinkSelected, () {
+                    setState(() {
+                      _isSnackSelected = false;
+                      _isDrinkSelected = true;
+                      _isSupplySelected = false;
+                    });
+                  }),
+                  _buildMachineTypeCard(Icons.inventory, 'Supply', _isSupplySelected, () {
+                    setState(() {
+                      _isSnackSelected = false;
+                      _isDrinkSelected = false;
+                      _isSupplySelected = true;
+                    });
+                  }),
+                ],
+              ),
+              const SizedBox(height: 20.0),
+              // Machine Options Section
+              _buildSectionHeader("Machine Options"),
+              // Operational Status Switch with Note
+              SwitchListTile(
+                title: const Text('Is the machine operational?'),
+                value: _isOperational,
+                onChanged: (value) {
+                  setState(() {
+                    _isOperational = value;
+                  });
+                },
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 16.0),
+                child: Text(
+                  'Leave this toggle unchecked if you are unsure.',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
               ),
               const SizedBox(height: 16.0),
-              const Text('Floor Number*', style: TextStyle(fontSize: 16)),
-              TextField(
-                maxLength: 3,
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                decoration: const InputDecoration(hintText: 'Ex: 2'),
-                controller: _floorController,
-              ),
-              const SizedBox(height: 40.0),
-              const Text('Select Machine Type*',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              RadioListTile<int>(
-                title: const Text('Snack'),
-                value: 0,
-                groupValue: _selectedOption,
+              SwitchListTile(
+                title: const Text('Does the machine take cash?*'),
+                value: _acceptsCash,
                 onChanged: (value) {
                   setState(() {
-                    _selectedOption = value;
-                    _isSnackSelected = true;
+                    _acceptsCash = value;
                   });
                 },
               ),
-              RadioListTile<int>(
-                title: const Text('Beverage'),
-                value: 1,
-                groupValue: _selectedOption,
+              SwitchListTile(
+                title: const Text('Does the machine take card?*'),
+                value: _acceptsCard,
                 onChanged: (value) {
                   setState(() {
-                    _selectedOption = value;
-                    _isDrinkSelected = true;
+                    _acceptsCard = value;
                   });
                 },
               ),
-              RadioListTile<int>(
-                title: const Text('Supply'),
-                value: 2,
-                groupValue: _selectedOption,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedOption = value;
-                    _isSupplySelected = true;
-                  });
-                },
-              ),
-              const SizedBox(height: 40.0),
-              const Text('Select Machine Options',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16.0),
-              const Text('Is the machine currently operating?',
-                  style: TextStyle(fontSize: 16)),
-              DropdownButton(
-                value: _selectedValueOperational,
-                items: const [
-                  DropdownMenuItem(
-                    value: 2,
-                    child: Text('Not Sure'),
-                  ),
-                  DropdownMenuItem(
-                    value: 1,
-                    child: Text('Yes'),
-                  ),
-                  DropdownMenuItem(
-                    value: 0,
-                    child: Text('No'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedValueOperational = value!;
-                  });
-                },
-              ),
-              const SizedBox(height: 20.0),
-              const Text('Does the machine take cash?*',
-                  style: TextStyle(fontSize: 16)),
-              DropdownButton(
-                value: _selectedValueCash,
-                items: const [
-                  DropdownMenuItem(
-                    value: 1,
-                    child: Text('Yes'),
-                  ),
-                  DropdownMenuItem(
-                    value: 0,
-                    child: Text('No'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedValueCash = value!;
-                  });
-                },
-              ),
-              //const DropdownButtonMenu(),
-              const SizedBox(height: 20.0),
-              const Text('Does the machine take card?*',
-                  style: TextStyle(fontSize: 16)),
-              DropdownButton(
-                value: _selectedValueCard,
-                items: const [
-                  DropdownMenuItem(
-                    value: 1,
-                    child: Text('Yes'),
-                  ),
-                  DropdownMenuItem(
-                    value: 0,
-                    child: Text('No'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedValueCard = value!;
-                  });
-                },
-              ),
-              // const DropdownButtonMenu(),
-              const SizedBox(height: 20.0),
-              const Text('*Required', style: TextStyle(color: Colors.red)),
               const SizedBox(height: 20.0),
 
               Center(
@@ -479,15 +431,12 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 name: _buildingController.text,
                                                 desc: _floorController.text,
                                                 lat: _currentPosition!.latitude,
-                                                lon:
-                                                _currentPosition!.longitude,
+                                                lon: _currentPosition!.longitude,
                                                 imagePath: imageUrl,
-                                                icon:
-                                                "assets/images/BlueMachine.png",
-                                                card: _selectedValueCard,
-                                                cash: _selectedValueCash,
-                                                operational:
-                                                _selectedValueOperational,
+                                                icon: "assets/images/BlueMachine.png",
+                                                card: _acceptsCard,
+                                                cash: _acceptsCash,
+                                                operational: _isOperational,
                                                 upvotes: 0,
                                                 dislikes: 0);
                                             FirebaseHelper()
@@ -509,15 +458,12 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 name: _buildingController.text,
                                                 desc: _floorController.text,
                                                 lat: _currentPosition!.latitude,
-                                                lon:
-                                                _currentPosition!.longitude,
+                                                lon: _currentPosition!.longitude,
                                                 imagePath: imageUrl,
-                                                icon:
-                                                "assets/images/PinkMachine.png",
-                                                card: _selectedValueCard,
-                                                cash: _selectedValueCash,
-                                                operational:
-                                                _selectedValueOperational,
+                                                icon: "assets/images/PinkMachine.png",
+                                                card: _acceptsCard,
+                                                cash: _acceptsCash,
+                                                operational: _isOperational,
                                                 upvotes: 0,
                                                 dislikes: 0);
                                             FirebaseHelper()
@@ -539,15 +485,12 @@ class _AddMachinePageState extends State<AddMachinePage> {
                                                 name: _buildingController.text,
                                                 desc: _floorController.text,
                                                 lat: _currentPosition!.latitude,
-                                                lon:
-                                                _currentPosition!.longitude,
+                                                lon: _currentPosition!.longitude,
                                                 imagePath: imageUrl,
-                                                icon:
-                                                "assets/images/YellowMachine.png",
-                                                card: _selectedValueCard,
-                                                cash: _selectedValueCash,
-                                                operational:
-                                                _selectedValueOperational,
+                                                icon: "assets/images/YellowMachine.png",
+                                                card: _acceptsCard,
+                                                cash: _acceptsCash,
+                                                operational: _isOperational,
                                                 upvotes: 0,
                                                 dislikes: 0);
                                             FirebaseHelper()
@@ -613,7 +556,48 @@ class _AddMachinePageState extends State<AddMachinePage> {
     );
   }
 
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
 
+  Widget _buildTextInput(String label, TextEditingController controller, String hintText, {int maxLength = 50}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 16)),
+        TextField(
+          maxLength: maxLength,
+          decoration: InputDecoration(hintText: hintText),
+          controller: controller,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMachineTypeCard(IconData icon, String label, bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 90,
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.pinkAccent : Colors.grey[200],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: isSelected ? Colors.white : Colors.black),
+            const SizedBox(height: 4),
+            Text(label, style: TextStyle(color: isSelected ? Colors.white : Colors.black)),
+          ],
+        ),
+      ),
+    );
+  }
 ////////////////////////////////////////////////////////////////////
   Future<String?> openCamera(BuildContext context) async {
     // Ensure that there is a camera available on the device

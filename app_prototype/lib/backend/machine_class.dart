@@ -2,6 +2,7 @@
 // Define the class Machine
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 
 class Machine {
   // Variables to store machine data
@@ -12,9 +13,9 @@ class Machine {
   final double lon; // Longitude of the machine's location
   late String imagePath; // Path to the image of the machine
   final String icon; // Icon of the machine on Google Maps
-  final int card; // Whether the machine accepts card payments or not
-  final int cash; // Whether the machine accepts cash payments or not
-  late int operational; // Whether the machine is operational or not
+  final bool card; // Whether the machine accepts card payments or not
+  final bool cash; // Whether the machine accepts cash payments or not
+  late bool operational; // Whether the machine is operational or not
   late int upvotes; // Number of upvotes for the machine
   late int dislikes; // Number of dislikes for the machine
 
