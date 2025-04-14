@@ -56,9 +56,9 @@ void main()
       lon: 22.95,
       imagePath: 'pathToImage',
       icon: 'pathToIcon',
-      card: 0,
-      cash: 1,
-      operational: 1,
+      card: false,
+      cash: true,
+      operational: true,
       upvotes: 0,
       dislikes: 0
     );
@@ -95,9 +95,9 @@ void main()
         lon: 25.76,
         imagePath: 'cloud storage path',
         icon: 'iconPath',
-        card: 0,
-        cash: 1,
-        operational: 1,
+        card: false,
+        cash: true,
+        operational: true,
         upvotes: 0,
         dislikes: 0
     );
