@@ -58,7 +58,6 @@ notMachines = LoadImages(notMachineDir)
 machinesTest = LoadImages(tPreMachineDir)
 notMachinesTest = LoadImages(tPreNotMachineDir)
 
-
 # Process images then write them to a file
 ResizeImages(machines, pMachineDir)
 ResizeImages(notMachines, pNotMachineDir)

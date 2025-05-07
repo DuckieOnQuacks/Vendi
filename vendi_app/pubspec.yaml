@@ -32,7 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   sqflite:
-  confetti:
+  confetti: ^0.7.0
   camera:
   path_provider:
   path:
@@ -72,30 +72,38 @@ dependencies:
   cupertino_icons:
   google_fonts: ^6.2.1
   line_awesome_flutter:
-  flutter_native_splash:
+  flutter_native_splash: ^2.4.6
+  tflite_flutter: ^0.11.0
+  image: ^4.2.0
+  flutter_animate: ^4.5.2
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons:
 
-flutter_icons:
+flutter_launcher_icons:
   android: true
-  image_path: "assets/images/logo.png"
+  ios: true
+  image_path: "assets/images/icon.png"
 
 flutter_native_splash:
-  android: true
+  android: trues
+  ios: true
   background_image: "assets/images/splash_screen_background.png"
   image: "assets/images/logo.png"
   fullscreen: true
+  color: "#FFFFFF"
+  android_12:
+    icon_background_color: "#FFFFFF"
+    image: "assets/images/logo.png"
 
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+# The "flutter_lints" package below contains a set of recommended lints to
+# encourage good coding practices. The lint set provided by the package is
+# activated in the `analysis_options.yaml` file located at the root of your
+# package. See that file for information about deactivating specific lint
+# rules and activating additional ones.
+flutter_lints: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -105,7 +113,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/achievements/
     - assets/images/logo.png
+    - assets/models/epoch50.tflite
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -8,9 +8,8 @@ import numpy as np
 
 app = Flask(__name__)
 CORS(app)
-model = os.path.join(os.getcwd(), 'Models/epoch50.tflite')
+model = 'epoch50.tflite'
 interpreter = ModelInterpreter(model)
-
 
 @app.route("/image", methods=['POST'])
 def acceptImage():
@@ -24,4 +23,4 @@ def acceptImage():
     return str(interpreter.RunModel(cvImage)[0][0])
 
 if __name__ == "__main__":
-    app.run(debug=True, host='192.168.1.217')
+    app.run(debug=True, host='192.168.1.18', port=5050)

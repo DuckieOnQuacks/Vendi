@@ -35,6 +35,7 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            proguardFiles("src/main/kotlin/proguard-rules.pro")
         }
     }
 }
@@ -42,3 +43,6 @@ android {
 flutter {
     source = "../.."
 }
+
+// Apply TensorFlow Lite GPU fix
+apply(from = "src/main/kotlin/tflite-gpu-fix.gradle")

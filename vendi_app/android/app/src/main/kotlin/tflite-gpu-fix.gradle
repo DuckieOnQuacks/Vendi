@@ -1,0 +1,4 @@
+dependencies {
+    // Add TensorFlow Lite GPU support explicitly
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.8.0'
+} 
