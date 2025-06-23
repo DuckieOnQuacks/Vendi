@@ -6,6 +6,8 @@ import 'package:vendi_app/backend/classes/user.dart';
 import 'package:vendi_app/pages/help.dart';
 import 'package:vendi_app/pages/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vendi_app/backend/message_helper.dart';
+import 'package:vendi_app/pages/about.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -131,6 +133,34 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  Widget buildLogoutTile(BuildContext context) {
+    return ListTile(
+      title: const Text('Logout'),
+      subtitle: const Text('Sign out of your account'),
+      leading: Icon(
+        Icons.logout,
+        color: Theme.of(context).colorScheme.primary,
+      ),
+      onTap: () {
+        showConfirmationDialog(
+          context,
+          title: 'Confirm Logout',
+          message: 'Are you sure you want to log out of your account?',
+          confirmText: 'Sign Out',
+          onConfirm: () {
+            FirebaseAuth.instance.signOut();
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+              (route) => false,
+            );
+          },
+        );
+      },
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+    );
+  }
+
   Widget buildDeleteAccountTile(BuildContext context) {
     return ListTile(
       title: const Text('Delete Account'),
@@ -141,6 +171,25 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       onTap: () {
         _showDeleteAccountDialog();
+      },
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+    );
+  }
+
+  Widget buildAboutTile(BuildContext context) {
+    return ListTile(
+      title: const Text('About'),
+      subtitle: const Text('App information and legal documents'),
+      leading: Icon(
+        Icons.info_outline,
+        color: Theme.of(context).colorScheme.primary,
+      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AboutPage()),
+        );
       },
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
@@ -384,10 +433,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Use a background color that complements the cards
     return Scaffold(
-      backgroundColor:
-          Theme.of(context).scaffoldBackgroundColor, // Apply background color
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         title: Image.asset(
@@ -395,29 +442,29 @@ class _SettingsPageState extends State<SettingsPage> {
           fit: BoxFit.contain,
           height: 32,
         ),
-        backgroundColor: Theme.of(context)
-            .appBarTheme
-            .backgroundColor, // Use theme AppBar backgroundColor
-        elevation: 0, // Remove app bar shadow for a flatter look
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        elevation: 0,
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(
-            vertical: 8.0), // Add padding around the list
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
         children: [
           _buildSectionHeader('Theme'),
           _buildSectionCard([
             buildDarkModeSwitch(context),
-            const Divider(
-                height: 1, indent: 16, endIndent: 16), // Divider inside card
+            const Divider(height: 1, indent: 16, endIndent: 16),
             buildResetThemeTile(context),
+          ]),
+          _buildSectionHeader('Account'),
+          _buildSectionCard([
+            buildLogoutTile(context),
+            const Divider(height: 1, indent: 16, endIndent: 16),
+            buildDeleteAccountTile(context),
           ]),
           _buildSectionHeader('Support'),
           _buildSectionCard([
             buildHelpTile(context),
-          ]),
-          _buildSectionHeader('Account'),
-          _buildSectionCard([
-            buildDeleteAccountTile(context),
+            const Divider(height: 1, indent: 16, endIndent: 16),
+            buildAboutTile(context),
           ]),
         ],
       ),

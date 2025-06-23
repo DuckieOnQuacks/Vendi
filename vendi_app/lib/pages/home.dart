@@ -11,6 +11,7 @@ import 'package:vendi_app/bottomsheets/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/classes/machine.dart';
 import 'package:vendi_app/backend/message_helper.dart';
 import 'add_machine.dart';
+import 'debug_menu.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -186,9 +187,11 @@ class _HomepageState extends State<Homepage> {
                   color: Theme.of(context).colorScheme.secondary,
                   size: 20,
                 ),
-                tooltip: 'Beta Feedback',
+                tooltip: 'Debug Menu',
                 onPressed: () {
-                  showBetaFeedbackDialog(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const DebugMenu()),
+                  );
                 },
               ),
             ),
@@ -335,6 +338,40 @@ class _HomepageState extends State<Homepage> {
                       },
                       child: const Icon(Icons.my_location,
                           size: 18, color: Colors.white),
+                    ),
+                  ),
+
+                // Add tap hint overlay
+                if (_isMapReady && _markers.isNotEmpty)
+                  Positioned(
+                    bottom: 16,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.touch_app,
+                                color: Colors.white.withOpacity(0.8), size: 16),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Tap icons for details',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
 
