@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vendi_app/pages/register.dart';
+import 'package:vendi_app/backend/classes/user.dart';
+import 'package:vendi_app/backend/message_helper.dart';
+import 'package:vendi_app/pages/bottom_navigation/navigation.dart';
+import 'package:vendi_app/pages/login_page/register_page.dart';
 import 'package:vendi_app/pages/login_page/reset_password.dart';
 
 class LoginPage extends StatefulWidget {
@@ -45,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
           // Then navigate to the homepage, replacing the login page in the stack
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) {
-              return const BottomBar();
+              return const BottomNavigation();
             }),
             (route) => false, // This removes all previous routes
           );

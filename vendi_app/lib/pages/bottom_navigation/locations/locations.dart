@@ -6,8 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/backend/classes/firebase.dart';
-import 'package:vendi_app/pages/navigation_bar/locations/widgets/filter_bottom_sheet.dart';
-import 'package:vendi_app/pages/navigation_bar/locations/widgets/machine_bottom_sheet.dart';
+import 'package:vendi_app/pages/bottom_navigation/locations/menus/add_machine_menu.dart';
+import 'package:vendi_app/pages/debug_menu/debug_menu.dart';
+import 'package:vendi_app/pages/bottom_navigation/locations/widgets/filter_bottom_sheet.dart';
+import 'package:vendi_app/pages/bottom_navigation/locations/widgets/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/classes/machine.dart';
 import 'package:vendi_app/backend/message_helper.dart';
 
@@ -202,7 +204,7 @@ class _MachineLocatorState extends State<MachineLocator> {
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => AddMachinePage(),
+                  builder: (context) => AddMachineMenu(),
                 ),
               );
               if (result == true) {

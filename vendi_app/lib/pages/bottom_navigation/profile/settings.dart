@@ -1,13 +1,13 @@
 // settings_page.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../backend/classes/theme_provider.dart';
+import 'package:vendi_app/backend/classes/theme_provider.dart';
 import 'package:vendi_app/backend/classes/user.dart';
-import 'package:vendi_app/pages/help.dart';
-import 'package:vendi_app/pages/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vendi_app/backend/message_helper.dart';
-import 'package:vendi_app/pages/about.dart';
+import 'package:vendi_app/pages/information/about.dart';
+import 'package:vendi_app/pages/information/help.dart';
+import 'package:vendi_app/pages/login_page/login_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);

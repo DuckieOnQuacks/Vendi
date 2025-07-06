@@ -1,13 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vendi_app/pages/login.dart';
-import '../../bottom_nav/backend/classes/user.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import '../../bottom_nav/backend/classes/theme_provider.dart';
 import 'package:vendi_app/backend/classes/machine.dart';
+import 'package:vendi_app/backend/classes/theme_provider.dart';
+import 'package:vendi_app/backend/classes/user.dart';
 import 'settings.dart';
-import '../../bottom_nav/profile/debug_menu.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);

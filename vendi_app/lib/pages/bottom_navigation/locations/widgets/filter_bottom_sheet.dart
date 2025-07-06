@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vendi_app/bottom_bar.dart';
+import 'package:vendi_app/pages/bottom_navigation/navigation.dart';
 
 class FilterPage extends StatefulWidget {
   const FilterPage({super.key});
@@ -104,7 +104,7 @@ class _FilterPageState extends State<FilterPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const BottomBar()),
+                            builder: (context) => const BottomNavigation()),
                       );
                     },
                     style: ElevatedButton.styleFrom(

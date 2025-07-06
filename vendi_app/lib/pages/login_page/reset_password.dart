@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vendi_app/pages/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vendi_app/pages/login_page/login_page.dart';
 
 import '../../backend/message_helper.dart';
 

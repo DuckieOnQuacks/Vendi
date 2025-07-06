@@ -9,7 +9,6 @@ import 'package:vendi_app/backend/classes/user.dart';
 import 'package:vendi_app/backend/message_helper.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:camera/camera.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:vendi_app/backend/camera_helper.dart';

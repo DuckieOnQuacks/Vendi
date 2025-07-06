@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:vendi_app/backend/classes/machine.dart';
 import 'package:vendi_app/backend/classes/user.dart';
-import 'package:vendi_app/pages/navigation_bar/locations/widgets/machine_bottom_sheet.dart';
-import '../../bottom_nav/backend/classes/machine.dart';
+import 'package:vendi_app/pages/bottom_navigation/locations/widgets/machine_bottom_sheet.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // All code on this page was developed by the team using the flutter framework

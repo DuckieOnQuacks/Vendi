@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vendi_app/pages/login.dart';
+import 'package:vendi_app/backend/message_helper.dart';
+import 'package:vendi_app/pages/login_page/login_page.dart';
 import 'dart:core';
-import '../backend/message_helper.dart';
 
 //Object Cleanup, removes from tree permanently
 class RegisterPage extends StatefulWidget {
