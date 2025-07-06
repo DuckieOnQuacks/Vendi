@@ -1,97 +1,108 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vendi_app/pages/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vendi_app/pages/register.dart';
-import 'package:vendi_app/pages/reset_password.dart';
-import '../backend/message_helper.dart';
-import '../backend/classes/user.dart';
-import '../bottom_bar.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+import '../../backend/message_helper.dart';
+
+class ResetPasswordPage extends StatefulWidget {
+  const ResetPasswordPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  _ResetPasswordPageState createState() => _ResetPasswordPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  // All code on this page was developed by the team using the flutter framework
-  late final TextEditingController emailController = TextEditingController();
-  late final TextEditingController passwordController = TextEditingController();
+class _ResetPasswordPageState extends State<ResetPasswordPage> {
+  final usernameController = TextEditingController();
   String? emailErrorMessage;
-  String? passwordErrorMessage;
-  bool _obscurePassword = true;
 
-  void signUserIn() async {
-    if (!mounted) {
+  @override
+  void dispose() {
+    usernameController.dispose();
+    super.dispose();
+  }
+
+  bool _validateEmail() {
+    if (usernameController.text.isEmpty ||
+        !usernameController.text.contains('@')) {
+      setState(() {
+        emailErrorMessage = 'Please enter a valid email';
+      });
+      return false;
+    }
+    setState(() {
+      emailErrorMessage = null;
+    });
+    return true;
+  }
+
+  //Checks username in database
+  Future<void> passReset() async {
+    if (!_validateEmail()) {
       return;
     }
+
+    // Show loading indicator
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return Center(
           child: CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.primary,
+            color: Colors.pink,
           ),
         );
       },
     );
+
     try {
-      if (validateFields()) {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: emailController.text, password: passwordController.text);
-        await recordUserLogin();
-        if (mounted) {
-          // First pop the loading dialog
-          Navigator.pop(context);
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: usernameController.text.trim());
 
-          // Then navigate to the homepage, replacing the login page in the stack
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (BuildContext context) {
-              return const BottomBar();
-            }),
-            (route) => false, // This removes all previous routes
-          );
-        }
-      } else {
-        Navigator.pop(context);
-        showMessage(context, 'Error', 'Please insert log in credentials');
-      }
+      // Close loading dialog
+      Navigator.pop(context);
+
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: const Text('Success',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              content: const Text(
+                'Email was found with this account! Password reset link has been sent to your email.',
+                textAlign: TextAlign.center,
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                    );
+                  },
+                  child: const Text('Back to Login'),
+                ),
+              ],
+            );
+          });
     } on FirebaseAuthException catch (e) {
-      if (mounted) {
-        Navigator.pop(context);
-        if (e.code == 'invalid-email') {
-          showMessage(context, 'Error', 'Please enter a valid email');
-        } else if (e.code == 'wrong-password') {
-          showMessage(context, 'Error', 'Wrong password');
-        } else if (e.code == 'user-not-found') {
-          showMessage(context, 'Error',
-              'This email address entered is not registered.');
-        } else {
-          showMessage(context, 'Error', 'An unexpected error occurred');
-        }
+      // Close loading dialog
+      Navigator.pop(context);
+
+      String message = 'An error occurred while processing your request.';
+      if (e.code == 'user-not-found') {
+        message = 'No user found with this email address.';
+      } else if (e.code == 'invalid-email') {
+        message = 'The email address is not valid.';
       }
+
+      showMessage(context, 'Error', message);
     }
-  }
-
-  bool validateFields() {
-    bool valid = true;
-    setState(() {
-      emailErrorMessage = null;
-      passwordErrorMessage = null;
-
-      if (emailController.text.isEmpty || !emailController.text.contains('@')) {
-        emailErrorMessage = 'Please enter a valid email';
-        valid = false;
-      }
-      if (passwordController.text.isEmpty ||
-          passwordController.text.length < 6) {
-        passwordErrorMessage =
-            'Please enter a password with at least 6 characters';
-        valid = false;
-      }
-    });
-    return valid;
   }
 
   @override
@@ -101,15 +112,21 @@ class _LoginPageState extends State<LoginPage> {
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
     final secondaryTextColor = Theme.of(context).textTheme.bodySmall?.color;
 
-    // The login page scaffold
     return GestureDetector(
       onTap: () {
         // Dismiss keyboard when tapping outside of text fields
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
         backgroundColor: backgroundColor,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: textColor),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -133,85 +150,64 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       child: Image.asset(
-                        'assets/images/YellowMachine.png',
-                        scale: 5,
+                        'assets/images/BlueMachine.png',
+                        scale: 4,
                       ),
                     ),
                     const SizedBox(height: 24),
+
+                    // Title
                     Text(
-                      'Hello Again!',
+                      'Reset Password',
                       style: GoogleFonts.bebasNeue(
                         fontWeight: FontWeight.bold,
-                        fontSize: 50,
+                        fontSize: 42,
                         letterSpacing: 1.5,
                         color: primaryColor,
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    //Creates space between text
-                    Text('Welcome back to Vendi, you\'ve been missed',
-                        style: GoogleFonts.bebasNeue(
-                          fontSize: 20,
+                    const SizedBox(height: 16),
+
+                    // Instructions
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        'Enter the email address associated with your account.',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
                           color: secondaryTextColor,
-                        )),
-                    const SizedBox(height: 40),
-                    //email text field
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        'We will email you a link to reset your password.',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: secondaryTextColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Email input field
                     _buildTextField(
-                      controller: emailController,
+                      controller: usernameController,
                       hintText: 'Email',
                       prefixIcon: Icons.email_outlined,
                       errorText: emailErrorMessage,
+                      keyboardType: TextInputType.emailAddress,
                     ),
-                    const SizedBox(height: 16),
-                    //Password text field
-                    _buildTextField(
-                      controller: passwordController,
-                      hintText: 'Password',
-                      prefixIcon: Icons.lock_outline,
-                      errorText: passwordErrorMessage,
-                      obscureText: _obscurePassword,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: Colors.grey,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return ResetPasswordPage();
-                              }));
-                            },
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(
-                                color: primaryColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    //sign in button
+                    const SizedBox(height: 32),
+
+                    // Reset Password Button
                     ElevatedButton(
-                      onPressed: signUserIn,
+                      onPressed: passReset,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
                         foregroundColor:
@@ -226,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       child: const Text(
-                        'Sign In',
+                        'Reset Password',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -235,11 +231,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 24),
+
+                    // Back to Login
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Not a member?',
+                          'Remember your password?',
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: secondaryTextColor,
@@ -247,16 +245,19 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
                                 builder: (BuildContext context) {
-                              return const RegisterPage();
-                            }));
+                                  return const LoginPage();
+                                },
+                              ),
+                            );
                           },
                           style: TextButton.styleFrom(
                             foregroundColor: primaryColor,
                           ),
                           child: const Text(
-                            'Register now',
+                            'Login',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -296,10 +297,7 @@ class _LoginPageState extends State<LoginPage> {
         errorText: errorText,
         filled: true,
         fillColor: Theme.of(context).cardColor,
-        prefixIcon: Icon(
-          prefixIcon,
-          color: Colors.grey,
-        ),
+        prefixIcon: Icon(prefixIcon, color: Colors.grey),
         suffixIcon: suffixIcon,
         contentPadding:
             const EdgeInsets.symmetric(vertical: 16, horizontal: 16),

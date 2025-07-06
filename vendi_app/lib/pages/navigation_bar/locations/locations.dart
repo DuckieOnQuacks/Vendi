@@ -6,21 +6,19 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vendi_app/backend/classes/firebase.dart';
-import 'package:vendi_app/bottomsheets/filter_bottom_sheet.dart';
-import 'package:vendi_app/bottomsheets/machine_bottom_sheet.dart';
+import 'package:vendi_app/pages/navigation_bar/locations/widgets/filter_bottom_sheet.dart';
+import 'package:vendi_app/pages/navigation_bar/locations/widgets/machine_bottom_sheet.dart';
 import 'package:vendi_app/backend/classes/machine.dart';
 import 'package:vendi_app/backend/message_helper.dart';
-import 'add_machine.dart';
-import 'debug_menu.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({Key? key}) : super(key: key);
+class MachineLocator extends StatefulWidget {
+  const MachineLocator({Key? key}) : super(key: key);
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<MachineLocator> createState() => _MachineLocatorState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _MachineLocatorState extends State<MachineLocator> {
   GoogleMapController? mapController;
   final Map<String, Marker> _markers = {};
   Position? currentPosition;

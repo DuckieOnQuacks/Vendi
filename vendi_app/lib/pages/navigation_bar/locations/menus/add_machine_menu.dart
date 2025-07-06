@@ -14,14 +14,14 @@ import 'package:vendi_app/bottom_bar.dart';
 import 'package:vendi_app/backend/classes/tflite_helper.dart';
 import 'package:confetti/confetti.dart';
 
-class AddMachinePage extends StatefulWidget {
-  const AddMachinePage({Key? key}) : super(key: key);
+class AddMachineMenu extends StatefulWidget {
+  const AddMachineMenu({Key? key}) : super(key: key);
 
   @override
-  _AddMachinePageState createState() => _AddMachinePageState();
+  _AddMachineMenuState createState() => _AddMachineMenuState();
 }
 
-class _AddMachinePageState extends State<AddMachinePage> {
+class _AddMachineMenuState extends State<AddMachineMenu> {
   late List<CameraDescription> cameras;
   final _buildingController = TextEditingController();
   final _floorController = TextEditingController();

@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:vendi_app/pages/home.dart';
-import 'package:vendi_app/pages/leaderboard.dart';
-import 'package:vendi_app/pages/profile.dart';
-import 'package:vendi_app/pages/favorites.dart';
 
 // All code on this page was developed by the team using the flutter framework
 
-class BottomBar extends StatefulWidget {
+class NavigationBar extends StatefulWidget {
   final VoidCallback? onMachineAdded;
-  const BottomBar({Key? key, this.onMachineAdded}) : super(key: key);
+  const NavigationBar({Key? key, this.onMachineAdded}) : super(key: key);
 
   @override
-  State<BottomBar> createState() => _BottomBarState();
+  State<NavigationBar> createState() => _NavigationBarState();
 }
 
-class _BottomBarState extends State<BottomBar> {
+class _NavigationBarState extends State<NavigationBar> {
   int selectedIndex = 0;
   late final List<Widget> screens;
 
